@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Equation de la dynamique &mdash; Documentation La Dynamique avec Cast3M 2021.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/togglebutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript">var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="3. Calculs modaux" href="modes.html" />
+    <link rel="prev" title="1. Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B81420" >
+          
+
+          
+            <a href="dynamique.html" class="icon icon-home"> La Dynamique avec Cast3M
+          
+
+          
+            
+            <img src="_static/logo_CEA_Cast3Mrouge.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2021.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Sommaire:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Equation de la dynamique</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#equation-generale-du-mouvement">2.1. Equation générale du mouvement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equation-du-mouvement-linearisee-pour-les-problemes-vibratoires">2.2. Equation du mouvement linéarisée pour les problèmes vibratoires</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modes.html">3. Calculs modaux</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#calcul-des-modes-propres-reels">3.1. Calcul des modes propres réels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#synthese-modale">3.2. Synthèse modale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#sous-structuration">3.3. Sous-structuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#calcul-des-modes-propres-complexes">3.4. Calcul des modes propres complexes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#exemple-commentes-de-calcul-de-modes-propres">3.5. Exemple commentés de calcul de modes propres</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reponse_forcee.html">4. Analyses spectrales du système linéaire forcé</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reponse_forcee.html#equations-du-systeme-lineaire-force">4.1. Equations du système linéaire forcé</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reponse_forcee.html#reponse-dans-le-cas-general">4.2. Réponse dans le cas général</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reponse_forcee.html#ecriture-du-probleme-dans-le-domaine-de-laplace">4.2.1. Ecriture du problème dans le domaine de Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reponse_forcee.html#fonction-de-transfert-sur-base-modale">4.2.2. Fonction de transfert sur base modale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reponse_forcee.html#limites-de-la-tranformation-de-laplace">4.2.3. Limites de la tranformation de Laplace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reponse_forcee.html#reponse-etablie">4.3. Réponse établie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reponse_forcee.html#interet-de-la-tranformation-de-fourier-pour-les-regimes-etablis">4.3.1. Intérêt de la tranformation de Fourier pour les régimes établis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reponse_forcee.html#reponse-a-un-spectre-d-excitation">4.3.2. Réponse à un spectre d'excitation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reponse_forcee.html#exemples-commentes-avec-un-calcul-spectral-de-regime-force">4.4. Exemples commentés avec un calcul spectral de régime forcé</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="integration_temporelle.html">5. Analyse par intégration temporelle</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="integration_temporelle.html#les-schemas-de-newmark">5.1. Les schémas de Newmark</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#relations-de-recurrence">5.1.1. Relations de récurrence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#proprietes">5.1.2. Propriétés</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#cas-des-differences-centrees">5.1.3. Cas des différences centrées</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#cas-de-l-acceleration-moyenne">5.1.4. Cas de l'accélération moyenne</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_temporelle.html#analyse-des-resultats-temporels">5.2. Analyse des résultats temporels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#evolutions-temporelles">5.2.1. Evolutions temporelles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#animations">5.2.2. Animations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#analyse-spectrale-des-resultats-temporels">5.2.3. Analyse spectrale des résultats temporels</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_temporelle.html#exemples-commentes-realisant-une-integration-temporelle">5.3. Exemples commentés réalisant une intégration temporelle</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="conclusions.html">6. Conclusions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exemples.html">7. Exemples commentés</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_exemples/rotor_laval_poutre.html">7.1. Modélisation d'un rotor de Laval : calcul des modes propres réels et complexes, réponse au balourd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#descriptif">7.1.1. Descriptif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#calcul-des-modes-reels">7.1.2. Calcul des modes réels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#calcul-du-diagramme-campbell">7.1.3. Calcul du diagramme Campbell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#calcul-de-la-reponse-au-balourd">7.1.4. Calcul de la réponse au balourd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#fichiers-a-telecharger">7.1.5. Fichiers à télécharger</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="_exemples/vibrations_cloche.html">7.2. Modélisation des vibrations d'une cloche : calcul des modes propres et réponse à un choc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#descriptif">7.2.1. Descriptif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#calcul-des-modes-reels">7.2.2. Calcul des modes réels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#calcul-de-la-reponse-a-un-choc-par-integration-temporelle">7.2.3. Calcul de la réponse à un choc par intégration temporelle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#fichiers-a-telecharger">7.2.4. Fichiers à télécharger</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">8. Références</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="dynamique.html">La Dynamique avec Cast3M</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="dynamique.html">Docs</a> &raquo;</li>
+        
+      <li>2. Equation de la dynamique</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/equation_dyn.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="equation-de-la-dynamique">
+<span id="equation-dyn"></span><h1>2. Equation de la dynamique<a class="headerlink" href="#equation-de-la-dynamique" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="equation-generale-du-mouvement">
+<h2>2.1. Equation générale du mouvement<a class="headerlink" href="#equation-generale-du-mouvement" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On considère ici un système mécanique
+sollicité ou qui évolue dans le temps suffisamment rapidement
+pour que ne soient pas négligés les <em>effets d'inertie</em>, ni les <em>effets visqueux</em>.
+Il est donc régit par la forme faible stipulant que
+<span class="math notranslate nohighlight">\(\forall \vec{v}\)</span> cinématiquement admissible à 0,
+on doit trouver <span class="math notranslate nohighlight">\(\vec{u}\)</span> et <span class="math notranslate nohighlight">\(\sigma\)</span> tels que soit vérifié
+à chaque instant :</p>
+<div class="math notranslate nohighlight" id="equation-eq-ppv1">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-ppv1" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}\int_{\Omega} \rho \ddot{\vec{u}}(t) \vec{v}(t)
++ f^\text{visq}(\vec{u},\dot{\vec{u}}) \vec{v}(t)
++ \sigma(t) : \epsilon(\vec{v}(t))  d\Omega
+\\ \qquad
+= \int_{d\Omega} f^\text{ext}(t)\vec{v}(t)
++ f^\text{nl}(\vec{u},\dot{\vec{u}}) \vec{v}(t)  d\Gamma\end{split}\]</div>
+<p>La méthode des éléments finis amène à discrétiser
+le déplacement (ainsi que la vitesse et l'accélération) sous la forme :</p>
+<div class="math notranslate nohighlight" id="equation-eq-fem1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-fem1" title="Lien permanent vers cette équation">¶</a></span>\[\vec{u}(x,t) =
+\begin{bmatrix} \vec{e}_1 \, \vec{e}_2 \, \vec{e}_3  \end{bmatrix}
+\,
+\begin{bmatrix} \mathcal{N}(x) \end{bmatrix}
+\, u(t)\]</div>
+<p>La combinaisons des deux équations précédentes
+conduit à l'équation d'équilibre dynamique discrétisée :</p>
+<div class="math notranslate nohighlight" id="equation-eq-dyn1">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-dyn1" title="Lien permanent vers cette équation">¶</a></span>\[\mathcal{M} \ddot{u}(t) + \mathcal{F}^\text{visq}(\dot{u},u) + \mathcal{F}^\text{int}(\sigma)
+=  \mathcal{F}^\text{ext}(t) + \mathcal{F}^\text{nl}(u,\dot{u})\]</div>
+<p>où l'on a distingué au second membre le <em>chargement extérieur</em>
+et les efforts non-linéaires liées au <em>contact frottant</em>.</p>
+<p>Les non-linéarités de type <em>comportement</em> ou <em>grands déplacements</em>
+sont quant à elles complètement intégrées dans les efforts internes.
+Leur traitement n'est pas propre à la dynamique
+et nous n'en discuterons pas plus ici.</p>
+</div>
+<div class="section" id="equation-du-mouvement-linearisee-pour-les-problemes-vibratoires">
+<h2>2.2. Equation du mouvement linéarisée pour les problèmes vibratoires<a class="headerlink" href="#equation-du-mouvement-linearisee-pour-les-problemes-vibratoires" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La plupart des problèmes dynamiques vibratoires se caractérise
+par de <em>petits</em> mouvements autour d'une position d'équilibre stationnaire.
+On décompose ainsi la solution dynamique en la somme d'une contribution stationnaire
+et vibratoire :</p>
+<div class="math notranslate nohighlight" id="equation-eq-dyn2vib">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-dyn2vib" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}u^\text{tot}(t)  &amp;=  u^0 + u(t) \\
+\sigma^\text{tot}(t)  &amp;=  \sigma^0 + u(t) \\\end{split}\]</div>
+<p>Lorsque l'amplitude des vibrations est suffisamment petite
+pour être considérée comme une <em>petite perturbation</em>,
+on peut linéariser les termes liés aux efforts internes et visqueux :</p>
+<div class="math notranslate nohighlight" id="equation-eq-dyn2">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-dyn2" title="Lien permanent vers cette équation">¶</a></span>\[\mathcal{M} \ddot{u}(t) + \mathcal{C} \dot{u}(t) + \mathcal{K} u(t)
+=  \mathcal{F}^\text{ext}(t) + \mathcal{F}^\text{nl}(u,\dot{u})\]</div>
+<p>Si les contraintes de l'équilibre
+autour duquel le problème vibratoire est calculé
+sont non négligeables,
+alors la linéarisation des efforts internes
+conduit à la prise en compte d'un terme de pré-contraintes
+calculé avec l'opérateur
+<code class="docutils literal notranslate"><span class="pre">KSIG</span></code> (<a class="reference external" href="http://www-cast3m.cea.fr/index.php?page=notices&amp;notice=KSIG">notice de KSIG</a>)
+en plus du terme lié à l'élasticité obtenu avec
+<code class="docutils literal notranslate"><span class="pre">RIGI</span></code>
+(<a class="reference external" href="http://www-cast3m.cea.fr/index.php?page=notices&amp;notice=RIGI">notice de RIGI</a>) :
+<span class="math notranslate nohighlight">\(\mathcal{K} = \mathcal{K}^\text{RIGI} + \mathcal{K}^\text{KSIG}(\sigma^0)\)</span>.
+Le cas-test <a class="reference external" href="http://www-cast3m.cea.fr/index.php?page=exemples&amp;exemple=vibr13">vibr13</a>
+est un exemple de calcul des modes propres d'une poutre précontrainte axialement.</p>
+<p>De la même façon, la linéarisation d'une force de pression suiveuse
+conduit à l'ajout des termes <code class="docutils literal notranslate"><span class="pre">KSIG</span></code>
+et <code class="docutils literal notranslate"><span class="pre">KP</span></code>
+(<a class="reference external" href="http://www-cast3m.cea.fr/index.php?page=notices&amp;notice=KP">notice de KP</a>)
+(voir l'exemple <a class="reference external" href="http://www-cast3m.cea.fr/index.php?page=exemples&amp;exemple=vibr8">vibr8</a>).</p>
+<p>Cette équation n'est pas complètement linéarisée
+à cause de la présence du terme d'efforts non-linéaires au second membre
+qu'on a volontairement conservé.
+Mais c'est cette forme qui est intéressante pour la plupart des études vibratoires.</p>
+<p>A cette équation, il convient d'ajouter les <em>conditions aux limites</em>
+qui s'expriment sous la forme d'une relation linéaire :</p>
+<div class="math notranslate nohighlight" id="equation-eq-dyn3">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-dyn3" title="Lien permanent vers cette équation">¶</a></span>\[\mathcal{L} u(t) = u^\text{imp}(t)\]</div>
+<p>et des <em>conditions initiales</em> généralement exprimée en (déplacement,vitesse)
+à l'instant <span class="math notranslate nohighlight">\(t=0\)</span> :</p>
+<div class="math notranslate nohighlight" id="equation-eq-dyn4">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eq-dyn4" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}u(t=0)       &amp;= u_0        \\
+\dot{u}(t=0) &amp;= \dot{u}_0\end{split}\]</div>
+<p>On va voir par la suite qu'on ne cherche pas toujours
+à intégrer d'emblée cette équation différentielle.
+En effet, une bonne connaissance du comportement dynamique du système
+passe souvent par l'étude de ses modes,
+sa réponse à une excitation harmonique ou aléatoire caractérisée par un spectre,
+sa stabilité.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modes.html" class="btn btn-neutral float-right" title="3. Calculs modaux" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral float-left" title="1. Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Benoit Prabel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

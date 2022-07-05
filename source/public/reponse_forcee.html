@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Analyses spectrales du système linéaire forcé &mdash; Documentation La Dynamique avec Cast3M 2021.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/togglebutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript">var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="5. Analyse par intégration temporelle" href="integration_temporelle.html" />
+    <link rel="prev" title="3. Calculs modaux" href="modes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B81420" >
+          
+
+          
+            <a href="dynamique.html" class="icon icon-home"> La Dynamique avec Cast3M
+          
+
+          
+            
+            <img src="_static/logo_CEA_Cast3Mrouge.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2021.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Sommaire:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="equation_dyn.html">2. Equation de la dynamique</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="equation_dyn.html#equation-generale-du-mouvement">2.1. Equation générale du mouvement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equation_dyn.html#equation-du-mouvement-linearisee-pour-les-problemes-vibratoires">2.2. Equation du mouvement linéarisée pour les problèmes vibratoires</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modes.html">3. Calculs modaux</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#calcul-des-modes-propres-reels">3.1. Calcul des modes propres réels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#synthese-modale">3.2. Synthèse modale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#sous-structuration">3.3. Sous-structuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#calcul-des-modes-propres-complexes">3.4. Calcul des modes propres complexes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modes.html#exemple-commentes-de-calcul-de-modes-propres">3.5. Exemple commentés de calcul de modes propres</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Analyses spectrales du système linéaire forcé</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#equations-du-systeme-lineaire-force">4.1. Equations du système linéaire forcé</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reponse-dans-le-cas-general">4.2. Réponse dans le cas général</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ecriture-du-probleme-dans-le-domaine-de-laplace">4.2.1. Ecriture du problème dans le domaine de Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fonction-de-transfert-sur-base-modale">4.2.2. Fonction de transfert sur base modale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limites-de-la-tranformation-de-laplace">4.2.3. Limites de la tranformation de Laplace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reponse-etablie">4.3. Réponse établie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#interet-de-la-tranformation-de-fourier-pour-les-regimes-etablis">4.3.1. Intérêt de la tranformation de Fourier pour les régimes établis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reponse-a-un-spectre-d-excitation">4.3.2. Réponse à un spectre d'excitation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#exemples-commentes-avec-un-calcul-spectral-de-regime-force">4.4. Exemples commentés avec un calcul spectral de régime forcé</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="integration_temporelle.html">5. Analyse par intégration temporelle</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="integration_temporelle.html#les-schemas-de-newmark">5.1. Les schémas de Newmark</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#relations-de-recurrence">5.1.1. Relations de récurrence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#proprietes">5.1.2. Propriétés</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#cas-des-differences-centrees">5.1.3. Cas des différences centrées</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#cas-de-l-acceleration-moyenne">5.1.4. Cas de l'accélération moyenne</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_temporelle.html#analyse-des-resultats-temporels">5.2. Analyse des résultats temporels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#evolutions-temporelles">5.2.1. Evolutions temporelles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#animations">5.2.2. Animations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_temporelle.html#analyse-spectrale-des-resultats-temporels">5.2.3. Analyse spectrale des résultats temporels</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_temporelle.html#exemples-commentes-realisant-une-integration-temporelle">5.3. Exemples commentés réalisant une intégration temporelle</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="conclusions.html">6. Conclusions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exemples.html">7. Exemples commentés</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_exemples/rotor_laval_poutre.html">7.1. Modélisation d'un rotor de Laval : calcul des modes propres réels et complexes, réponse au balourd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#descriptif">7.1.1. Descriptif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#calcul-des-modes-reels">7.1.2. Calcul des modes réels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#calcul-du-diagramme-campbell">7.1.3. Calcul du diagramme Campbell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#calcul-de-la-reponse-au-balourd">7.1.4. Calcul de la réponse au balourd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/rotor_laval_poutre.html#fichiers-a-telecharger">7.1.5. Fichiers à télécharger</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="_exemples/vibrations_cloche.html">7.2. Modélisation des vibrations d'une cloche : calcul des modes propres et réponse à un choc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#descriptif">7.2.1. Descriptif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#calcul-des-modes-reels">7.2.2. Calcul des modes réels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#calcul-de-la-reponse-a-un-choc-par-integration-temporelle">7.2.3. Calcul de la réponse à un choc par intégration temporelle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_exemples/vibrations_cloche.html#fichiers-a-telecharger">7.2.4. Fichiers à télécharger</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">8. Références</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="dynamique.html">La Dynamique avec Cast3M</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="dynamique.html">Docs</a> &raquo;</li>
+        
+      <li>4. Analyses spectrales du système linéaire forcé</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/reponse_forcee.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="analyses-spectrales-du-systeme-lineaire-force">
+<span id="reponse-forcee"></span><h1>4. Analyses spectrales du système linéaire forcé<a class="headerlink" href="#analyses-spectrales-du-systeme-lineaire-force" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="equations-du-systeme-lineaire-force">
+<h2>4.1. Equations du système linéaire forcé<a class="headerlink" href="#equations-du-systeme-lineaire-force" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On considère le système linéaire, amorti et excité par une force extérieure.</p>
+<div class="math notranslate nohighlight" id="equation-eq-force1">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-force1" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}\mathcal{M} \ddot{u}(t) + \mathcal{C} \dot{u}(t) + \mathcal{K} u(t)
+&amp;=  \mathcal{F}^\text{ext}(t) \\
+u(t=0)       &amp;= u_0        \\
+\dot{u}(t=0) &amp;= \dot{u}_0\end{split}\]</div>
+<p>Dans la plupart des cas, le chargement extérieur peut se mettre sous la forme
+séparant sa dépendance spatiale et temporelle :</p>
+<div class="math notranslate nohighlight" id="equation-eq-force2">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-force2" title="Lien permanent vers cette équation">¶</a></span>\[\mathcal{F}^\text{ext}(x,t) = \mathcal{F}_0(x) \, f(t)\]</div>
+<p>où <span class="math notranslate nohighlight">\(f(t)\)</span> est une fonction scalaire du temps
+et <span class="math notranslate nohighlight">\(\mathcal{F}_0(x)\)</span> un vecteur éléments finis constant.</p>
+</div>
+<div class="section" id="reponse-dans-le-cas-general">
+<h2>4.2. Réponse dans le cas général<a class="headerlink" href="#reponse-dans-le-cas-general" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="ecriture-du-probleme-dans-le-domaine-de-laplace">
+<h3>4.2.1. Ecriture du problème dans le domaine de Laplace<a class="headerlink" href="#ecriture-du-probleme-dans-le-domaine-de-laplace" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Lorsque l'excitation a une durée finie dans le temps
+(comme un créneau ou une impulsion)
+ou atteint une valeur constante au bout d'un temps fini,
+la réponse du système se compose d'une phase <em>transitoire</em>,
+suivie d'un mouvement libre ou forcé, généralement amorti,
+qui tend in fine vers un régime <em>stationnaire</em>.</p>
+<p>Cette réponse générale
+peut être obtenue par <em>tranformation de Laplace</em> du système.
+On rappelle que cette tranformée se définit par :</p>
+<div class="math notranslate nohighlight" id="equation-eq-laplace1">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-laplace1" title="Lien permanent vers cette équation">¶</a></span>\[\tilde{X}(s) \equiv \int_0^{\infty} X(t) \operatorname{e}^{-st} dt\]</div>
+<p>Elle permet de transformer l'équation différentielle <a class="reference internal" href="#equation-eq-force1">(1)</a>
+en un produit dans le domaine de Laplace
+entre la <em>fonction de transfert</em> du système mécanique
+et la tranformée de Laplace de l'excitation.</p>
+<div class="math notranslate nohighlight" id="equation-eq-laplace2">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-laplace2" title="Lien permanent vers cette équation">¶</a></span>\[\tilde{u}(s) = \tilde{\mathcal{H}}(s) \, \tilde{\mathcal{F}}(s)\]</div>
+<p>où apparaît la fonction de transfert et le second membre transformé :</p>
+<div class="math notranslate nohighlight" id="equation-eq-laplace3">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-laplace3" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}\tilde{H}(s)
+&amp;= \left[ s^2 \mathcal{M}  + s \mathcal{C} + \mathcal{K} \right]^{-1} \\
+\tilde{\mathcal{F}}(w)
+&amp;= \tilde{\mathcal{F}}^\text{ext}(w)
++ \mathcal{M} \dot{u}_0
++ s \mathcal{M} {u}_0\end{split}\]</div>
+<p>La transformée de Laplace inverse permet ensuite d'obtenir la solution temporelle
+(ou loi horaire).</p>
+</div>
+<div class="section" id="fonction-de-transfert-sur-base-modale">
+<h3>4.2.2. Fonction de transfert sur base modale<a class="headerlink" href="#fonction-de-transfert-sur-base-modale" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Il est aisée d'exprimer la fonction de transfert sur base modale
+tant que l'amortissement respecte la décomposition de Basile
+(aussi appelé amortissement de Rayleigh),
+et on a alors :</p>
+<div class="math notranslate nohighlight" id="equation-eq-laplace4">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-laplace4" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}\tilde{u}_j
+&amp;= \sum_{k} \tilde{H}(j,k,s) \tilde{\mathcal{F}}_k \\
+\text{avec} \quad
+\tilde{H}(j,k,s)
+&amp;= \sum_{i=1..m} \frac{\varphi_i(j) \varphi_i(k)}
+                      {m_i (\omega_i^2 + s \xi_i \omega_i + s^2)}\end{split}\]</div>
+</div>
+<div class="section" id="limites-de-la-tranformation-de-laplace">
+<h3>4.2.3. Limites de la tranformation de Laplace<a class="headerlink" href="#limites-de-la-tranformation-de-laplace" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Bien que cette approche permette d'obtenir la réponse transitoire
+d'un système linéaire à une sollicitation quelconque,
+on préférera directement utiliser
+des <a class="reference internal" href="integration_temporelle.html#integration-temporelle"><span class="std std-ref">méthodes d'intégration temporelle</span></a>
+lorsque le transitoire est souhaité.
+Une analyse spectrale en post-traitement des résultats temporels obtenus
+peuvent apporter des éléments de compréhension et seront discutés
+dans la section consacrée.</p>
+</div>
+</div>
+<div class="section" id="reponse-etablie">
+<h2>4.3. Réponse établie<a class="headerlink" href="#reponse-etablie" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="interet-de-la-tranformation-de-fourier-pour-les-regimes-etablis">
+<h3>4.3.1. Intérêt de la tranformation de Fourier pour les régimes établis<a class="headerlink" href="#interet-de-la-tranformation-de-fourier-pour-les-regimes-etablis" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Lorsqu'une réponse établie (i.e stationnaire) est recherchée,
+l'utilisation de la tranformation de Fourier
+se trouve quant à elle compétitive.
+Définissant cette tranformée et son inverse par :</p>
+<div class="math notranslate nohighlight" id="equation-eq-fourier1">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eq-fourier1" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}\hat{X}(\omega)
+&amp;\equiv \int_{-\infty}^{\infty} X(t) \operatorname{e}^{-\boldsymbol{i} \omega t} dt \\
+X(t)
+&amp;\equiv \frac{1}{2\pi}
+\int_{-\infty}^{\infty} \hat{X}(\omega) \operatorname{e}^{+\boldsymbol{i}\omega t } d\omega \\\end{split}\]</div>
+<p>on constate une grande analogie avec celle de Laplace,
+les deux transformations partageant la plupart de leurs propriétés.
+Contrairement à la première,
+la tranformée de Fourier occulte la particularité de l'origine des temps,
+la borne d'intégration inférieure étant <span class="math notranslate nohighlight">\(-\infty\)</span>,
+ce qui explique qu'elle soit utile à l'analyse de régimes établis
+(aussi appelé stationnaires
+et définis par le comportement lorsque <span class="math notranslate nohighlight">\(t \to \infty\)</span>).</p>
+<p>Dans Cast3M, les opérateurs
+<code class="docutils literal notranslate"><span class="pre">TFR</span></code> (<a class="reference external" href="www-cast3m.cea.fr/index.php?page=notices&amp;notice=TFR">notice de TFR</a>)
+et <code class="docutils literal notranslate"><span class="pre">TFRI</span></code> (<a class="reference external" href="www-cast3m.cea.fr/index.php?page=notices&amp;notice=TFRI">notice de TFRI</a>)
+permettent le calcul numérique
+des transformées de Fourier directe et inverse,
+tandis que <code class="docutils literal notranslate"><span class="pre">DSPR</span></code> (<a class="reference external" href="www-cast3m.cea.fr/index.php?page=notices&amp;notice=DSPR">notice de DSPR</a>)
+fournit la densité spectrale de puissance d'un signal.</p>
+</div>
+<div class="section" id="reponse-a-un-spectre-d-excitation">
+<h3>4.3.2. Réponse à un spectre d'excitation<a class="headerlink" href="#reponse-a-un-spectre-d-excitation" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Pour chaque degré de liberté, on a la relation sur les coefficients de Fourier :</p>
+<div class="math notranslate nohighlight" id="equation-eq-fourier2">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eq-fourier2" title="Lien permanent vers cette équation">¶</a></span>\[\hat{u}(w) = \hat{\mathcal{H}}(w) \, \hat{\mathcal{F}}(w)\]</div>
+<p>ainsi que sur les spectres :</p>
+<div class="math notranslate nohighlight" id="equation-eq-fourier3">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eq-fourier3" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}S_{uu}(w)           &amp;= |\mathcal{H}(w)|^2 \, S_{\mathcal{FF}}(w) \\
+S_{u\mathcal{F}}(w) &amp;= \mathcal{H}(w)     \, S_{\mathcal{FF}}(w)\end{split}\]</div>
+<p>qui peut s'écrire entre n'importe quel degré de liberté j et k.
+En particulier, lorsqu'il s'agit de mode, on a là encore :</p>
+<div class="math notranslate nohighlight" id="equation-eq-fourier4">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-fourier4" title="Lien permanent vers cette équation">¶</a></span>\[\hat{H}(j,k,\omega) = \sum_{i=1..m}
+\frac{\varphi_i(j) \varphi_i(k)}
+     {m_i (\omega_i^2 - \omega^2 + 2 \boldsymbol{i} \xi_i \omega_i \omega)}\]</div>
+<p>En pratique dans Cast3M,
+connaissant les caractéristiques modales
+et le spectre d'excitation sous la forme d'une évolution de la fréquence,
+une simple multiplication permet de construire cette réponse.</p>
+<p>Si l'on ne travaille pas sur base modale,
+l'équation <a class="reference internal" href="#equation-eq-fourier2">(8)</a> cache une système linéaire à résoudre
+à chaque fréquence considérée,
+puisque :</p>
+<div class="math notranslate nohighlight" id="equation-eq-fourier5">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-fourier5" title="Lien permanent vers cette équation">¶</a></span>\[\begin{split}\hat{H}(\omega)
+&amp;= \left[ -\omega^2 \mathcal{M}  + \boldsymbol{i} \omega \mathcal{C} + \mathcal{K} \right]^{-1} \\\end{split}\]</div>
+</div>
+</div>
+<div class="section" id="exemples-commentes-avec-un-calcul-spectral-de-regime-force">
+<h2>4.4. Exemples commentés avec un calcul spectral de régime forcé<a class="headerlink" href="#exemples-commentes-avec-un-calcul-spectral-de-regime-force" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="_exemples/rotor_laval_poutre.html#ex-rotor-laval-poutre"><span class="std std-ref">Modélisation d'un rotor de Laval : calcul des modes propres réels et complexes, réponse au balourd</span></a></li>
+<li><em>TODO tube soumis à un écoulement turbulent</em></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="integration_temporelle.html" class="btn btn-neutral float-right" title="5. Analyse par intégration temporelle" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modes.html" class="btn btn-neutral float-left" title="3. Calculs modaux" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Benoit Prabel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
