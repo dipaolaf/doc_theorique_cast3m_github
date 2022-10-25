@@ -1,0 +1,321 @@
+************************************************************************
+* REPONSE VIBRATOIRE D'UNE CLOCHE
+*
+* Calcul modal et integration temporelle suite a un choc
+* Modele 3D, elements massifs
+* Vue de la generatrice
+*
+*   Z ^
+*     | blocage
+*     | |
+*     | V
+*     | +---___
+*     |        \
+*     |         |
+*     |         |
+*     |          |
+*     |          |
+*     |           |
+*     |           |
+*     |            |
+*     |      choc-->\
+*     |              \
+*     +================+------> X
+*                     p1
+*
+* Auteur : Benoit Prabel, 2017-11-15 pour sujet de Master 2 UPMC
+*          remis en forme le 2021-09-13
+* Geometrie de cloche fournie par Jose Antunes et al.
+*
+************************************************************************
+
+
+************************************************************************
+* OPTIONS
+************************************************************************
+
+* VIBR : nombre de mode et ordre de grandeur des 1eres frequences
+  Nmode = 30;  Fgoal = 1000.;
+  
+* DYNAMIC : SUR BASE MODALE OU ELEMENTS FINIS ?
+  ifPJBA1 = FAUX;
+* ifPJBA1 = VRAI;
+
+* TRAC et DESS : OPTIONS
+  OPTI 'TRAC' 'PSC' 'EPTR' 5 'POTR' 'HELVETICA_16' ;
+
+
+************************************************************************
+* MODELISATION
+************************************************************************
+
+* RECUPERATION DU MAILLAGE
+  OPTI REST 'mesh_bell.xdr';
+  REST ;
+* TRACE DU MAILLAGE 
+  MESS '>>> Le maillage comporte ' (NBEL Vbell) ' elements quadratiques';
+* TRAC Vbell 'FACE';
+
+* DONNEES MATERIAU
+*  Ey1  : module d'Young    
+*  nu1  : coefficient de poisson 
+*  ro1  : densite  
+*  al1  : coefficient de dilatation thermique (inutile ici)
+  Ey1 = 100.E9;
+  nu1 = 0.34;
+  ro1 = 8910.;
+  al1 = 15.E-6;
+  
+* MODELE et MATERIAU
+  modbell = MODE Vbell 'MECANIQUE' 'ELASTIQUE' 'ISOTROPE';
+  matbell = MATE modbell 'YOUN' Ey1 'NU' nu1 'RHO' ro1 'ALPH' al1;
+
+* MATRICES
+  K1 = RIGI modbell matbell;
+  M1 = MASS modbell matbell;
+
+* CONDITIONS AUX LIMITES
+  CL1 = BLOQ Senca 'DEPL';
+  Ktot1 = K1 et CL1;
+
+
+************************************************************************
+* ANALYSE MODALE 
+************************************************************************
+
+* CALCUL DES MODES
+* Tmode = VIBR 'IRAM' Fgoal Nmode Ktot1 M1 ;
+  Tmode = VIBR 'SIMUL' Fgoal Nmode Ktot1 M1 ;
+
+* POST TRAITEMENT : preparation
+* trace de face et de dessus
+  eye_y = 0. -1.2E6 0.   ;
+  eye_z = 0.  0.    1.2E6;
+* petit travail car on veut tracer seulement qq aretes visibles
+  are_bell  = ARET Vbell;
+  env_Sbell = CONT Sbell;
+  env_trac  = c_bas ET env_Sbell;
+  prTOUR = PROG 90. 180. 270.;
+  REPE BTOUR (DIME prTOUR); 
+    angTOUR  = EXTR prTOUR &BTOUR;
+    env_trac = env_trac ET (TOUR env_Sbell angTOUR PR1 PR2);
+  FIN  BTOUR;
+  ELIM  env_trac Vbell 1.E-8; 
+  env_trac = env_trac et are_bell;
+  env_trac = env_trac COUL 'BRON';
+  
+* POST TRAITEMENT : appel a POSTVIBR
+* table d'options de POSTVIBR
+  ToptPost = TABL;
+  ToptPost . 'MAILLAGE_2' = env_trac ;
+* en vue de face 
+  OPTI 'OEIL' eye_y;
+  POSTVIBR Tmode ToptPost (MOTS 'TABL' 'DEFO' 'MAIL' 'LIST');
+* idem en vue de dessus
+  OPTI 'OEIL' eye_z;
+  POSTVIBR Tmode ToptPost (MOTS 'TABL' 'DEFO');
+
+
+************************************************************************
+* CHARGEMENT
+************************************************************************
+
+* description spatiale
+  Pchoc1 = c_i POINT PROCH (p86);
+  Fchoc1 = FORC 'FX' 1. Pchoc1;
+  
+* description temporelle
+  Tchoc = 1.E-4; 
+  evolF = EVOL MANU 't'  (prog 0. Tchoc (2*Tchoc) 1.)
+                    '|F|'(prog 0.  1.   0.        0.);
+                    
+* objet chargement F(x,t) sur base physique et modale
+  CHA1  = CHAR 'MECA' Fchoc1 evolF;
+  CHA1P = PJBA CHA1 Tmode;
+
+
+************************************************************************
+* ANALYSE PAR INTEGRATION TEMPORELLE : PREPARATION
+************************************************************************
+    
+* MATRICE D'AMORTISSEMENT
+
+* Si on souhaite definir directement un amortissement modal (en %) -----
+*   c1pp = PROG 20. 20. (Nmode - 2)*1.;
+*   C1P  = AMOR Tmode c1pp ;
+
+* Si on prend un amortissement de Rayleigh tel que C = a M + b K   ----- 
+* On se donne les contraintes :
+* |a/2w + bw/2 = 0.20  pour w=2*pi*87
+* |a/2w + bw/2 = 0.02  pour w=2*pi*1000
+  w1 = 2. * pi * (Tmode . 'MODES' . 1 . 'FREQUENCE');
+  w2 = 2. * pi * 2000.;
+  prMatrix = PROG (0.5/w1) (0.5*w1) (0.5/w2) (0.5*w2);
+  Matrix = MANU 'RIGI' PR1 (MOTS 'A' 'B') 'DUAL' (MOTS 'FA' 'FB') 'QUEL' prMatrix;
+  FAB = MANU 'CHPO' PR1 2 'FA' 0.20 'FB' 0.01;
+  UAB = RESO Matrix FAB;
+  coef_a = EXTR UAB 'A' PR1;
+  coef_b = EXTR UAB 'B' PR1;
+  prfreq = PROG 1. PAS 1. 100. PAS 10. 1000. PAS 100. 3000.;
+  prw    = 2. * pi * prfreq;
+  prxi   = 0.5 * ((coef_a * (prw**-1)) + (coef_b * prw));
+  evxi   = EVOL 'BOUT' 'MANU' 'f (Hz)' prfreq '\x (%)' (100.*prxi);
+  dess evxi 'YBOR' 0. 20. 'YGRA' 1. 'GRIL' 'POIN' 'GRIS';
+* C = a M + b K
+  C1 = (coef_a * M1) ET (coef_b * K1);
+  C1P   = PJBA C1   Tmode;  
+* on peut extraire les amortissements modaux
+  prci = EXTR (EXTR C1P 'DIAG') 'VALE';
+  prwi = 2.*pi * (Tmode . 'LISTE_FREQUENCES');
+  prmi = Tmode . 'LISTE_MASSES';
+  prxi = prci / (2.*prwi * prmi);
+  list prxi;
+  
+* MATRICES masse et raideur sur base modale 
+  K1P   = PJBA K1   Tmode;
+  M1P   = PJBA M1   Tmode;  
+
+* DISCRETISATION TEMPORELLE
+  tfin = 50.E-3;
+* pour l'implicite (DYNAMIC)
+  dt   = 0.01E-3; nsort = 1;
+  tprog = prog 0. 'PAS' dt tfin;
+  nt    = dime tprog;
+  MESS nt ' pas  de temps avec dt=' dt;
+* pour DYNE, on peut se permettre un pas de temps + fin
+*  xdt = 4;
+  xdt = 1;
+  dtDYNE = dt / xdt; 
+  ntDYNE = (nt - 1) * xdt + 1;
+  nsortDYNE =  nsort * xdt;
+*  nsortDYNE = 2;
+
+* CONDITIONS INITIALES
+  U0   = CHPO 'UNIFORME' 0. M1;
+  U0_P = MANU 'CHPO' (Tmode . 'MAILLAGE_REPERE') 'ALFA' 0.;
+
+  
+************************************************************************
+* ANALYSE PAR INTEGRATION TEMPORELLE 1 : via DYNE
+************************************************************************
+
+* MISE EN DONNEES POUR DYNE
+  Tamor = TABL 'AMORTISSEMENT';  Tamor . 'AMORTISSEMENT' = C1P  ;
+  Tchar = TABL 'CHARGEMENT'   ;  Tchar . 'BASE_A'        = CHA1P;
+  Tini  = TABL 'INITIAL'      ;  Tini  . 'DEPLACEMENT'   = U0_P;
+                                 Tini  . 'VITESSE'       = U0_P;
+  Tsort = TABL 'SORTIE'       ;  Tsort . 'TYPE_SORTIE'   = MOT 'LISTREEL';
+  
+* INTEGRATION TEMPORELLE
+  TDYNE = DYNE 'DIFFERENCES_CENTREES' Tmode Tamor Tchar Tini Tsort
+               ntDYNE dtDYNE nsortDYNE;
+  
+* POST TRAITEMENT DES RESULTATS
+* evolutions
+  ux1ev = EVOL 'BLEU' RECO 'LEGE' 'DYNE' TDYNE Tmode 'DEPL' p1 'UX';
+  vx1ev = EVOL 'BLEU' RECO 'LEGE' 'DYNE' TDYNE Tmode 'VITE' p1 'UX';
+
+* spectre de la vitesse 
+  p   = ENTI ( (log ntDYNE) / (log 2.) );
+  Dv1 = DSPR p vx1ev 'FMIN' 10. 'FMAX' 5000. 'BLEU';
+  
+* traces
+  DESS ux1ev 'LEGE' 'NE' XBOR 0. tfin;
+  DESS vx1ev 'LEGE' 'NE' XBOR 0. tfin;
+  DESS Dv1;
+
+
+************************************************************************
+* ANALYSE PAR INTEGRATION TEMPORELLE 2 : via DYNAMIC
+************************************************************************
+* on fait la meme analyse et on verifie juste que le resultat est le meme
+
+* MISE EN DONNEES POUR DYNAMIC
+  TAB1in = TABL;
+SI ifPJBA1;
+  TAB1in . 'DEPL'   = U0_P ;   
+  TAB1in . 'VITE'   = U0_P ;   
+  TAB1in . 'CHAR'   = CHA1P; 
+  TAB1in . 'RIGI'   = K1P  ; 
+  TAB1in . 'MASS'   = M1P  ;
+  TAB1in . 'AMOR'   = C1P  ; 
+SINON;
+  TAB1in . 'DEPL'   = U0   ;   
+  TAB1in . 'VITE'   = U0   ;   
+  TAB1in . 'CHAR'   = CHA1 ; 
+  TAB1in . 'RIGI'   = Ktot1; 
+  TAB1in . 'MASS'   = M1   ;
+  TAB1in . 'AMOR'   = C1   ; 
+FINSI;
+  TAB1in . 'TEMPS_CALCULES' = tprog;
+  TAB1in . 'PAS_SAUVES'     = nsort;
+  
+* INTEGRATION TEMPORELLE
+  TAB1 = DYNAMIC TAB1in ;
+  
+* POST TRAITEMENT DES RESULTATS
+* on prepare les EVOLUTIONS TEMPORELLES :
+* temps sauves 
+  tp = prog ;
+* deplacements et vitesse au point p1 selon UX pour le choc 1
+  ux2p = prog;  
+  vx2p = prog;
+*------------------------ boucle sur les pas de temps 
+  npas = dime TAB1;
+  ipas = 0;
+  REPE BPAS npas; ipas = ipas + 1;  
+    mess 'ipas = ' ipas ;
+    SI (NON (EXIS TAB1 ipas)); ITER BPAS ; FINSI;    
+*   recup de la solution au pas ipas  et temps t
+    t  = TAB1 . ipas . 'TEMP';
+*   grandeurs souhaitees
+    SI ifPJBA1;
+      u = RECO (TAB1 . ipas . 'DEPL') Tmode;
+      v = RECO (TAB1 . ipas . 'VITE') Tmode;
+*     TAB1 . ipas . 'DEPL_RECO' = u;
+*     TAB1 . ipas . 'VITE_RECO' = v;
+    SINON;
+      u  = TAB1 . ipas . 'DEPL';    
+      v  = TAB1 . ipas . 'VITE';        
+    FINSI;
+*   stockage des grandeurs souhaitees
+    tp = tp et t;
+    ux2p = ux2p et (extr u p1 'UX');
+    vx2p = vx2p et (extr v p1 'UX');      
+  FIN  BPAS;
+*------------------------ fin de boucle sur les pas de temps
+ 
+* evolutions
+  ux2ev = EVOL 'ROSE' MANU 'LEGE' 'DYNAMIC' 't' tp 'u_{x}(p1)' ux2p;
+  vx2ev = EVOL 'ROSE' MANU 'LEGE' 'DYNAMIC' 't' tp 'v_{x}(p1)' vx2p; 
+
+* spectre de la vitesse 
+  p   = ENTI ( (log nt) / (log 2.) );
+  Dv2 = DSPR p vx2ev 'FMIN' 10. 'FMAX' 5000. 'ROSE';
+  
+* traces
+  DESS ux2ev 'LEGE' 'NE' XBOR 0. tfin;
+  DESS vx2ev 'LEGE' 'NE' XBOR 0. tfin;
+  DESS Dv2;
+
+  
+************************************************************************
+* TRACES COMPARATIFS
+************************************************************************
+
+  DESS (ux2ev ET ux1ev) 'LEGE' 'NE' XBOR 0. tfin;
+  DESS (vx2ev ET vx1ev) 'LEGE' 'NE' XBOR 0. tfin;
+  dess (Dv2   ET Dv1  ) 'LEGE' 'NE' TITX 'f (Hz)' TITY 'S_{vv}';
+  
+  
+************************************************************************
+* SAUVEGARDE ET FIN NORMALE
+************************************************************************
+
+OPTI SAUV 'vibrations_cloche.xdr';
+SAUV;
+
+
+TEMP IMPR MAXI CPU;
+FIN ;
+
