@@ -1,0 +1,478 @@
+*******************************************************************************
+*                                                                             *
+*  Rotor de Laval                                                             *
+*  Etude dans le repere inertiel (ou fixe) avec elements poutre de TIMO       *
+*                                                                             *
+*              p2   kpal                                                      *
+*  z=L          +--/\/\/\--|                                                  *
+*               |                                                             *
+*               |                                                             *
+*               |                                                             *
+*            p1a|                                                             *
+*        =======+=======   Mdisc, Ixyz                                        *
+*            p1b|                                                             *
+*               |                                                             *
+*               |                                                             *
+*               |                                                             *
+*  z=0          +--/\/\/\--|                                                  *
+*              p0                                                             *
+*                                                                             *
+*                                                                             *
+*  Réf :                                                                      *
+*  [1] Vollan, Arne, and Louis Komzsik. "Computational techniques of rotor    *
+*      dynamics with the finite element method". CRC Press, 2012.]            *              
+*                                                                             *
+*  Mots-clés : Vibrations, calcul modal, machines tournantes,                 *
+*              poutre, modes complexes, reponse frequentielle                 *
+*                                                                             *
+*  Auteur: Benoit Prabel, Mars 2020                                           *
+*                                                                             *
+*******************************************************************************
+
+*******************************************************************************
+* OPTIONS
+*******************************************************************************
+
+* PARAMETRES : on souhaite NbModR modes
+  NbModR = 5;
+
+* dimension, type d'elements geometriques, ...
+  OPTI 'DIME' 3 'ELEM' 'SEG2';
+  
+* visualisation (sortie postscript)
+  GRAPH = VRAI;
+  OPTI 'TRAC' PSC 'EPTR' 12 'POTR' 'HELVETICA_16'
+       'FTRA' (CHAI 'rotor_laval_poutre-' NbModR '.ps');
+
+
+*******************************************************************************
+* DONNEES
+*******************************************************************************
+
+* arbre (shaft)
+  L      = 1.0 ;
+  Dshaft = 64.E-3;
+* Disque (disc)  
+  zdisc  = 0.5*L;
+  Mdisc  = 40.;
+  Izdisc = 5. ;
+* Materiau
+  E1   = 2.1E11 ;
+  nu1  = 0.3 ;
+  rho1 = 7800. ;
+  Visc1= 0.00001*E1;
+* Palier
+  kpal_x = 3.9E6;
+  kpal_y = kpal_x;
+  cpal_x = 1000.;
+  cpal_y = cpal_x;
+  
+* Calculs preliminaires pour completer les donnees
+  
+* formule des caracteristiques des poutres a section circulaire creuse :
+*   Section  = pi * ((Rext**2) - (Rint**2));
+*   Itorsion = pi * ((Rext**4) - (Rint**4)) / 2.; 
+*   Iflexion = pi * ((Rext**4) - (Rint**4)) / 4.; 
+* on a un disque plein ==> Rint = 0
+* on a les donnees (Mdisc et Idisc) integrees sur h et multipliee par rho1 :
+*   rho1 * h * pi    * (R**2) = Mdisc
+*   rho1 * h * pi/2. * (R**4) = Izdisc
+* (2)/(1)  ==>  0.5*(R**2) = Izdisc/Mdisc  ==>  Rdisc = (2*Izdisc/Mdisc)**0.5
+  Rdisc = (2*Izdisc/Mdisc)**0.5;
+  hdisc = Mdisc / (rho1 * pi * (Rdisc**2));
+  MESS 'Rdisc=' Rdisc ' hdisc=' hdisc;
+  
+* ==> caracteristiques geometriques de la poutre definissant le disque :
+  Sdisc = pi * (Rdisc**2);
+  Iz    = pi/2. * (Rdisc**4);
+  Ix    = pi/4. * (Rdisc**4);
+
+* caracteristique de l'arbre
+  Rshaft = Dshaft /2.;
+  Sshaft = pi * (Rshaft**2);
+  Izshaft = pi/2. * (Rshaft**4);
+  Ixshaft = pi/4. * (Rshaft**4);
+  
+  
+*******************************************************************************
+* MAILLAGE
+*******************************************************************************
+
+* PARAMETRES
+  OPTI 'ELEM' SEG2;
+  nL    = 80;
+  nVect = nL/16;
+  
+* POINTS  
+  p0  = 0. 0. 0.;
+  p1a = 0. 0. (zdisc - hdisc);
+  p1b = 0. 0. (zdisc + hdisc);
+  p2  = 0. 0. L;
+* points du palier  
+  ppal = p0 et p2;
+  
+* DROITES
+  d1a = DROI (nL/2) p0  p1a;
+  d2  = (DROI  1     p1a p1b) COUL 'BLEU';
+  d1b = DROI (nL/2) p1b p2 ;
+  d1  = d1a   et d1b;
+  dtot= d1 et d2;
+  
+* TRACE
+* si GRAPH;
+*   TRAC dtot 'TITRE' 'maillage';
+* finsi;
+
+* ON VEUT QUELQUES POINTS POUR LE TRACE DE VECTEUR DANS POSTVIBR
+  dVect = (DROI nVect p0  p1a) ET d2 ET (DROI nVect p1b p2);
+  pVect = CHAN dVect 'POI1';
+  ELIM dtot pVect (1.E-8*L);
+
+  
+*******************************************************************************
+* MODELE, MATERIAU, MATRICES
+*******************************************************************************
+*
+* 1 : arbre 
+  mod1 = MODE d1 'MECANIQUE' TIMO;
+  mat1 = MATE mod1 'YOUNG' E1 'NU' Nu1 'RHO' Rho1
+          'SECT' Sshaft 'INRY' Ixshaft 'INRZ' Ixshaft 'TORS' Izshaft
+          'OMEG' 1. 'VISQ' Visc1;
+*
+* 2 : disque
+  mod2 = MODE d2 'MECANIQUE' TIMO;
+  mat2 = MATE mod2 'YOUNG' E1 'NU' Nu1 'RHO' Rho1
+          'SECT' Sdisc 'INRY' Ix 'INRZ' Ix 'TORS' Iz
+          'OMEG' 1. 'VISQ' Visc1;
+*
+  mod12 = mod1 et mod2;
+  mat12 = mat1 et mat2;
+
+* raideur, masse, couplage gyroscopique
+  K12  = RIGI mod12 mat12;
+  Mtot = MASS mod12 mat12;
+  Gtot = GYRO mod12 mat12;
+* amortissement + amortissement corotatif
+  C12 KROT12 = AMOR  mod12 mat12 'COROTATIF';
+
+* 3 : paliers 
+* appuis = raideurs discretes
+  Kx3 = APPU 'UX' kpal_x ppal;
+  Ky3 = APPU 'UY' kpal_x ppal;
+  K3 = Kx3 et Ky3;
+  Cx3 = APPU 'UX' cpal_x ppal;
+  Cy3 = APPU 'UY' cpal_x ppal;
+  C3 = Cx3 et Cy3;
+
+* autres conditions aux limites ?
+  bloZ = BLOQ 'UZ' 'RZ' ppal;
+
+* assemblage
+  Ktot = K12 et K3 et bloZ;
+  Ctot = C12 et C3;
+
+  
+*******************************************************************************
+* MODES REELS
+*******************************************************************************
+
+* PARAMETRES : on souhaite NbModR modes (cf. tete de fichier)
+
+* CALCUL
+  TBasR1 = VIBR 'SIMUL' 1. NbModR Ktot Mtot;
+  
+* POST-TRAITEMENT 
+si GRAPH;
+
+* tableau + deformees modale automatise via la procedure postvibr
+* on peux customiser avec table d'options
+  Toptions = TABL;
+  Toptions .'MAILLAGE_VECTEUR' = pVect;
+  POSTVIBR TBasR1 Toptions;
+
+* quel est ce mode 3 ?
+  phi3 = TBasR1 . 'MODES' . 3 . 'DEFORMEE_MODALE';
+  TITRE 'Mode 3 : RZ ';
+  TRAC (EXCO phi3 'RZ') dtot 'NOLE';
+* c'est de la torsion !
+* si on souhaite le supprimer, il faudrait bloquer plus de ddls RZ
+sinon;
+  POSTVIBR TBasR1 (MOTS 'TABL');
+
+finsi;
+
+* VIBR 'SIMUL' a detecte des modes doubles et il a donc ajoute un mode en plus
+* retrouvons le vrai nombre avec une mini-boucle...
+  NbModR = NbModR - 1 ;
+  REPE bb; NbModR = NbModR + 1;
+    SI (EXIS TBasR1 . 'MODES' (NbModR + 1));
+      ITER bb; 
+    SINON; 
+      QUIT bb; 
+    FINSI;
+  FIN bb;
+  MESS 'nombre de modes reels fournis in fine par VIBR SIMUL='NbModR;
+
+  
+*******************************************************************************
+* CALCUL DU DIAGRAMME DE CAMPBELL 
+* (= EVOLUTION DES FREQUENCES COMPLEXES AVEC LA VITESSE DE ROTATION)
+*******************************************************************************
+
+* OMEGA en RoundPerMinute
+  si (NbModR < 6);  
+    PR_RPM = prog 0. 'PAS' 0.1E3 10.E3;
+  sinon;           
+    PR_RPM = prog 0. 'PAS' 0.1E3 20.E3;
+  finsi;
+
+* on choisit l'unite pour OMEGA : RoundPerMinute, rad/s ou Hz(=tr/s) 
+* G est calcule pour 1 rad/s --> multiplier par FAC_G
+  UNIT_OMEG = mot 'RPM'  ; FAC_G = (2.*pi/60.); PROMEG = PR_RPM; 
+* UNIT_OMEG = mot 'rad/s'; FAC_G = 1.;          PROMEG = (2.*pi/60.) * PR_RPM ;
+* UNIT_OMEG = mot 'Hz'   ; FAC_G = 2.*pi;       PROMEG = PR_RPM / 60.;
+  cha_x = chai '\W ('UNIT_OMEG')';
+  NOMEG = DIME PROMEG;
+  
+* PROJECTION DES MATRICES ASSEMBLEES SUR LA BASE REELLE
+  M1P = PJBA TBasR1 Mtot ;
+  G1P = PJBA TBasR1 Gtot ;
+  K1P = PJBA TBasR1 (K12 et K3) ;
+  C1P = PJBA TBasR1 Ctot;
+  KROT1P = PJBA TBasR1 KROT12;
+
+* REM : il serait possible d'utiliser directement la procedure campbell,
+* mais il semble plus pedagogique de reecrire ici la boucle et le calcul
+
+* CREATION DE 2*NbModC LISTREELS DE TAILLE NOMEG
+  NbModC = 2*NbModR;
+  TfreqR = TABL;
+  TfreqI = TABL;
+  REPE BmodC NbModC;
+    TfreqR . &BmodC = PROG NOMEG*0.;
+    TfreqI . &BmodC = PROG NOMEG*0.;
+  FIN  BmodC;
+* + 2 LISTREELS TEMPORAIRES DE TRAVAIL
+  prWorkR = PROG NbModC*0.;
+  prWorkI = PROG NbModC*0.;
+   
+* ON BOUCLE SUR LES FREQUENCES DE ROTATION Omega_j ---------------------
+  REPE BOMEG NOMEG;  
+    Omega_j = EXTR PROMEG &BOMEG;
+    MESS 'Calcul des modes complexes pour \W=' Omega_j ' ' UNIT_OMEG;
+  
+*   on va resoudre : [ [K + W*C'] + iw [C + W*G] - w^2 [M] ] * \psi = 0
+*   G est calcule pour 1 rad/s -> on mutliplie par FAC_G
+    K_j = K1P ET (Omega_j * KROT1P);
+    C_j = C1P ET (Omega_j * FAC_G * G1P); 
+    M_j = M1P;    
+    TbasC_j = VIBC M_j K_j C_j ;
+    
+*   extraction des frequences et tri par ordre croissant
+    SI (&BOMEG EGA 1);
+      ORDOVIBC TbasC_j;
+*   puis en minimisant la distance au resultat precedent
+    SINON;
+      ORDOVIBC TbasC_j TbasC_jm1;
+    FINSI;
+    prwR_j = TbasC_j . 'LISTE_FREQUENCES_REELLES'     ;
+    prwI_j = TbasC_j . 'LISTE_FREQUENCES_IMAGINAIRES' ;
+*   pour le prochain pas 
+    TbasC_jm1 = TbasC_j;    
+
+*   on stocke dans les listreels finaux
+    REPE BmodC NbModC;
+      REMP (TfreqR . &BmodC) &BOMEG (EXTR prwR_j &BmodC);
+      REMP (TfreqI . &BmodC) &BOMEG (EXTR prwI_j &BmodC);
+    FIN  BmodC;
+
+  FIN  BOMEG ;
+* FIN DE LA BOUCLE SUR LES FREQUENCES DE ROTATION ----------------------
+  
+  
+* POST-TRAITEMENT GRAPHIQUE 
+* on ne trace que les modes tq wR>0 -> i ={NbModC/2+1 ... NbModC}
+  IFhalf = VRAI;
+  si IFhalf;  NC = NbModC/2; ideb = NC;3
+  sinon;      NC = NbModC;   ideb = 0;
+  finsi;
+  
+  colors = @PALETTE NC;
+  evfreqR = VIDE 'EVOLUTIO';
+  evfreqI = VIDE 'EVOLUTIO';
+  REPE BmodC NC;
+    coco = EXTR colors &BmodC;
+    i = ideb + &BmodC;
+    evfreqR = evfreqR 
+    et (EVOL coco 'MANU' cha_x PROMEG 'w_{R} (Hz)' (TfreqR . i));
+    evfreqI = evfreqI 
+    et (EVOL coco 'MANU' cha_x PROMEG 'w_{I} (/s)' (TfreqI . i));
+  FIN  BmodC;
+
+si GRAPH;
+  TITRE 'Campbell diagram';
+  prBisRPM  = PROG 0. (MAXI PROMEG);
+  evBissec1 = EVOL 'MANU' cha_x prBisRPM 'w_{R} (Hz)' (prBisRPM / 60.);
+  evBissec0 = EVOL 'MANU' cha_x prBisRPM 'w_{I} (Hz)' (0. * prBisRPM);
+  TBissec = TABL; TBissec . 1 = MOT 'TIRR';
+  DESS (evBissec1 et evfreqR) TBissec;
+  DESS (evBissec0 et evfreqI) TBissec;
+finsi;
+
+  
+*******************************************************************************
+* CALCUL DE LA REPONSE A UN BALOURD
+*******************************************************************************
+
+* OMEG2 en RoundPerMinute
+  si (NbModR < 6);  
+*   PR_RPM2 = prog 0.1E3 'PAS' 0.1E3 10.E3;
+    PR_RPM2 = prog 0.1E3 'PAS' 0.05E3  1.5E-3 'PAS' 0.002E3 2.5E3  'PAS' 0.1E3 10.E3;
+  sinon;            
+    PR_RPM2 = prog 0.1E3 'PAS' 0.05E3  1.5E-3 'PAS' 0.002E3 2.5E3  'PAS' 0.1E3 20.E3;
+  finsi;
+
+* on choisit l'unite pour OMEG2 = rad/s
+* G, Krot, Fbal sont definis pour 1 rad/s --> pas de conversion :)
+  UNIT_OMEG2 = mot 'rad/s'; PROMEG2 = (2.*pi/60.) * PR_RPM2 ;
+  cha_x = chai '\W ('UNIT_OMEG2')';
+  NOMEG2 = DIME PROMEG2;
+ 
+* DESCRIPTION SPATIALE DU BALOURD
+* ici, force tournante autoure de Z, unitaire et appliquée en Z~0.75L
+  pbal  = dtot POIN 'PROCH' (0.5 *(p1b PLUS p2));
+  FbalX = FORC 'FX'  1. pbal;
+  FbalY = FORC 'FY' -1. pbal;
+* description frequentielle = le balourd varie en W^2
+* on pose F(W=1rad/s)=1 
+  FbalP =  (PJBA FbalX TBasR1) 
+  ET (EXCO (PJBA FbalY TBasR1) 'FALF' 'IFAL');
+* de sorte que : 
+*   F(t) =  F * cos(wt) - FI * sin(wt)
+*        =  FX* cos(wt) - FY * sin(wt)
+*        =  eX* cos(wt) + eY * sin(wt) 
+*   --> sens de rotation = +eZ
+
+* CREATION DES MATRICES PROJETEE DE TAILLE DOUBLE
+  Mharm = IMPE M1P    'MASSE'   ;
+* G est calcule pour 1 rad/s -> on mutliplie par FAC_G
+  Gharm = IMPE G1P    'AMOR'    ;
+  Kharm = IMPE K1P    'RAIDEUR' ;
+  Charm = IMPE C1P    'AMOR'    ;
+  KRharm= IMPE KROT1P 'RAIDEUR' ;
+
+* REM : il serait possible d'utiliser directement la procedure balourd,
+* mais il semble plus pedagogique de reecrire ici la boucle et le calcul
+
+* CREATION DE NbModR LISTREELS DE TAILLE NOMEG2
+  TqR = TABL;
+  TqI = TABL;
+  REPE BmodR NbModR;
+    TqR . &BmodR = PROG NOMEG2*0.;
+    TqI . &BmodR = PROG NOMEG2*0.;
+  FIN  BmodR;
+   
+* ON BOUCLE SUR LES FREQUENCES DE ROTATION Omega_j ---------------------
+  REPE BOMEG2 NOMEG2;  
+    Omega_j = EXTR PROMEG2 &BOMEG2;
+    MESS 'Calcul de la reponse au balourd pour \W=' Omega_j ' ' UNIT_OMEG2;
+  
+*   on va resoudre : [ [ K - W^2*M ]   -[W*C + W^2*G] ] * ( U) = ( F)
+*                    [ [W*C + W^2*G]    [ K - W^2*M ] ] * (IU) = (IF)
+    Kdyn = ( Kharm ET (Omega_j * KRharm) )
+      ET (Omega_j * (Charm ET (Omega_j * Gharm)) )
+      ET ((Omega_j**2) * Mharm);
+    Fdyn = (Omega_j**2) *FbalP ;
+    Udyn = RESO Kdyn Fdyn;
+    
+*   extraction des resultats modaux : on stocke dans les listreels finaux
+    REPE BmodR NbModR;
+      ptrep_j = TBasR1 . 'MODES' . &BmodR . 'POINT_REPERE';
+      REMP (TqR . &BmodR) &BOMEG2 (EXTR Udyn 'ALFA' ptrep_j);
+      REMP (TqI . &BmodR) &BOMEG2 (EXTR Udyn 'IALF' ptrep_j);
+    FIN  BmodR;
+
+  FIN  BOMEG2 ;
+* FIN DE LA BOUCLE SUR LES FREQUENCES DE ROTATION ----------------------
+  
+  
+* POST-TRAITEMENT GRAPHIQUE 
+  colors = @PALETTE NbModR;
+  evqAMP = VIDE 'EVOLUTIO';
+  evqNYQ = VIDE 'EVOLUTIO';
+  REPE BmodR NbModR;
+    coco = EXTR colors &BmodR;
+    leg1 = CHAI 'q_{'&BmodR'}';
+    prqAMP1 = ( ((TqR . &BmodR)**2) + ((TqI . &BmodR)**2) )**0.5;
+    evqAMP = evqAMP
+    et (EVOL coco 'MANU' 'LEGE' leg1 '\W (RPM)' PR_RPM2 '|q|' prqAMP1);
+    evqNYQ = evqNYQ 
+    et (EVOL coco 'MANU' 'LEGE' leg1 'q_{R}' (TqR . &BmodR) 'q_{I}' (TqI . &BmodR));
+  FIN  BmodR;
+
+si GRAPH;
+  TqAMP = TABL; 
+  TqAMP . 2 = MOT 'TIRR'; 
+  TqAMP . 5 = MOT 'TIRR';
+  TqAMP . 7 = MOT 'TIRR';
+  TqAMP . 9 = MOT 'TIRR';
+  TITR 'Unbalance response : amplitude';
+  DESS evqAMP TqAMP;
+  DESS evqAMP LOGY YBOR 1.E-5 1.E1 TqAMP;
+  TITR 'Unbalance response : Nyquist';
+  DESS evqNYQ 'CARR' LEGE ;
+finsi;
+
+
+*******************************************************************************
+* TEST DE NON REGRESSION
+*******************************************************************************
+
+SI (NbModR < 6);
+
+* ON TESTE JUSTE LE SUIVI
+
+* preparation au calcul de la derivee 
+* abscisse
+  dOMEG  = ((ENLE PROMEG NOMEG) - (ENLE PROMEG 1));
+  NdOMEG = NOMEG - 1;
+* message
+  opti echo 0;
+  MESS (CHAI 'Mode'*4 'E[w]'*18 'E[dwR/dW]'*33 'max[dwR/dW]'*48 'E[dwI/dW]'*63 'max[dwI/dW]'*78);
+* les courbes etant asse lineaire xtol = 10 est largement suffisant
+  xtol = 10.;
+  
+* boucle sur les modes Complexes (i.e. sur les courbes)
+  REPE BmodC NbModC;
+*   --- PARTIE REELLE ---
+    wR = TfreqR . &BmodC;
+    wRmoy = (SOMM wR) / NOMEG;
+*   calcul de la derivee 
+    dwRdW = ((ENLE wR NOMEG) - (ENLE wR 1)) / dOMEG;
+*   moyenne et valeur max
+    dwRdWmoy = (SOMM dwRdW) / NdOMEG;
+    dwRdWmax = MAXI 'ABS' dwRdW;
+*   --- PARTIE IMAGINAIRE ---
+    wI = TfreqR . &BmodC;
+    wImoy = (SOMM wI) / NOMEG;
+*   calcul de la derivee 
+    dwIdW = ((ENLE wI NOMEG) - (ENLE wI 1)) / dOMEG;
+*   moyenne et valeur max
+    dwIdWmoy = (SOMM dwIdW) / NdOMEG;
+    dwIdWmax = MAXI 'ABS' dwIdW;
+*   --- MESSAGE + TEST ---
+*   message
+    MESS (CHAI &BmodC*4 wRmoy*18 dwRdWmoy*33 dwRdWmax*48 dwIdWmoy*63 dwIdWmax*78);    
+*   test sur la derivee pour verifier la continuite
+    dwdWref = MAXI 'ABS' (PROG dwRdWmoy dwIdWmoy 1.E-6);
+    SI (dwRdWmax > (xtol*dwdWref)); ERRE 5; FINSI;
+    SI (dwIdWmax > (xtol*dwdWref)); ERRE 5; FINSI;
+  FIN  BmodC;
+  opti echo 1;
+
+FINSI;
+
+
+
+FIN ;
+
