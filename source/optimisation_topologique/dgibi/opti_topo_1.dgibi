@@ -1,0 +1,124 @@
+************************************************************************
+* Exemple de méthode d'optimisation topologique                        *
+* Méthode SIMP                                                         *
+* Application à une poutre en flexion                                  *
+************************************************************************
+
+
+** Paramètres globaux
+OPTI 'DIME' 2 'MODE' 'PLAN' 'DEFO' 'ELEM' 'QUA4' ;
+l      = 1. ;
+h      = 0.2 ;
+yo     = 200.E9 ;
+nu     = 0.3 ;
+
+** Maillage (controlé par sa taille de maille)
+den1   = l / 120. ;
+OPTI 'DENS' den1 ;
+p1     = 0. 0. ;
+p2     = l  0. ;
+lb     = DROI p1 p2 ;
+mail   = lb TRAN (0. h) ;
+p3     = mail POIN 'PROC' ((l / 2.) h) ;
+con    = CONT mail ;
+
+** Modèle
+mod    = MODE mail 'MECANIQUE' ;
+ma0    = MATE mod 'YOUN' yo 'NU' nu ;
+
+** Blocages
+blo    = (BLOQ 'UY' p1) ET (BLOQ 'UX' 'UY' p2) ;
+
+** Chargement
+f      = FORC (0. -1.E5) p3 ;
+
+** Paramètres d'optimisation
+p      = 3. ;
+fv     = 0.4 ;
+eta    = 0.5 ;
+rmin   = 1.5 * den1 ;
+m      = 0.1 ;
+xmin   = 0.001 ;
+xmax   = 1. ;
+
+** Optimisation topologique
+* initialisation de la topologie
+x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
+vini   = MESU mail ;
+vcib   = vini * fv ;
+* matrice de filtrage
+un     = MANU 'CHML' mod 'SCAL' 1. 'GRAVITE' ;
+vole   = INTG mod un 'ELEM' ;
+mcg    = un POIN 'SUPERIEUR' 0. ;
+wg     = PROI mcg vole ;
+kfil   = MFIL wg rmin 1. 0. ;
+* boucle d'optimisation
+liso  = PROG 0. 'PAS' 0.05 1. ;
+REPE b1 100 ;
+* pénalisation de la rigidité
+  yop    = (x ** p) * yo ;
+  map    = MATE mod 'YOUN' yop 'NU' nu ;
+* résolution du problème mécanique
+  rip    = RIGI mod map ;
+  u      = RESO (rip ET blo) f ;
+* déformée et tracé de la topologie
+  def1   = DEFO mail u 1000. ;
+  TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) ;
+* fonction objectif : compliance = uT.K.u = Int(sig:eps)dV
+  eps    = EPSI 'LINE' mod u ;
+  sig    = ELAS mod map eps ;
+  psi    = INTG mod (ENER mod sig eps) ;
+* sensibilité
+  sig0   = ELAS mod ma0 eps ;
+  ene0   = ENER mod eps sig0 ;
+  ene    = CHAN ene0 mod 'GRAVITE' ;
+  dpsi   = (-1. * p * (x ** (p - 1.)) * ene) ;
+* filtrage de la sensibilité
+  xdpsi  = x * dpsi ;
+  xdpsi0 = PROI mcg xdpsi ;
+  xdpsi1 = kfil * xdpsi0 ;
+  xdpsi  = MANU 'CHML' mod 'REPA' 'SCAL' (EXTR xdpsi1 'VALE') 'TYPE' 'SCALAIRE' 'GRAVITE' ;
+  dpsi   = xdpsi / x ;
+* optimisation d'une nouvelle topologie (méthode du critère d'optimalité)
+  l1     = 0. ;
+  l2     = MAXI 'ABS' dpsi ;
+  REPE b2 50 ;
+    SI ((l2 - l1) < 1.E-4) ;
+      QUIT b2 ;
+    FINSI ;
+    lmid   = 0.5 * (l1 + l2) ;
+    b      = -1. * dpsi / lmid ;
+    xinf   = BORN (x - m) 'MINIMUM' xmin ;
+    xsup   = BORN (x + m) 'MAXIMUM' xmax ;
+    xnew   = x * (b ** eta) ;
+    minf   =  (xnew - xinf) MASQ 'INFERIEUR' 0. ;
+    mmil   = ((xnew - xinf) MASQ 'SUPERIEUR' 0.) * ((xnew - xsup) MASQ 'INFERIEUR' 0.) ;
+    msup   =  (xnew - xsup) MASQ 'SUPERIEUR' 0. ;
+    xnew   = (xinf * minf) + (xnew * mmil) + (xsup * msup) ;
+    vnew   = INTG mod xnew ;
+    SI (vnew > vcib) ;
+      l1     = lmid ;
+    SINON ;
+      l2     = lmid ;
+    FINSI ;
+  FIN b2 ;
+* bilan de l'itération
+  change = MAXI 'ABS' (x - xnew) ;
+  MESS 'It.' ' ' &b1 '   Obj.' ' ' c '   Change' ' ' change '   Fvol.' ' ' (vnew / vini) '   Dicho.' ' ' &b2 ;
+  SI (change < 0.01) ;
+    QUIT b1 ;
+  FINSI ;
+* préparation de la nouvelle itération
+  x      = xnew ;
+FIN  b1 ;
+
+** Tracé de la topologie finale
+yop    = (xnew ** p) * yo ;
+map    = MATE mod 'YOUN' yop 'NU' nu ;
+rip    = RIGI mod map ;
+u      = RESO (rip ET blo) f ;
+def1   = DEFO mail u 1000. ;
+TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) ;
+
+
+FIN ;

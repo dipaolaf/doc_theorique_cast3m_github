@@ -1,0 +1,117 @@
+//**********************************************************************
+@DSL Default;
+@Behaviour Mazars;
+//@ModellingHypotheses{"PlaneStress"};
+@Author Giuseppe Rastiello;
+@Date 27 / 10 / 2021;
+@Description{Original Mazars model formulation (1984) without successive
+			improvements to better account for damage in shear model and
+			bitension/bicompression};
+
+//**********************************************************************
+//********** Material properties to be entered in Cast3M ***************
+
+@MaterialProperty stress young;
+young.setGlossaryName("YoungModulus");  //Young modulus
+@MaterialProperty real nu;
+nu.setGlossaryName("PoissonRatio");		//Poisson's ratio
+
+@MaterialProperty real Ac;				//Mazars' model parameter
+@MaterialProperty real At;				//Mazars' Model parameter
+@MaterialProperty real Bc;				//Mazars' Model parameter
+@MaterialProperty real Bt;				//Mazars' Model parameter
+@MaterialProperty real ed0;				//Damage threshold (strain)
+
+//**********************************************************************
+//***************** State (internal) variables *************************
+//********(updated during calculations and outputted)*******************
+
+@StateVariable real d;					//Damage variable (scalar)
+d.setGlossaryName("Damage");
+@StateVariable real kappa;				//History variable
+@StateVariable real eeqc;				//Mazars equivalent strain
+
+//**********************************************************************
+//********************** Local variables *******************************
+
+@LocalVariable stress lambda;			//Lamé’s constant
+@LocalVariable stress mu;				//Lamé’s constant
+
+@InitLocalVariables{
+  lambda = computeLambda(young,nu);
+  mu     = computeMu(young,nu);
+}
+
+//**********************************************************************
+//************ Constitutive model integrator (explicit) ****************
+@Integrator {
+
+  // total strain tensor (epsilon) and trace of the strain tensor
+  const auto e  = eval(eto + deto);
+  const auto tr = trace(e);
+  
+  // eigenvalues of the strain tensor
+  strain e1,e2,e3;
+  e.template computeEigenValues<Stensor::FSESJACOBIEIGENSOLVER>(e1,e2,e3);
+  //without eval at line 50 computeEigenValues does not work !
+  
+  // Mazars equivalent strain
+  const real ppe1=max(strain(0),e1);
+  const real ppe2=max(strain(0),e2);
+  const real ppe3=max(strain(0),e3);
+  eeqc= sqrt(ppe1*ppe1+ppe2*ppe2+ppe3*ppe3);
+  
+  const auto f = eeqc - kappa ;
+  
+  if (f > 0  and eeqc > ed0) {
+  // Ver 2
+  //  if (f > 0) {
+  
+	//set history variable
+	kappa = eeqc ;
+	// Ver 2
+	//kappa = max(kappa,ed0) ;
+	   
+	// eigenvalues of the effective stress tensor
+	const stress s1 = 2*mu*e1+lambda*tr;
+	const stress s2 = 2*mu*e2+lambda*tr;
+	const stress s3 = 2*mu*e3+lambda*tr;
+  
+	// strains due to the positive stresses
+	const stress pps1=max(stress(0),s1);
+	const stress pps2=max(stress(0),s2);
+	const stress pps3=max(stress(0),s3);  
+	const stress trpps = pps1+pps2+pps3 ;
+	const real elt1 = (pps1*(1.+nu)-trpps*nu)/young;
+	const real elt2 = (pps2*(1.+nu)-trpps*nu)/young;
+	const real elt3 = (pps3*(1.+nu)-trpps*nu)/young;
+  
+	// compute alphat and alphac
+	const real alphat = (ppe1*elt1+ppe2*elt2+ppe3*elt3)/(eeqc*eeqc) ;
+	const real alphac = 1. - alphat ;
+    
+	// compute dt and dc (note: variable dt cannot be used in Mfront)
+	const real dtrac = 1. - ed0*(1-At)/kappa - At*exp(-Bt*(kappa-ed0)) ;
+	const real dcomp = 1. - ed0*(1-Ac)/kappa - Ac*exp(-Bc*(kappa-ed0)) ;
+
+	// compute damage
+	d = alphat*dtrac + alphac*dcomp;
+	d = min(0.99999,d);
+		
+  }
+  // compute stress
+  sig = (1.-d)*(lambda*tr*Stensor::Id()+2*mu*e);
+}
+
+//**********************************************************************
+//************* Elastic/Secant/Tangent stiffness tensor ****************
+@TangentOperator{
+      if(smt==ELASTIC){
+        Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
+      } else if(smt==SECANTOPERATOR){
+        Dt = (1.-d)*(lambda*Stensor4::IxI()+2*mu*Stensor4::Id());
+      } else {
+        return FAILURE;
+      }
+}      
+//**********************************************************************

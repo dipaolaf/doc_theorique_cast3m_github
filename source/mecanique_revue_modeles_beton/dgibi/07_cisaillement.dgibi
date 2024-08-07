@@ -1,0 +1,258 @@
+************************************************************************
+*      Cas test elementaire pour la loi d'endommagement de Mazars      *
+*                Essai de cisaillement simple monotone                 *
+*                                                                      *
+* Le test est realise avec plusieurs modes de calcul :                 *
+*   1) 3D volumique                                                    *
+*   2) 2D contraintes planes                                           *
+************************************************************************
+
+** Options pour les traces
+OPTI 'TRAC' 'PSC' ;
+
+** Liste des modes de calcul a traiter
+lcas = LECT 1 2 ;
+
+** Parametres geometriques
+long = 1. ;
+epai = 0.1 ;
+
+** Parametres materiau
+you   = 20.E9 ;
+nu    = 0.2 ;
+epd0  = 8.E-5 ;
+at    = 1. ;
+ac    = 1.5 ;
+bt    = 8000. ;
+bc    = 1550. ;
+beta  = 1. ;
+
+
+
+**************** C A S  #1  :  3 D   V O L U M I Q U E ****************
+SI (EXIS lcas 1) ;
+
+** Options generales
+  OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+
+** Maillage
+  p1      = 0. 0. 0. ;
+  p2      = 0. long 0. ;
+  l12     = DROI 1 p1 p2 ;
+  sgauche = l12 TRAN 1 (0. 0. long) ;
+  mail    = sgauche VOLU 'TRAN' 1 (long 0. 0.) ;
+  sdroite = mail FACE 2 ;
+  p3      = sdroite POIN 'PROC' (long 0. 0.) ;
+  mes1    = MESU mail ;
+  env1    = ENVE mail ;
+
+** Modele et caracteristiques materiau
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+
+** Blocages
+  bl = BLOQ 'DEPL' env1 ;
+
+** Chargement (deformation homogene sur le bord)
+  exx = 0. ;
+  eyy = 0. ;
+  ezz = 0. ;
+  exy = 1.E-3 ;
+  exz = 0. ;
+  eyz = 0. ;
+  x y z = COOR env1 ;
+  depx  = (x * exx) + (y * exy) + (z * exz) ;
+  depy  = (x * exy) + (y * eyy) + (z * eyz) ;
+  depz  = (x * exz) + (y * eyz) + (z * ezz) ;
+  dim   = DEPI bl ((NOMC 'UX' depx) ET (NOMC 'UY' depy) ET (NOMC 'UZ' depz)) ;
+  ev1   = EVOL 'MANU' (PROG 0. 1.) (PROG 0. 1.) ;
+  cha   = CHAR 'DIMP' dim ev1 ;
+
+** Resolution
+  t                               = TABL ;
+  t . 'MODELE'                    = mo ;
+  t . 'CARACTERISTIQUES'          = ma ;
+  t . 'BLOCAGES_MECANIQUES'       = bl ;
+  t . 'CHARGEMENT'                = cha ;
+  t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.01 1. ;
+  t . 'MOVA'                      = MOT 'D' ;
+  t . 'MES_SAUVEGARDES'           = TABL ;
+  t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t ;
+
+** Post traitement
+* courbes : endommagement moyen vs temps
+*           contrainte moyenne vs deformation moyenne
+  tt = t . 'TEMPS' ;
+  tc = t . 'CONTRAINTES' ;
+  te = t . 'DEFORMATIONS' ;
+  tv = t . 'VARIABLES_INTERNES' ;
+  tu = t . 'DEPLACEMENTS' ;
+  ltps = PROG ;
+  lend = PROG ;
+  lsig = PROG ;
+  leps = PROG ;
+  REPE b1 (DIME tt) ;
+    tps1 = tt . (&b1 - 1) ;
+    ltps = ltps ET tps1 ;
+    end1 = (INTG mo (tv . (&b1 - 1)) 'D')    / mes1 ;
+    sig1 = (INTG mo (tc . (&b1 - 1)) 'SMXY') / mes1 ;
+    eps1 = (INTG mo (te . (&b1 - 1)) 'GAXY') / mes1 ;
+    lend = lend ET end1 ;
+    lsig = lsig ET sig1 ;
+    leps = leps ET eps1 ;
+  FIN b1 ;
+  ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
+  ev1 = EVOL 'ROUG' 'MANU' 'GAXY'  leps 'SMXY' lsig ;
+  DESS ev0 'TITR' '[3D V] Endommagement vs Temps' ;
+  DESS ev1 'TITR' '[3D V] Contrainte vs Deformation' ;
+* evolutions temporelles a tous les points de Gauss
+  ng = 8 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 5 = MOT 'MARQ TRID NOLI' ;
+  tleg . 6 = MOT 'MARQ TRIU NOLI' ;
+  tleg . 7 = MOT 'MARQ TRIL NOLI' ;
+  tleg . 8 = MOT 'MARQ TRIR NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Point Gauss' ' ' &b ;
+  FIN b ;
+* endommagement
+  evend = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
+  FIN b ;
+  DESS evend 'LEGE' tleg 'TITR' '[3D V] D vs Temps' ;
+* contrainte
+  evsmxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxy = evsmxy ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMXY' 1 1 &b) ;
+  FIN b ;
+  DESS evsmxy 'LEGE' tleg 'TITR' '[3D V] SMXY vs Temps' ;
+* deformation
+  evepxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxy = evepxy ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'GAXY' 1 1 &b) ;
+  FIN b ;
+  DESS evepxy 'LEGE' tleg 'TITR' '[3D V] GAXY vs Temps' ;
+FINSI ;
+
+
+
+
+******* C A S  #2  :  2 D   C O N T R A I N T E S   P L A N E S ********
+SI (EXIS lcas 2) ;
+
+** Options generales
+  OPTI 'DIME' 2 'MODE' 'PLAN' 'CONT' 'ELEM' 'QUA4' ;
+
+** Maillage
+  p1      = 0. 0. ;
+  p2      = 0. long ;
+  sgauche = DROI 1 p1 p2 ;
+  mail    = sgauche TRAN 1 (long 0.) ;
+  sdroite = mail COTE 3 ;
+  p3      = sdroite POIN 'PROC' (long 0.) ;
+  mes1    = MESU mail ;
+  cont1   = CONT mail ;
+
+** Modele et caracteristiques materiau
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'DIM3' epai ;
+
+** Blocages
+  bl = BLOQ 'DEPL' cont1 ;
+
+** Chargement (deformation homogene sur le bord)
+  exx = 0. ;
+  eyy = 0. ;
+  exy = 1.E-3 ;
+  x y = COOR cont1 ;
+  depx = (x * exx) + (y * exy) ;
+  depy = (x * exy) + (y * eyy) ;
+  dim  = DEPI bl ((NOMC 'UX' depx) ET (NOMC 'UY' depy)) ;
+  ev1  = EVOL 'MANU' (PROG 0. 1.) (PROG 0. 1.) ;
+  cha  = CHAR 'DIMP' dim ev1 ;
+
+** Resolution
+  t                               = TABL ;
+  t . 'MODELE'                    = mo ;
+  t . 'CARACTERISTIQUES'          = ma ;
+  t . 'BLOCAGES_MECANIQUES'       = bl ;
+  t . 'CHARGEMENT'                = cha ;
+  t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.01 1. ;
+  t . 'MOVA'                      = MOT 'D' ;
+  t . 'MES_SAUVEGARDES'           = TABL ;
+  t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t ;
+
+** Post traitement
+* courbes : endommagement moyen vs temps
+*           contrainte moyenne vs deformation moyenne
+  tt = t . 'TEMPS' ;
+  tc = t . 'CONTRAINTES' ;
+  te = t . 'DEFORMATIONS' ;
+  tv = t . 'VARIABLES_INTERNES' ;
+  tu = t . 'DEPLACEMENTS' ;
+  ltps = PROG ;
+  lend = PROG ;
+  lsig = PROG ;
+  leps = PROG ;
+  REPE b1 (DIME tt) ;
+    tps1 = tt . (&b1 - 1) ;
+    ltps = ltps ET tps1 ;
+    end1 = (INTG mo (tv . (&b1 - 1)) 'D')    / mes1 ;
+    sig1 = (INTG mo (tc . (&b1 - 1)) 'SMXY') / mes1 ;
+    eps1 = (INTG mo (te . (&b1 - 1)) 'GAXY') / mes1 ;
+    lend = lend ET end1 ;
+    lsig = lsig ET sig1 ;
+    leps = leps ET eps1 ;
+  FIN b1 ;
+  ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
+  ev1 = EVOL 'ROUG' 'MANU' 'GAXY'  leps 'SMXY' lsig ;
+  DESS ev0 'TITR' '[2D Plan cont.] Endommagement vs Temps' ;
+  DESS ev1 'TITR' '[2D Plan cont.] Contrainte vs Deformation' ;
+* evolutions temporelles a tous les points de Gauss
+  ng = 8 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 5 = MOT 'MARQ TRID NOLI' ;
+  tleg . 6 = MOT 'MARQ TRIU NOLI' ;
+  tleg . 7 = MOT 'MARQ TRIL NOLI' ;
+  tleg . 8 = MOT 'MARQ TRIR NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Point Gauss' ' ' &b ;
+  FIN b ;
+* endommagement
+  evend = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
+  FIN b ;
+  DESS evend 'LEGE' tleg 'TITR' '[2D Plan cont.] D vs Temps' ;
+* contrainte
+  evsmxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxy = evsmxy ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMXY' 1 1 &b) ;
+  FIN b ;
+  DESS evsmxy 'LEGE' tleg 'TITR' '[2D Plan cont.] SMXY vs Temps' ;
+* deformation
+  evepxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxy = evepxy ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'GAXY' 1 1 &b) ;
+  FIN b ;
+  DESS evepxy 'LEGE' tleg 'TITR' '[2D Plan cont.] GAXY vs Temps' ;
+FINSI ;
+
+
+
+
+FIN ;
+

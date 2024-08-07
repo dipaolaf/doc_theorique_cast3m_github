@@ -1,0 +1,244 @@
+************************************************************************
+*      Cas test elementaire pour la loi d'endommagement de Mazars      *
+*                 Essai de traction biaxiale monotone                  *
+*                                                                      *
+* Le test est realise avec plusieurs modes de calcul :                 *
+*   1) 3D volumique                                                    *
+*   2) 2D contraintes planes                                           *
+************************************************************************
+
+** Options pour les traces
+OPTI 'TRAC' 'PSC' ;
+
+** Liste des modes de calcul a traiter
+lcas = LECT 1 2 ;
+
+** Parametres geometriques
+long = 1. ;
+epai = 0.1 ;
+
+** Parametres materiau
+you   = 20.E9 ;
+nu    = 0.2 ;
+epd0  = 8.E-5 ;
+at    = 1. ;
+ac    = 1.5 ;
+bt    = 8000. ;
+bc    = 1550. ;
+beta  = 1. ;
+
+** Procedure PERSO1 pour provoquer stopper le calcul des que l'endommagement commence
+DEBP PERSO1 t1*'TABLE' ;
+  endo1 = EXCO 'D' (t1 . 'ESTIMATION' . 'VARIABLES_INTERNES') ;
+  SI ((MAXI endo1) > 0.) ;
+    t1 . 'ARRET' = VRAI ;
+  FINSI ;
+FINP ;
+
+
+
+**************** C A S  #1  :  3 D   V O L U M I Q U E ****************
+SI (EXIS lcas 1) ;
+
+** Options generales
+  OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+
+** Maillage
+  p1      = 0. 0. 0. ;
+  p2      = 0. long 0. ;
+  l12     = DROI 1 p1 p2 ;
+  sgauche = l12 TRAN 1 (0. 0. long) ;
+  mail    = sgauche VOLU 'TRAN' 1 (long 0. 0.) ;
+  sdroite = mail FACE 2 ;
+  env1    = ENVE mail ;
+  sbas    = env1 ELEM 4 ;
+  shaut   = env1 ELEM 3 ;
+  mes1    = MESU mail ;
+
+** Modele et caracteristiques materiau
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+
+** Blocages
+  bl = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' sbas) ET (BLOQ 'UZ' p1) ;
+
+** Chargements (on fait varier le rapport entre les contraintes xx et yy imposees)
+  langl  = PROG 0. 'PAS' 2.5 360. ;
+  lsigxx = PROG ;
+  lsigyy = PROG ;
+  lok    = LECT ;
+  REPE b0 (DIME langl) ;
+    angl1 = EXTR langl &b0 ;
+    SI (angl1 < 90.1) ;
+      sigmax = 2.5E6 ;
+    SINON ;
+      SI (angl1 < 180.1) ;
+        sigmax = 1.8E7 ;
+      SINON ;
+        SI (angl1 < 270.1) ;
+          sigmax = 5.8E7 ;
+        SINON ;
+          sigmax = 1.8E7 ;
+        FINSI ;
+      FINSI ;
+    FINSI ;
+    sxximp = -1. * sigmax * (COS angl1) ;
+    syyimp = -1. * sigmax * (SIN angl1) ;
+    fprx   = PRES 'MASS' mo sdroite sxximp ;
+    fpry   = PRES 'MASS' mo shaut   syyimp ;
+    ev1    = EVOL 'MANU' (PROG 0. 1.) (PROG 0. 1.) ;
+    cha    = CHAR 'MECA' (fprx ET fpry) ev1 ;
+
+** Tracé des blocages et du chargement pour une valeur d'angle
+    SI (EGA angl1 60.) ;
+      vfx = VECT fprx 'FORC' 'ROUG' 3.E-7 ;
+      vfy = VECT fpry 'FORC' 'ROUG' 3.E-7 ;
+      TRAC ((RIGI mo ma) ET bl) (vfx ET vfy) 'NOLE' 'TITR' '[3D V] Blocages et chargement' ;
+    FINSI ;
+
+** Resolution
+    t                               = TABL ;
+    t . 'MODELE'                    = mo ;
+    t . 'CARACTERISTIQUES'          = ma ;
+    t . 'BLOCAGES_MECANIQUES'       = bl ;
+    t . 'CHARGEMENT'                = cha ;
+    t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.002 1. ;
+    t . 'MOVA'                      = MOT 'D' ;
+    t . 'MES_SAUVEGARDES'           = TABL ;
+    t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+    t . 'PROCEDURE_PERSO1'          = VRAI ;
+    PASAPAS t ;
+    SI (EXIS t 'ARRET') ;
+      SI (t . 'ARRET') ;
+        ok = 1 ;
+      FINSI ;
+    FINSI ;
+    lok = lok ET ok ;
+
+** Post traitement : recuperation des contraintes SMXX et SMYY obtenues au pic
+    evsmxx = EVOL 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 1 ;
+    evsmyy = EVOL 'TEMP' t 'CONTRAINTES' 'SMYY' 1 1 1 ;
+    tc = t . 'CONTRAINTES' ;
+    nc = DIME tc ;
+    vsmxx = (INTG mo (tc . (nc - 1)) 'SMXX') / mes1 ;
+    vsmyy = (INTG mo (tc . (nc - 1)) 'SMYY') / mes1 ;
+    lsigxx = lsigxx ET ((INTG mo (tc . (nc - 1)) 'SMXX') / mes1) ;
+    lsigyy = lsigyy ET ((INTG mo (tc . (nc - 1)) 'SMYY') / mes1) ;
+  FIN b0 ;
+* test que pour toutes les valeurs d'angle, on a atteint le pic
+  SI (EXIS lok 0) ;
+    MESS ;
+    MESS '***** Attention, pour certains points le pic n''a pas ete franchi ! *****' ;
+    MESS ;
+    LIST lok ;
+  FINSI ;
+  ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx 'SMYY' lsigyy ;
+  DESS ev1 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[3D V] Diagramme des contraintes' ;
+FINSI ;
+
+
+
+
+******* C A S  #3  :  2 D   C O N T R A I N T E S   P L A N E S ********
+SI (EXIS lcas 2) ;
+
+** Options generales
+  OPTI 'DIME' 2 'MODE' 'PLAN' 'CONT' 'ELEM' 'QUA4' ;
+
+** Maillage
+  p1      = 0. 0. ;
+  p2      = 0. long ;
+  sgauche = DROI 1 p1 p2 ;
+  mail    = sgauche TRAN 1 (long 0.) ;
+  shaut   = mail COTE 2 ;
+  sdroite = mail COTE 3 ;
+  sbas    = mail COTE 4 ;
+  mes1    = MESU mail ;
+
+** Modele et caracteristiques materiau
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'DIM3' epai ;
+
+** Blocages
+  bl = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' sbas) ;
+
+** Chargements (on fait varier le rapport entre les contraintes xx et yy imposees)
+  langl  = PROG 0. 'PAS' 2.5 360. ;
+  lsigxx = PROG ;
+  lsigyy = PROG ;
+  lok    = LECT ;
+  REPE b0 (DIME langl) ;
+    angl1 = EXTR langl &b0 ;
+    SI (angl1 < 90.1) ;
+      sigmax = 0.25E6 ;
+    SINON ;
+      SI (angl1 < 180.1) ;
+        sigmax = 1.8E6 ;
+      SINON ;
+        SI (angl1 < 270.1) ;
+          sigmax = 3.E6 ;
+        SINON ;
+          sigmax = 1.8E6 ;
+        FINSI ;
+      FINSI ;
+    FINSI ;
+    sxximp = -1. * sigmax * (COS angl1) ;
+    syyimp = -1. * sigmax * (SIN angl1) ;
+    fprx   = PRES 'MASS' mo sdroite sxximp ;
+    fpry   = PRES 'MASS' mo shaut   syyimp ;
+    ev1    = EVOL 'MANU' (PROG 0. 1.) (PROG 0. 1.) ;
+    cha    = CHAR 'MECA' (fprx ET fpry) ev1 ;
+
+** Tracé des blocages et du chargement pour une valeur d'angle
+    SI (EGA angl1 60.) ;
+      vfx = VECT fprx 'FORC' 'ROUG' 1.E-6 ;
+      vfy = VECT fpry 'FORC' 'ROUG' 1.E-6 ;
+      TRAC ((RIGI mo ma) ET bl) (vfx ET vfy) 'NOLE' 'TITR' '[2D Plan cont.] Blocages et chargement' ;
+    FINSI ;
+
+** Resolution
+    t                               = TABL ;
+    t . 'MODELE'                    = mo ;
+    t . 'CARACTERISTIQUES'          = ma ;
+    t . 'BLOCAGES_MECANIQUES'       = bl ;
+    t . 'CHARGEMENT'                = cha ;
+    t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.002 1. ;
+    t . 'MOVA'                      = MOT 'D' ;
+    t . 'MES_SAUVEGARDES'           = TABL ;
+    t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+    t . 'PROCEDURE_PERSO1'          = VRAI ;
+    PASAPAS t ;
+    ok = 0 ;
+    SI (EXIS t 'ARRET') ;
+      SI (t . 'ARRET') ;
+        ok = 1 ;
+      FINSI ;
+    FINSI ;
+    lok = lok ET ok ;
+
+** Post traitement : recuperation des contraintes SMXX et SMYY obtenues au pic
+    evsmxx = EVOL 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 1 ;
+    evsmyy = EVOL 'TEMP' t 'CONTRAINTES' 'SMYY' 1 1 1 ;
+    tc = t . 'CONTRAINTES' ;
+    nc = DIME tc ;
+    vsmxx = (INTG mo (tc . (nc - 1)) 'SMXX') / mes1 ;
+    vsmyy = (INTG mo (tc . (nc - 1)) 'SMYY') / mes1 ;
+    lsigxx = lsigxx ET ((INTG mo (tc . (nc - 1)) 'SMXX') / mes1) ;
+    lsigyy = lsigyy ET ((INTG mo (tc . (nc - 1)) 'SMYY') / mes1) ;
+  FIN b0 ;
+* test que pour toutes les valeurs d'angle, on a atteint le pic
+  SI (EXIS lok 0) ;
+    MESS ;
+    MESS '***** Attention, pour certains points le pic n''a pas ete franchi ! *****' ;
+    MESS ;
+    LIST lok ;
+  FINSI ;
+  ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx 'SMYY' lsigyy ;
+  DESS ev1 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[2D Plan cont.] Diagramme des contraintes' ;
+FINSI ;
+
+
+
+
+
+FIN ;

@@ -1,0 +1,111 @@
+* fichier : statique1.dgibi
+************************************************************************
+* Illustration de la methode de resolution d'un equilibre mecanique    *
+* par minimisation iterative du residu.                                *
+*                                                                      *
+* On calcul la flexion simple d'une poutre au comportement elasto-     *
+* plastique parfait en petits deplacements.                            *
+*                                                                      *
+************************************************************************
+
+* Pour visualiser les tracer, commentez la ligne ci-dessous :
+opti trac psc ;
+
+* Options generales : 3D, hexahedre lineaire
+opti dime 3 elem cub8 ;
+
+* Precision :
+zprec1   = 1.e-4 ;
+
+*** Geometrie et maillage ***
+* Dimensions de la poutre (Longuer, Epaisseur, Hauteur) :
+l1       = 15. ;
+e1       = 0.3 ;
+h1       = 0.6 ;
+
+* Repere :
+o1       = 0 0 0 ;
+x1       = 1 0 0 ;
+y1       = 0 1 0 ;
+z1       = 0 0 1 ;
+
+* Maillage :
+ly1      = o1  droi 4 (e1 * y1) ;
+s1       = ly1 tran 8 (h1 * z1) ;
+v1       = s1  volu tran 100 (l1 * x1) ;
+s2       = v1  face 2 ;
+trac qual cach v1
+  titr (chai 'maillage de la poutre (nb noeuds =' (nbno v1) ')') ;
+
+*** Modele mecanique ***
+* Modele & Caracteristiques materielles :
+mo1      = mode v1 mecanique elastique plastique parfait ;
+ma1      = mate mo1 youn 40.e9 nu 0.2 sigy 25.e6 rho 2.e3 ;
+
+* Conditions sur les deplacements :
+A1       = bloq depl s1 ;
+
+* Forces volumiques et surfaciques  :
+grav1    = manu chml mo1 fx 0. fy 0. fz -9.81 rigidites type scalaire ;
+rho1     = (exco ma1 rho scal) chan type 'FOR. VOL' ;
+Fv1      = cneq mo1 (rho1 * grav1) ;
+Fs1      = forc s2 (0 0 -1.e4) ;
+trac cach (vect Fv1 forc bleu 5.e-2) v1
+  titr 'Forces nodales equivalentes volumiques' ;
+trac cach (vect Fs1 forc vert 5.e-3) (aret v1 et s2)
+  titr 'Forces nodales equivalentes surfaciques' ;
+
+*** Resolution :
+* Rigidites :
+Kel1     = rigi mo1 ma1 ;
+Kel1     = Kel1 et A1 ;
+
+*** Resolution iterative par Minimisation du Residu ***
+* On resout de facon iterative le champ de deplacement solution
+* en controlant le critere sur l'equilibre des efforts.
+* En dessous d'une valeur cible (zprec1), on sort : 
+R1       = Fv1 + Fs1 ;
+U1       = manu chpo V1 3 ux 0. uy 0. uz 0. ;
+lsm1     = extr mo1 contraintes ;
+repe b1 20 ;
+  dDu1     = reso Kel1 R1 ;
+  U1       = U1 + dDu1 ;
+  Fr1      = reac A1 U1 ;
+  eps1     = epsi line mo1 U1 ;
+  comp1    = comp mo1 (eps1*0.) (eps1 et ma1) ;
+  sig1     = exco comp1 lsm1 lsm1 ;
+  bsg1     = bsig mo1 sig1 ;
+  R1       = Fv1 + Fs1 + Fr1 - bsg1 ;
+  si (&b1 ega 1) ;
+    opti echo 0 ;
+    mess ' Ite.     Critere Forces   Epse' ;
+    Fref1    = maxi abs (Fv1 + Fs1 + Fr1) ;
+  fins ;
+  zcr1     = (maxi abs R1) / Fref1 ;
+  epse1    = exco comp1 epse epse ;
+  mess &B1 '     ' zcr1 '     ' (maxi epse1) ;
+  si (zcr1 < zprec1) ;
+    mess ' > Convergence a l iteration ' &B1 ;
+    opti echo 1 ;
+        quit b1 ;
+  fins ;
+fin b1 ;
+epse1    = exco comp1 epse epse ;
+*
+* Deformees :
+def0     = defo U1 (aret v1)  0. blan ;
+def1     = defo U1 (enve v1) 20. roug ;
+trac cach (def0 et def1) titr ' Deformee ';
+
+* Contrainte SMxx sur deformee :
+niso1    = 14 ;
+sig1     = 1.e-6 * sig1 ;
+defsg1   = defo U1 v1 20. mo1 (exco sig1 smxx smxx) ;
+trac defsg1 titr ' Contrainte SMxx sur deformee (MPa) ' niso1 ;
+
+* Deformations inelastiques EIXX sur deformee :
+liso1    = prog 0. pas 0.1e-4 1.2e-4 ;
+defei1   = defo U1 v1 20. mo1 epse1 ;
+trac defei1 titr ' Deformation plastique cumulee sur deformee ' liso1 ;
+
+fin ;
