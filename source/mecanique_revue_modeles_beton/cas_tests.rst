@@ -41,9 +41,9 @@ Les instructions Gibiane correpondantes sont :
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 188-196
+      :lines: 252-263
       :linenos:
-      :lineno-start: 188
+      :lineno-start: 252
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -110,17 +110,17 @@ Les instructions Gibiane correpondantes sont :
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 57-66
+      :lines: 74-83
       :linenos:
-      :lineno-start: 57
+      :lineno-start: 74
 
 .. admonition:: Traction monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 446-454
+      :lines: 596-604
       :linenos:
-      :lineno-start: 446
+      :lineno-start: 596
 
 Les blocages et le chargement sont représentés sur les figures suivantes.
 

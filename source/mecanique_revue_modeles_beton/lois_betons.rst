@@ -24,7 +24,30 @@ Characteristiques et limitations principales :
 
 Anomalies observées
 ~~~~~~~~~~~~~~~~~~~
-**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type multi-fibre est proscrite !**.
+
+Anomalie 1
+++++++++++
+[valable au 19/09/2024]
+
+Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazars.eso. Cette anomalie ne rend pas le modèle Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M. Elle est corrigée dans la version du jour ainsi que dans la version 2024.1.
+
+Anomalie 2
+++++++++++
+nh145313 : L'anomalie suivante est corrigée en bloquant les rotation de l'extrémité libre de la poutre à fibre.
+[**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type multi-fibre est proscrite !**.]
+
+Anomalie 3 (?)
+++++++++++++++
+Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazars.eso) que poutres à fibre (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
+
+.. math::
+   D_{max}=(1 - \epsilon)
+   
+où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. Plus ce paramètre est grand, plus le domaine apparait précocement.
+
+La consolidation qui peut possiblement en découler dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissible et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle.
+
+.. _mazars:
 
 Formulation du modèle
 ~~~~~~~~~~~~~~~~~~~~~

@@ -11,10 +11,12 @@
 ************************************************************************
 
 ** Options pour les traces
-OPTI 'TRAC' 'PSC' ;
+ OPTI 'TRAC' 'PSC' ;
 
 ** Liste des modes de calcul a traiter
-lcas = LECT 1 2 3 4 5 ;
+ lcas = LECT 1 2 3 4 5 ;
+*nh145313
+*lcas = LECT 1 ; COMM '3D volumique' ;
 
 ** Parametres geometriques
 long = 1. ;
@@ -33,6 +35,18 @@ beta  = 1. ;
 ** Paramètres chargement
 umax  = 5.E-4 ;
 
+*nh145313
+** Legende courbes
+  tdess = 'TABLE' ;
+  tdess.'TITRE' = 'TABLE' ;
+  tdess. 1 = 'MARQ LOSA' ;
+  tdess.'TITRE'. 1 = MOT 'Calcul' ;
+  tdess. 2 = 'MARQ CROI' ;
+  tdess.'TITRE'. 2 = MOT 'Reference' ;
+
+
+
+
 
 **************** C A S  #1  :  3 D   V O L U M I Q U E ****************
 SI (EXIS lcas 1) ;
@@ -49,6 +63,9 @@ SI (EXIS lcas 1) ;
   sdroite = mail FACE 2 ;
   p3      = sdroite POIN 'PROC' (long 0. 0.) ;
   mes1    = MESU mail ;
+*nh145313
+*rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+*TRAC 'QUAL' (rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -70,9 +87,8 @@ SI (EXIS lcas 1) ;
   mor = MODE re0 'MECANIQUE' 'BARR' ;
   mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
   rir = RIGI mor mar ;
-  vf  = VECT didroite 'FLX' ' ' ' ' 'CYAN' ;
-  an  = ANNO 'ETIQ' (0.5 * p2) 0. FAUX 'Cube (L)' ;
-  TRAC ((RIGI mo ma) ET blgauche ET blrig ET rir) vf 'NOLE' an 'TITR' '[3D V] Blocages et chargement' ;
+  vf  = VECT didroite 'FLX' ' ' ' ' 'ROUGE' ;
+  TRAC ((RIGI mo ma) ET blgauche ET blrig ET rir) vf 'NOLE' 'TITR' '[3D V] Blocages et chargement' ;
 
 ** Resolution
   t                               = TABL ;
@@ -122,9 +138,22 @@ SI (EXIS lcas 1) ;
   ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
   ev1 = EVOL 'ROUG' 'MANU' 'EPXX'  leps 'SMXX' lsig ;
   ev2 = EVOL 'ROUG' 'MANU' 'UX'    ldep 'FX'   lrea ;
-  DESS ev0 'TITR' '[3D V] Endommagement vs Temps' ;
-  DESS ev1 'TITR' '[3D V] Contrainte vs Deformation' ;
-  DESS ev2 'TITR' '[3D V] Reaction vs Deplacement' ;
+*nh145313
+  ltps1 =  ENLE ltps 1 ;
+  nb1 = DIME ltps1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd0 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+  lepe = ltps1 * umax / long ;
+  dt = un1 - ((epd0*(un1-lat1)/lepe) + (at*(EXP(bt*(lepd0-lepe))))) ;
+  seuil1 = dt MASQ 'EGSUP' 0 ;
+  dt = seuil1 * dt ; 
+  lsig1 = (un1 - dt) * you * lepe ;
+  an0 = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'D'    dt    ;
+  an1 = EVOL 'TURQ' 'MANU' 'EPXX'  lepe  'SMXX' lsig1 ;
+  DESS (ev0 ET an0) 'TITR' '[3D V] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
+  DESS (ev1 ET an1) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' 'NE' tdess ;
+  DESS ev2 'TITR' '[3D V] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
 * evolutions temporelles a tous les points de Gauss
   ng = 8 ;
   tleg = TABL ;
@@ -138,27 +167,55 @@ SI (EXIS lcas 1) ;
   tleg . 8 = MOT 'MARQ TRIR NOLI' ;
   tleg . 'TITRE' = TABL ;
   REPE b ng ;
-    tleg . 'TITRE' . &b = CHAI 'Point Gauss' ' ' &b ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
   FIN b ;
 * endommagement
   evend = VIDE 'EVOLUTIO' ;
   REPE b ng ;
     evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
   FIN b ;
-  DESS evend 'LEGE' 'SE' tleg 'TITR' '[3D V] D vs Temps' ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Reference' ;
+  DESS (evend ET an0) 'LEGE' 'SE' tleg 'TITR' '[3D V] D vs Temps' ;
 * contrainte
   evsmxx = VIDE 'EVOLUTIO' ;
   REPE b ng ;
     evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 &b) ;
   FIN b ;
-  DESS evsmxx 'LEGE' 'NE' tleg 'TITR' '[3D V] SMXX vs Temps' ;
+*nh145313
+  ansmxx = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'SMXX' lsig1 ;
+  DESS (evsmxx ET ansmxx) 'LEGE' 'NE' tleg 'TITR' '[3D V] SMXX vs Temps' ;
 * deformation
   evepxx = VIDE 'EVOLUTIO' ;
   REPE b ng ;
     evepxx = evepxx ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
   FIN b ;
   DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[3D V] EPXX vs Temps' ;
+*nh145313
+* comparaison Calcul / Reference sur la contrainte moyenne
+  ler1 = ABS ((ENLE lsig 1) - lsig1) / lsig1 ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  lepe  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[3D V] Ecart relatif Calcul/Reference Contrainte vs Deformation, max' ' ' mer1 ;
+  DESS eer1 'TITR' tit1 ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
+  SAUT 1 LIGN ;
+  SI (mer1 < 1.E-10) ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' < 1.E-10 => OK' ;
+    SAUT 1 LIGN ;
+    ERRE 0 ;
+  SINO ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' > 1.E-10 => ERREUR' ;
+    ERRE 5 ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
 FINSI ;
+
 
 
 
@@ -170,14 +227,20 @@ SI (EXIS lcas 2) ;
   OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
 
 ** Maillage
+*nh145313
   p1s     = (-0.5 * epai) (-0.5 * epai) 0. ;
   p2s     = (-0.5 * epai) ( 0.5 * epai) 0. ;
   l12s    = DROI 1 p1s p2s ;
+*nh145313
   mails   = l12s TRAN 1 (epai 0. 0.) ;
   p1      = 0. 0. 0. ;
   p2      = long 0. 0. ;
   mail    = DROI 1 p1 p2 ;
   mes1    = MESU mails ;
+*nh145313
+*rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+*TRAC 'QUAL' (rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[3D PaF] Maillages de la Poutre et de sa Section' ;
+
 
 ** Modele et caracteristiques materiau
   mos = MODE mails 'MECANIQUE' 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
@@ -190,6 +253,9 @@ SI (EXIS lcas 2) ;
   blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
   bldroite = BLOQ 'UX' p2 ;
   bl       = blgauche ET bldroite ;
+*nh145313
+  bldroit2 = BLOQ 'ROTA' p2 ;
+  bl       = bl ET bldroit2 ;
 
 ** Chargements
   didroite = DEPI bldroite umax ;
@@ -201,7 +267,7 @@ SI (EXIS lcas 2) ;
   mor = MODE re0 'MECANIQUE' 'BARR' ;
   mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
   rir = RIGI mor mar ;
-  vf = VECT didroite 'FLX' ' ' ' ' 'CYAN' 200. ;
+  vf = VECT didroite 'FLX' ' ' ' ' 'ROUG' 200. ;
   TRAC ((RIGI mo ma) ET blgauche ET rir) vf 'NOLE' 'TITR' '[3D PaF] Blocages et chargement' ;
 
 ** Resolution
@@ -211,7 +277,6 @@ SI (EXIS lcas 2) ;
   t . 'BLOCAGES_MECANIQUES'       = bl ;
   t . 'CHARGEMENT'                = cha ;
   t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.01 1. ;
-*  t . 'MOVA'                      = MOT 'D' ;
   t . 'MES_SAUVEGARDES'           = TABL ;
   t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
   PASAPAS t ;
@@ -231,6 +296,9 @@ SI (EXIS lcas 2) ;
   REPE b ng ;
     tleg . 'TITRE' . &b = CHAI 'Point Gauss' ' ' &b ;
   FIN b ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Reference' ;
   tt = t . 'TEMPS' ;
   tv = t . 'VARIABLES_INTERNES' ;
   tu = t . 'DEPLACEMENTS' ;
@@ -290,9 +358,44 @@ SI (EXIS lcas 2) ;
   ev1 = (EVOL 'ROUG' 'MANU' 'EPXX'  leps1 'SMXX' lsig1) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps2 'SMXX' lsig2) ET
         (EVOL 'ROUG' 'MANU' 'EPXX'  leps3 'SMXX' lsig3) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps4 'SMXX' lsig4) ;
   ev2 = EVOL 'ROUG' 'MANU' 'UX' ldep 'FX' lrea ;
-  DESS ev0 'LEGE' 'SE' tleg 'TITR' '[3D PaF] Endommagement vs Temps' ;
-  DESS ev1 'LEGE' 'NE' tleg 'TITR' '[3D PaF] Contrainte vs Deformation' ;
-  DESS ev2 'TITR' '[3D PaF] Reaction vs Deplacement' ;
+*nh145313
+  ltps1 =  ENLE ltps 1 ;
+  nb1 = DIME ltps1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd0 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+  lepe = ltps1 * umax / long ;
+  dt = un1 - ((epd0*(un1-lat1)/lepe) + (at*(EXP(bt*(lepd0-lepe))))) ;
+  seuil1 = dt MASQ 'EGSUP' 0 ;
+  dt = seuil1 * dt ; 
+  lsan1 = (un1 - dt) * you * lepe ;
+  an0 = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'D'    dt    ;
+  an1 = EVOL 'TURQ' 'MANU' 'EPXX'  lepe  'SMXX' lsan1 ;
+  DESS (ev0 ET an0) 'LEGE' 'SE' tleg 'TITR' '[3D PaF] Endommagement vs Temps' ;
+  DESS (ev1 ET an1) 'LEGE' 'NE' tleg 'TITR' '[3D PaF] Contrainte vs Deformation' ;
+  DESS ev2 'TITR' '[3D PaF] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+* comparaison Calcul / Reference sur la contrainte moyenne
+  lsig = (lsig1 + lsig2 + lsig3 + lsig4) / 4. ;
+  ler1 = ABS ((ENLE lsig 1) - lsan1) / lsan1 ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  lepe  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[3D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation, max' ' ' mer1 ;
+  DESS eer1 'TITR' tit1 ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' *********** C A S  #2  :  3 D   P O U T R E   A   F I B R E ************';
+  SAUT 1 LIGN ;
+  SI (mer1 < 1.E-10) ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' < 1.E-10 => OK' ;
+    SAUT 1 LIGN ;
+    ERRE 0 ;
+  SINO ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' > 1.E-10 => ERREUR' ;
+    ERRE 5 ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
 FINSI ;
 
 
@@ -313,6 +416,9 @@ SI (EXIS lcas 3) ;
   sdroite = mail COTE 3 ;
   p3      = sdroite POIN 'PROC' (long 0.) ;
   mes1    = MESU mail ;
+*nh145313
+*rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
+*TRAC 'QUAL' (rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -334,8 +440,8 @@ SI (EXIS lcas 3) ;
   mor = MODE re0 'MECANIQUE' 'BARR' ;
   mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
   rir = RIGI mor mar ;
-  vf = VECT didroite 'FLX' ' ' 'CYAN' ;
-  TRAC ((RIGI mo ma) ET blgauche ET blrig ET rir) vf 'NOLE' 'TITR' 'Blocages et chargement' ;
+  vf = VECT didroite 'FLX' ' ' 'ROUG' ;
+  TRAC ((RIGI mo ma) ET blgauche ET blrig ET rir) vf 'NOLE' 'TITR' '[2D Plan cont.] Blocages et chargement' ;
 
 ** Resolution
   t                               = TABL ;
@@ -385,9 +491,22 @@ SI (EXIS lcas 3) ;
   ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
   ev1 = EVOL 'ROUG' 'MANU' 'EPXX'  leps 'SMXX' lsig ;
   ev2 = EVOL 'ROUG' 'MANU' 'UX'    ldep 'FX'   lrea ;
-  DESS ev0 'TITR' '[2D Plan cont.] Endommagement vs Temps' ;
-  DESS ev1 'TITR' '[2D Plan cont.] Contrainte vs Deformation' ;
-  DESS ev2 'TITR' '[2D Plan cont.] Reaction vs Deplacement' ;
+*nh145313
+  ltps1 =  ENLE ltps 1 ;
+  nb1 = DIME ltps1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd0 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+  lepe = ltps1 * umax / long ;
+  dt = un1 - ((epd0*(un1-lat1)/lepe) + (at*(EXP(bt*(lepd0-lepe))))) ;
+  seuil1 = dt MASQ 'EGSUP' 0 ;
+  dt = seuil1 * dt ; 
+  lsig1 = (un1 - dt) * you * lepe ;
+  an0 = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'D'    dt    ;
+  an1 = EVOL 'TURQ' 'MANU' 'EPXX'  lepe  'SMXX' lsig1 ;
+  DESS (ev0 ET an0) 'TITR' '[2D Plan cont.] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
+  DESS (ev1 ET an1) 'TITR' '[2D Plan cont.] Contrainte vs Deformation' 'LEGE' 'NE' tdess ;
+  DESS ev2 'TITR' '[2D Plan cont.] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
 * evolutions temporelles a tous les points de Gauss
   ng = 4 ;
   tleg = TABL ;
@@ -404,19 +523,46 @@ SI (EXIS lcas 3) ;
   REPE b ng ;
     evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
   FIN b ;
-  DESS evend 'LEGE' 'SE' tleg 'TITR' '[2D Plan cont.] D vs Temps' ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Reference' ;
+  DESS (evend ET an0) 'LEGE' 'SE' tleg 'TITR' '[2D Plan cont.] D vs Temps' ;
 * contrainte
   evsmxx = VIDE 'EVOLUTIO' ;
   REPE b ng ;
     evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 &b) ;
   FIN b ;
-  DESS evsmxx 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMXX vs Temps' ;
+*nh145313
+  ansmxx = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'SMXX' lsig1 ;
+  DESS (evsmxx ET ansmxx) 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMXX vs Temps' ;
 * deformation
   evepxx = VIDE 'EVOLUTIO' ;
   REPE b ng ;
     evepxx = evepxx ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
   FIN b ;
   DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] EPXX vs Temps' ;
+*nh145313
+* comparaison Calcul / Reference sur la contrainte moyenne
+  ler1 = ABS ((ENLE lsig 1) - lsig1) / lsig1 ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  lepe  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[2D Plan cont.] Ecart relatif Calcul/Reference Contrainte vs Deformation, max' ' ' mer1 ;
+  DESS eer1 'TITR' tit1 ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' ******* C A S  #3  :  2 D   C O N T R A I N T E S   P L A N E S ********';
+  SAUT 1 LIGN ;
+  SI (mer1 < 1.E-10) ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' < 1.E-10 => OK' ;
+    SAUT 1 LIGN ;
+    ERRE 0 ;
+  SINO ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' > 1.E-10 => ERREUR' ;
+    ERRE 5 ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
 FINSI ;
 
 
@@ -436,6 +582,9 @@ SI (EXIS lcas 4) ;
   mail    = sbas TRAN 1 (0. long) ;
   shaut   = mail COTE 3 ;
   p3      = shaut POIN 'PROC' (0. long) ;
+*nh145313
+*rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
+*TRAC 'QUAL' (rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -459,8 +608,8 @@ SI (EXIS lcas 4) ;
   mor = MODE re0 'MECANIQUE' 'BARR' ;
   mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
   rir = RIGI mor mar ;
-  vf = VECT dihaut ' ' 'FLX' 'CYAN' ;
-  TRAC ((RIGI mo ma) ET blbas ET rir) vf 'NOLE' 'TITR' 'Blocages et chargement' ;
+  vf = VECT dihaut ' ' 'FLX' 'ROUG' ;
+  TRAC ((RIGI mo ma) ET blbas ET rir) vf 'NOLE' 'TITR' '[2D Axi.] Blocages et chargement' ;
 
 ** Resolution
   t                               = TABL ;
@@ -510,9 +659,22 @@ SI (EXIS lcas 4) ;
   ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
   ev1 = EVOL 'ROUG' 'MANU' 'EPZZ'  leps 'SMZZ' lsig ;
   ev2 = EVOL 'ROUG' 'MANU' 'UZ'    ldep 'FZ'   lrea ;
-  DESS ev0 'TITR' '[2D Axi.] Endommagement vs Temps' ;
-  DESS ev1 'TITR' '[2D Axi.] Contrainte vs Deformation' ;
-  DESS ev2 'TITR' '[2D Axi.] Reaction vs Deplacement' ;
+*nh145313
+  ltps1 =  ENLE ltps 1 ;
+  nb1 = DIME ltps1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd0 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+  lepe = ltps1 * umax / long ;
+  dt = un1 - ((epd0*(un1-lat1)/lepe) + (at*(EXP(bt*(lepd0-lepe))))) ;
+  seuil1 = dt MASQ 'EGSUP' 0 ;
+  dt = seuil1 * dt ; 
+  lsig1 = (un1 - dt) * you * lepe ;
+  an0 = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'D'    dt    ;
+  an1 = EVOL 'TURQ' 'MANU' 'EPZZ'  lepe  'SMZZ' lsig1 ;
+  DESS (ev0 ET an0) 'TITR' '[2D Axi.] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
+  DESS (ev1 ET an1) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NE' tdess ;
+  DESS ev2 'TITR' '[2D Axi.] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
 * evolutions temporelles a tous les points de Gauss
   ng = 4 ;
   tleg = TABL ;
@@ -529,20 +691,48 @@ SI (EXIS lcas 4) ;
   REPE b ng ;
     evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
   FIN b ;
-  DESS evend 'LEGE' 'SE' tleg 'TITR' '[2D Axi.] D vs Temps' ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Reference' ;
+  DESS (evend ET an0) 'LEGE' 'SE' tleg 'TITR' '[2D Axi.] D vs Temps' ;
 * contrainte
   evsmzz = VIDE 'EVOLUTIO' ;
   REPE b ng ;
     evsmzz = evsmzz ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 &b) ;
   FIN b ;
-  DESS evsmzz 'LEGE' 'NE' tleg 'TITR' '[2D Axi.] SMZZ vs Temps' ;
+*nh145313
+  ansmzz = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'SMZZ' lsig1 ;
+  DESS (evsmzz ET ansmzz) 'LEGE' 'NE' tleg 'TITR' '[2D Axi.] SMZZ vs Temps' ;
 * deformation
   evepzz = VIDE 'EVOLUTIO' ;
   REPE b ng ;
     evepzz = evepzz ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'EPZZ' 1 1 &b) ;
   FIN b ;
   DESS evepzz 'LEGE' 'NO' tleg 'TITR' '[2D Axi.] EPZZ vs Temps' ;
+*nh145313
+* comparaison Calcul / Reference sur la contrainte moyenne
+  ler1 = ABS ((ENLE lsig 1) - lsig1) / lsig1 ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPZZ'  lepe  'Ec.rel.SMZZ' ler1 ;
+  tit1 = CHAI '[2D Axi.] Ecart relatif Calcul/Reference Contrainte vs Deformation, max' ' ' mer1 ;
+  DESS eer1 'TITR' tit1 ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' ************ C A S  #4  :  2 D   A X I S Y M E T R I Q U E *************';
+  SAUT 1 LIGN ;
+  SI (mer1 < 1.E-10) ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' < 1.E-10 => OK' ;
+    SAUT 1 LIGN ;
+    ERRE 0 ;
+  SINO ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' > 1.E-10 => ERREUR' ;
+    ERRE 5 ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
 FINSI ;
+
 
 
 
@@ -562,6 +752,9 @@ SI (EXIS lcas 5) ;
   p2      = long 0. ;
   mail    = DROI 1 p1 p2 ;
   mes1    = MESU mails ;
+*nh145313
+*rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
+*TRAC 'QUAL' (rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[2D PaF] Maillages de la Poutre et de sa Section' ;
 
 ** Modele et caracteristiques materiau
   mos = MODE mails 'MECANIQUE' 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
@@ -574,6 +767,9 @@ SI (EXIS lcas 5) ;
   blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
   bldroite = BLOQ 'UX' p2 ;
   bl       = blgauche ET bldroite ;
+*nh145313
+  bldroit2 = BLOQ 'ROTA' p2 ;
+  bl       = bl ET bldroit2 ;
 
 ** Chargements
   didroite = DEPI bldroite umax ;
@@ -585,8 +781,8 @@ SI (EXIS lcas 5) ;
   mor = MODE re0 'MECANIQUE' 'BARR' ;
   mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
   rir = RIGI mor mar ;
-  vf = VECT didroite 'FLX' ' ' 'CYAN' 200. ;
-  TRAC ((RIGI mo ma) ET blgauche ET rir) vf 'NOLE' 'TITR' 'Blocages et chargement' ;
+  vf = VECT didroite 'FLX' ' ' 'ROUG' 200. ;
+  TRAC ((RIGI mo ma) ET blgauche ET rir) vf 'NOLE' 'TITR' '[2D PaF] Blocages et chargement' ;
 
 ** Resolution
   t                               = TABL ;
@@ -595,7 +791,6 @@ SI (EXIS lcas 5) ;
   t . 'BLOCAGES_MECANIQUES'       = bl ;
   t . 'CHARGEMENT'                = cha ;
   t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.01 1. ;
-*  t . 'MOVA'                      = MOT 'D' ;
   t . 'MES_SAUVEGARDES'           = TABL ;
   t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
   PASAPAS t ;
@@ -615,6 +810,9 @@ SI (EXIS lcas 5) ;
   REPE b ng ;
     tleg . 'TITRE' . &b = CHAI 'Point Gauss' ' ' &b ;
   FIN b ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Reference' ;
   tt = t . 'TEMPS' ;
   tv = t . 'VARIABLES_INTERNES' ;
   tu = t . 'DEPLACEMENTS' ;
@@ -674,10 +872,46 @@ SI (EXIS lcas 5) ;
   ev1 = (EVOL 'ROUG' 'MANU' 'EPXX'  leps1 'SMXX' lsig1) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps2 'SMXX' lsig2) ET
         (EVOL 'ROUG' 'MANU' 'EPXX'  leps3 'SMXX' lsig3) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps4 'SMXX' lsig4) ;
   ev2 = EVOL 'ROUG' 'MANU' 'UX' ldep 'FX' lrea ;
-  DESS ev0 'LEGE' 'SE' tleg 'TITR' '[2D PaF] Endommagement vs Temps' ;
-  DESS ev1 'LEGE' 'NE' tleg 'TITR' '[2D PaF] Contrainte vs Deformation' ;
-  DESS ev2 'TITR' '[2D PaF] Reaction vs Deplacement' ;
+*nh145313
+  ltps1 =  ENLE ltps 1 ;
+  nb1 = DIME ltps1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd0 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+  lepe = ltps1 * umax / long ;
+  dt = un1 - ((epd0*(un1-lat1)/lepe) + (at*(EXP(bt*(lepd0-lepe))))) ;
+  seuil1 = dt MASQ 'EGSUP' 0 ;
+  dt = seuil1 * dt ; 
+  lsan1 = (un1 - dt) * you * lepe ;
+  an0 = EVOL 'TURQ' 'MANU' 'Temps' ltps1 'D'    dt    ;
+  an1 = EVOL 'TURQ' 'MANU' 'EPXX'  lepe  'SMXX' lsan1 ;
+  DESS (ev0 ET an0) 'LEGE' 'SE' tleg 'TITR' '[2D PaF] Endommagement vs Temps' ;
+  DESS (ev1 ET an1) 'LEGE' 'NE' tleg 'TITR' '[2D PaF] Contrainte vs Deformation' ;
+  DESS ev2 'TITR' '[2D PaF] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+* comparaison Calcul / Reference sur la contrainte moyenne
+  lsig = (lsig1 + lsig2 + lsig3 + lsig4) / 4. ;
+  ler1 = ABS ((ENLE lsig 1) - lsan1) / lsan1 ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  lepe  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[2D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation, max' ' ' mer1 ;
+  DESS eer1 'TITR' tit1 ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' *********** C A S  #5  :  2 D   P O U T R E   A   F I B R E ************';
+  SAUT 1 LIGN ;
+  SI (mer1 < 1.E-10) ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' < 1.E-10 => OK' ;
+    SAUT 1 LIGN ;
+    ERRE 0 ;
+  SINO ;
+    MESS ' Ecart relatif max entre Calcul et Reference' ' ' mer1 ' > 1.E-10 => ERREUR' ;
+    ERRE 5 ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
 FINSI ;
+
 
 
 
