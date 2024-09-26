@@ -8,17 +8,17 @@ La liste suivante concerne les lois de comportement pour le béton.
 Loi MAZARS
 ----------
 
-'MAZARS'    : Modele d'endommagement scalaire pour le beton (bien adapte aux chargements monotones).
+'MAZARS'    : Modele d'endommagement scalaire pour le béton (bien adapté aux chargements monotones).
 
 Description
 ~~~~~~~~~~~
 La loi de comportement élastique endommageable en traction/compression selon le modèle de Mazars, corrigé pour prendre en compte de manière plus réaliste l'endommagement en cisaillement, est présentée ici [MAZARS-1984]_ [MAZARS-1986]_ [PIJAUDIER-1991]_.
 
-Characteristiques et limitations principales :
+Caracteristiques et limitations principales :
 
-- Dans ce modèlela dégradation des propriétés élastiques du matériau est représentée à l'aide d'une variable scalaire :math:`D` variant entre zéro (matériau sain) et l'unité (matériau totalement endommagé). Cette dernière est obtenue par la combinaison de deux variables scalaires représentant l'endommagement sous sollicitations de compression et de traction séparément ;
+- Dans ce modèle la dégradation des propriétés élastiques du matériau est représentée à l'aide d'une variable scalaire :math:`D` variant entre zéro (matériau sain) et l'unité (matériau totalement endommagé). Cette dernière est obtenue par la combinaison de deux variables scalaires représentant l'endommagement sous sollicitations de compression et de traction séparément ;
 
-- Cela permet de modéliser convenablement la dyssimétrie traction-compression observée expérimentalement pour les bétons. Cependant, aucune reprise de raideur lors du passage d'une sollicitation de compression à une sollicitation de traction ne peut être prise en compte, c'est-à-dire que l'effet unilatéral n'est pas modélisé ;
+- Cela permet de modéliser convenablement la dyssimétrie traction-compression observée expérimentalement pour les bétons. Cependant, aucune reprise de raideur lors du passage d'une sollicitation de traction à une sollicitation de compression ne peut être prise en compte, c'est-à-dire que l'effet unilatéral n'est pas modélisé ;
 
 - Compte tenu de cela, cette loi est adaptée à la simulation de la réponse du béton sous chargement monotone, mais nécessite des modifications pour une utilisation dans le cadre d'un calcul sous sollicitations cycliques et/ou dynamiques. Dans ce dernier cas, des limitations supplémentaires sont présentes (par exemple, l'impossibilité de modéliser des boucles d'hystérésis).
 
@@ -43,23 +43,23 @@ Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques 
 .. math::
    D_{max}=(1 - \epsilon)
    
-où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. Plus ce paramètre est grand, plus le domaine apparait précocement.
+où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de de paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
 
-La consolidation qui peut possiblement en découler dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissible et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle.
+En effet, la consolidation qui en découlerait dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissibles et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle.
 
 .. _mazars:
 
 Formulation du modèle
 ~~~~~~~~~~~~~~~~~~~~~
-La rélation contrainte-déformation s'écrit :
+La relation contrainte-déformation s'écrit :
 
 .. math::
 
    \boldsymbol{\sigma} = (1-D) \mathbb{E} : \boldsymbol{\varepsilon}
 
-où :math:`\boldsymbol{\sigma}` est le tenseur des contraintes de Cauchy, :math:`\boldsymbol{\varepsilon}` est le tenseur des déformations infinitesimales, et :math:`\mathbb{E}` est le tenseur d'elasticité d'ordre 4. 
+où :math:`\boldsymbol{\sigma}` est le tenseur des contraintes de Cauchy, :math:`\boldsymbol{\varepsilon}` est le tenseur des déformations infinitésimales, et :math:`\mathbb{E}` est le tenseur d'élasticité d'ordre 4. 
 
-La variable d'endommagement evolue au cours du chargement en fonction critère d'endommagement :
+La variable d'endommagement évolue au cours du chargement en fonction du critère d'endommagement :
 
 .. math::
 
@@ -74,7 +74,7 @@ Selon la formulation proposée par Mazars, la déformation équivalente est déf
    {e}=\sqrt{\langle\boldsymbol{\varepsilon}\rangle:\langle\boldsymbol{\varepsilon}\rangle} = \sqrt{\sum_{i=1}^{^{n}}\langle\epsilon_{i}\rangle^{2}}
    
 où :math:`\langle\boldsymbol{\varepsilon}\rangle` est la partie positive du tenseur des déformations, :math:`\epsilon_{i}` est la i-ème déformation
-principale, :math:`\langle\cdot\rangle_+` est l'opérateur de MacAuley, et :math:`n` répresente la dimension du problème consideré. 
+principale, :math:`\langle\cdot\rangle_+` est l'opérateur de Macauley, et :math:`n` répresente la dimension du problème consideré. 
 
 La variable d'histoire :math:`\kappa` est donc définie par :
 
@@ -84,7 +84,7 @@ La variable d'histoire :math:`\kappa` est donc définie par :
 
 avec :math:`e_0` une valeur seuil initiale et :math:`t` une variable répresentant le temps (ou bien le pseudo-temps dans un calcul quasi-statique). 
 
-L’évolution de cette surface de charge doit respecter le conditions Kuhn-Tucker :
+L’évolution de cette surface de charge doit respecter les conditions Kuhn-Tucker :
 
 .. math::
 
@@ -96,11 +96,11 @@ Pour prendre en compte la nature fortement dissymétrique du comportement en tra
 
 .. math::
 
-   D_{t(c)} = 1 - \frac{e_0 (1-A_{t(c)})}{\kappa} - A_{t(c)} \exp\left[ -B_t(\kappa - e_0)\right]
+   D_{t(c)} = 1 - \frac{e_0 (1-A_{t(c)})}{\kappa} - A_{t(c)} \exp\left[ -B_{t(c)}(\kappa - e_0)\right]
 
-avec :math:`A_{t(c)}` et :math:`B_{t(c)}` les quatre paramètres additionnels permettant de définir, avec le seuil de première fissuration en traction :math:`e_0`, les lois d'évolution de l'endommagement  en traction (t) et en compression (c). Le paramètre :math:`A_{t}` permet de controler la contrainte résiduelle en traction uniaxiale tandis que le paramètre :math:`B_{t}` controle la forme de la loi d'evolution de l'endommagement dans la phase post pic de contrainte. 
+avec :math:`A_{t(c)}` et :math:`B_{t(c)}` les quatre paramètres additionnels permettant de définir, avec le seuil de première fissuration en traction :math:`e_0`, les lois d'évolution de l'endommagement  en traction (t) et en compression (c). Le paramètre :math:`A_{t(c)}` permet de controler la contrainte résiduelle en traction (respectivement compression) uniaxiale tandis que le paramètre :math:`B_{t(c)}` contrôle la forme de la loi d'evolution de l'endommagement dans la phase post pic de contrainte. 
 
-La variable d'endommagement :math:`D` est finalement obtenue par combinaison lineaire des variables :math:`D_{t}` et :math:`D_{c}` 
+La variable d'endommagement :math:`D` est finalement obtenue par combinaison linéaire des variables :math:`D_{t}` et :math:`D_{c}` 
 comme suit :
 
 .. math::
@@ -116,7 +116,7 @@ avec :math:`\alpha_{t(c)} \in [0,1]` des facteurs de combinaison qui s'expriment
 avec :math:`\varepsilon_i^t` les déformations associées aux contraintes principales positives. Le paramètre :math:`\beta` a été introduit historiquement plus tatd dans le modèle pour éviter une évolution trop rapide de l'endommagement en cisaillement [PIJAUDIER-1991]_.
 
 Réponses typiques
-"""""""""""""""""
++++++++++++++++++
 
 .. figure:: figures/Figure_Mazars_1.png
    :width: 15cm
@@ -131,14 +131,14 @@ Réponses typiques
    Loi contrainte - déformation pour une sollicitation uniaxiale.
 
 Quelques commentaires
-"""""""""""""""""""""
++++++++++++++++++++++
 Grâce à sa simplicité et sa robustesse, ce modèle a été et est encore largement utilisé pour modéliser le comportement du béton. Certaines pathologies peuvent néanmoins être citées et pour lesquelles des développements sont à considérer :
 
 - Le modèle présente une fragilité excessive dans son comportement en cisaillement, et l'introduction du paramètre :math:`\beta` pour atténuer cet effet entraîne une reprise de rigidité à des niveaux de déformation élevés ;
 
-- Le modèle ne prend pas en compte l'effet unilatéral, c'est-à-dire que la refermeture des fissures expérimentalement observée entraîne une reprise de raideur. En conséquence, le modèle ne parvient pas à reproduire correctement le comportement sous chargements cycliques ;
+- Le modèle ne prend pas en compte l'effet unilatéral, c'est-à-dire une reprise de raideur due à la refermeture des fissures expérimentalement observée. En conséquence, le modèle ne parvient pas à reproduire correctement le comportement sous chargements cycliques ;
 
-- En termes numériques, l'utilisation de l'opérateur de Mac Cauley dans l'expression des coefficients :math:`\alpha_{t(c)}` entraîne une dérivée non définie de ceux-ci en zéro. Cela empêche ainsi l'utilisation de l'opérateur tangent dans le schéma de résolution. Par conséquent, seul l'opérateur sécant est utilisé, ce qui limite la vitesse de convergence du schéma de résolution ;
+- En termes numériques, l'utilisation de l'opérateur de Macauley dans l'expression des coefficients :math:`\alpha_{t(c)}` entraîne une dérivée non définie de ceux-ci en zéro. Cela empêche ainsi l'utilisation de l'opérateur tangent dans le schéma de résolution. Par conséquent, seul l'opérateur sécant est utilisé, ce qui limite la vitesse de convergence du schéma de résolution ;
   
 - Le caractère isotrope de l’endommagement ne permet pas de bien suivre l’évolution des nonlinéarités pour des chargements non radiaux.
 
@@ -146,9 +146,9 @@ Grâce à sa simplicité et sa robustesse, ce modèle a été et est encore larg
 Implémentation Cast3M (esope)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-@Détailler les sources de l'implémentation multi-fibre@
+@Détailler les sources de l'implémentation multi-fibre@ *[nh145313 à placer après le paragraphe suivant à mon avis]*
 
-Dans la suite, nous détaillons les étapes du calcul en mettant l'accent sur les parties de code correspondantes aux aspects théoriques mentionnés précédemment. Pour une analyse détaillée de l'implémentation et des aspects plus strictement techniques concernant la signification des variables, veuillez vous référer aux commentaires présents dans le fichier source mazars.eso.	  
+Dans la suite, nous détaillons les étapes du calcul pour les éléments volumiques en mettant l'accent sur les parties de code correspondantes aux aspects théoriques mentionnés précédemment. Pour une analyse détaillée de l'implémentation et des aspects plus strictement techniques concernant la signification des variables, veuillez vous référer aux commentaires présents dans le fichier source cmazar.eso *[nh145313 : cmazar.eso ?]*.	  
 
 	.. literalinclude:: sources/mazars.eso
 		:language: fortran
@@ -157,7 +157,7 @@ Dans la suite, nous détaillons les étapes du calcul en mettant l'accent sur le
 		:lineno-start: 1
 
 Entrées
-""""""""""""""""
++++++++
 	
 	.. literalinclude:: sources/mazars.eso
 		:language: fortran
@@ -172,7 +172,7 @@ Entrées
 		:lineno-start: 34
 
 Sorties
-"""""""""""""""""
++++++++
 
 	.. literalinclude:: sources/mazars.eso
 		:language: fortran
@@ -181,7 +181,7 @@ Sorties
 		:lineno-start: 42
 
 Algorithme
-""""""""""
+++++++++++
 
 Le calul de l'endommagement est réalisé par une procédure purement explicite.
 
@@ -194,10 +194,11 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 - On calcule la déformation équivalente de Mazars :
 		
 	* Si le calcul est local (**ISTEP = 0**), la déformation principale est évaluée directement sur la base des déformations principales ;
-	* 
+	        
 	* En cas d'un calcul non-local, l'évolution de l'endommagement est pilotée par la contrepartie non-locale de la déformation de Mazars. Celle-ci est évaluée avec deux passages dans la loi de comportement :
+
 		- Lors du premier passage (**ISTEP = 1**), on calcule la déformation locale et on sort de la loi de comportement. La déformation non-locale est calculée via une procédure ad-hoc en dehors de la loi de comportement, par exemple, via une méthode non-locale intégrale ou bien une formulation de type gradient implicite ;
-		- Cette déformation non-locale est une variable d'entrée de la loi de comportement (**ISTEP = 2**) et est utilisée pour faire évoluer l'endommagement;
+		- Cette déformation non-locale est une variable d'entrée de la loi de comportement (**ISTEP = 2**) et est utilisée pour faire évoluer l'endommagement ;
 
 - On vérifie le dépassement du seuil de déformation. Si le seuil n'est pas dépassé, l'endommagement n'est pas mis à jour. Sinon, on procède comme suit.
 				
@@ -270,7 +271,7 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 Implémentation MFront
 ~~~~~~~~~~~~~~~~~~~~~
 
-Une implémentation de la loi de Mazars a été réalisée sous MFront. Le code suivant détaille l'implémentation pour une utilisation avec des elements volumiques/surfaciques. La formulation implémentée est une version simplifiée de celle disponible dans Cast3M. En particulier, aucun correctif n'est pas introduit pour améliorer la réponse du modèle en cisaillement et compression bi-/tri-axiale. 
+Une implémentation de la loi de Mazars a été réalisée sous MFront. Le code suivant détaille l'implémentation pour une utilisation avec des elements volumiques/surfaciques. La formulation implémentée est une version simplifiée de celle disponible dans Cast3M. En particulier, aucun correctif n'est introduit pour améliorer la réponse du modèle en cisaillement et compression bi-/tri-axiale. 
 
 	.. literalinclude:: sources/mazars_mfront.mfront
 		:linenos:
@@ -301,24 +302,26 @@ Exemple d'utilisation de la loi Mazars pour des éléments finis de section **QU
 Paramètres de la loi non linéaire
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- **KTR0**: seuil en déformation pour la traction, :math:`e_0`
-- **ACOM**: paramètre pour la compression, :math:`A_c`
-- **BCOM**: paramètre pour la compression, :math:`B_c`
-- **ATRA**: paramètre pour la traction, :math:`A_t`
-- **BTRA**: paramètre pour la traction, :math:`B_t`
-- **BETA**: correction pour le cisaillement, :math:`\beta`
+- **KTR0** : seuil en déformation pour la traction, :math:`e_0`
+- **ATRA** : paramètre pour la traction, :math:`A_t`
+- **ACOM** : paramètre pour la compression, :math:`A_c`
+- **BTRA** : paramètre pour la traction, :math:`B_t`
+- **BCOM** : paramètre pour la compression, :math:`B_c`
+- **BETA** : correction pour le cisaillement, :math:`\beta`
 
 Valeurs typiques
-""""""""""""""""
+++++++++++++++++
 
 Pour un béton ordinaire, on peut choisir :
-- :math:`e_0= 10^{-4}`
-- :math:`A_c= 10^{-4}`
-- :math:`A_t= 10^{-4}`
-- :math:`B_t= 10^{-4}`
-- :math:`B_c= 10^{-4}`
 
-Prise en compte de la régularisation dans la définition des paramètre matériaux
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+- :math:`e_0= 10^{-4}`
+- :math:`A_t= 1`
+- :math:`A_c= 1,5`
+- :math:`B_t= 8000`
+- :math:`B_c= 1550`
+- :math:`\beta= 1`
+
+Prise en compte de la régularisation dans la définition des paramètres matériaux
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 - Régularisation énergetique 
 - Régularisation non-locale (quelle formulation? quelle variable est rendue non-locale?)

@@ -507,7 +507,213 @@ Compression monotone
 ~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``02_compression.dgibi``
 
-TODO
+On applique le cas de chargement de compression simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_comp_mono>` et :ref:`massif <sec:modeles_beton_test_mass_comp_mono>` en déplacement imposé négatif, croissant en valeur absolue, jusqu’à atteindre l’endommagement autour de 0,9.
+
+Pour tous les modes de calcul le déplacement imposé vaut :math:`u_{max}=-5.10^{-3}` m.
+
+L’objectif est d’évaluer la limite en compression puis le comportement post-pic du modèle.
+
+L'analyse des résultats porte sur les courbes :
+
+- d'endomagemment moyen en fonction du temps ;
+- de la contrainte moyenne en fonction de la déformation moyenne ;
+- de la force de réaction globale en fonction du déplacement imposé.
+
+Solution de référence
++++++++++++++++++++++
+La solution de référence est obtenue de manière analytique à partir de l'équation donnant la loi de l'évolution de l'endommagement en compression :
+
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{e} - A_c\exp\left[-B_c (e - e_0)\right]
+   
+où :
+
+- :math:`A_c` et :math:`B_c` sont les paramètres de la loi de Mazars en compression ;
+- :math:`e_0` est le seuil d'endommagement en déformation ;
+- :math:`e` est la déformation équivalente selon la formulation proposée par Mazars :
+
+.. math::
+   {e} = \sqrt{\sum_{i=1}^{^{n}}\langle\epsilon_{i}\rangle^{2}}
+   
+où :math:`\langle\epsilon_{i}\rangle` est la partie positive de la i-ème déformation principale et :math:`n` répresente la dimension du problème consideré (cf. chapitre :ref:`mazars`).
+   
+L'expression de la déformation équivalente :math:`e` dépend du mode de représentation géométrique (choix de modélisation E.F. et dimension spatiale) et doit donc être spécifiée dans chaque cas.
+
+Résultats du cas 3D poutre à fibre
+++++++++++++++++++++++++++++++++++
+
+Déformation équivalente
+"""""""""""""""""""""""
+Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
+
+.. math::
+
+   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
+
+La compression est uniaxiale dans la direction :math:`x` qui coincide avec la direction de la poutre, d'où l'expression du tenseur des contraintes :
+
+.. math::
+
+   \boldsymbol{\sigma} = 
+      \begin{bmatrix}
+         \sigma_{xx} & 0 & 0 \\
+         0 & 0 & 0 \\
+         0 & 0 & 0
+      \end{bmatrix}
+
+et de sa trace :
+
+.. math::
+
+   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
+
+Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+
+D'où l'expression du tenseur des déformations :
+
+.. math::
+
+   \boldsymbol{\varepsilon} = 
+      \begin{bmatrix}
+         \frac{1}{E}\sigma_{xx} & 0 & 0 \\
+         0 & -\frac{\nu}{E}\sigma_{xx} & 0 \\
+         0 & 0 & -\frac{\nu}{E}\sigma_{xx}
+      \end{bmatrix}
+
+Or, :math:`\sigma_{xx}<0` (compression)
+
+D'où :
+
+- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{xx}\rangle=0`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\frac{\nu}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=-\frac{\nu}{E}\sigma_{xx}`
+
+La déformation équivalente s'exprime donc par :
+
+.. math::
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=   \frac{\sqrt{2}\nu}{E}\sigma_{xx}=\sqrt{2}\nu|\epsilon_{xx}|
+
+Dans Cast3M, :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_d_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_s_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   8.35516.10^{-09} > 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D poutre à fibre sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_f_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D poutre à fibre
+++++++++++++++++++++++++++++++++++
+
+Déformation équivalente
+"""""""""""""""""""""""
+Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
+
+.. math::
+
+   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
+
+La compression est uniaxiale dans la direction :math:`x` qui coincide avec la direction de la poutre, d'où l'expression du tenseur des contraintes :
+
+.. math::
+
+   \boldsymbol{\sigma} = 
+      \begin{bmatrix}
+         \sigma_{xx} & 0 \\
+         0 & 0
+      \end{bmatrix}
+
+et de sa trace :
+
+.. math::
+
+   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
+
+Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+
+D'où l'expression du tenseur des déformations :
+
+.. math::
+
+   \boldsymbol{\varepsilon} = 
+      \begin{bmatrix}
+         \frac{1}{E}\sigma_{xx} & 0 \\
+         0 & -\frac{\nu}{E}\sigma_{xx}
+      \end{bmatrix}
+
+Or, :math:`\sigma_{xx}<0` (compression)
+
+D'où :
+
+- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{xx}\rangle=0`
+- :math:`\epsilon_{yy}=-\frac{\nu}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=-\frac{\nu}{E}\sigma_{xx}`
+
+La déformation équivalente s'exprime donc par :
+
+.. math::
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}}=\frac{\nu}{E}|\sigma_{xx}|=\nu|\epsilon_{xx}|
+
+*[nh145313 : cette formulation 2D de la déformation équivalente* :math:`{e}=\nu|\epsilon_{xx}|` *donne une solution de référence qui ne colle pas avec la solution calculée. l'accord Calcul-Référence est atteint si, pour la solution de référence, la déformation équivalente est écrite comme en 3D, soit* :math:`{e}=\sqrt{2}\nu|\epsilon_{xx}|` *. En 2D, la poutre à fibre en compression simple doit pouvoir rendre compte de l'expansion de sa section dans ses 2 directions, comme en 3D... Comment écrire analytiquement cet effet 3D dans un espace 2D (matrice 2x2) ?]*
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_d_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_s_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   8.35516.10^{-09} > 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D poutre à fibre sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_f_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
 
 
 

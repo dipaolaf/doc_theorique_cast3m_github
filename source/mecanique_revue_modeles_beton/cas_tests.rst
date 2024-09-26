@@ -27,13 +27,11 @@ Traction monotone
 Description
 """""""""""
 
-Il s'agit d'un test de traction simple monotone. On considère une poutre de longueur :math:`L` et section transversale :math:`S`
-soumise à un chargement de traction dans la direction de son axe.
+Il s'agit d'un test de traction simple monotone. On considère une poutre de longueur :math:`L` et section transversale :math:`S` soumise à un chargement de traction dans la direction de son axe.
 
 Blocages et chargement
 """"""""""""""""""""""
-Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant
-progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément.
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
 
 Les instructions Gibiane correpondantes sont :
 
@@ -41,9 +39,9 @@ Les instructions Gibiane correpondantes sont :
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 252-263
+      :lines: 255-266
       :linenos:
-      :lineno-start: 252
+      :lineno-start: 255
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -53,8 +51,43 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/01_traction.dgibi>`
 
 
+.. _sec:modeles_beton_test_pout_comp_mono:
+
 Compression monotone
 ~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: figures/mazars_comp_mono_char_3dpaf.png
+   :width: 15cm
+   :align: center
+
+   Compression simple sur un modèle d'éléments finis poutre.
+
+Description
+"""""""""""
+
+Il s'agit d'un test de compression simple monotone. On considère une poutre de longueur :math:`L` et section transversale :math:`S` soumise à un chargement de compression dans la direction de son axe.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant progressivement jusqu'à une valeur :math:`u_{max} (<0)`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
+
+Les instructions Gibiane correpondantes sont :
+
+.. admonition:: Compression monotone : blocages et chargement
+
+   .. literalinclude:: dgibi/02_compression.dgibi
+      :language: gibiane
+      :lines: 283-294
+      :linenos:
+      :lineno-start: 283
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/02_compression.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/02_compression.dgibi>`
+
 
 Traction cyclique
 ~~~~~~~~~~~~~~~~~
@@ -88,21 +121,20 @@ Description
 
 Il s'agit d'un test de traction simple monotone. Les dimensions dépendent de l'hypothèse de calcul retenue :
 
-- en 3D, on considère un cube de coté :math:`L` ;
-- en 2D plan, on considère un domaine carré de coté :math:`L` et d'épaisseur :math:`e` ;
+- en 3D, on considère un cube d'arête :math:`L` ;
+- en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
 - en 2D axisymétrique, on considère un cylindre de rayon :math:`R` et de hauteur :math:`H`.
 
 Blocages et chargement
 """"""""""""""""""""""
-Le chargement consiste à piloter le déplacement d'une des faces en l'augmentant progressivement jusqu'à une valeur :math:`u_{max}`.
-On bloque les déplacements l'autre face en laissant libre la contraction par effet de Poisson.
+Le chargement consiste à piloter le déplacement d'une des faces en l'augmentant progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements de l'autre face en laissant libre la contraction par effet de Poisson.
 
 - En 3D, on pilote le déplacement **UX** de la face "droite" (située dans le plan :math:`x=L`) et
-  on bloque le déplacements **UX** de la face opposée "gauche" (dans le plan x=0).
-  Le mouvement de corps rigide est empeché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0).
+  on bloque le déplacement **UX** de la face opposée "gauche" (dans le plan :math:`x=0`).
+  Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0).
 - En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
-- En 2D axisymétrique on pilote le déplacement **UZ** de ligne "haute" (située en :math:`z=L`).
-  On bloque alors les déplacements **UZ** de la ligne opposée "basse" (en z=0).
+- En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
+  On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
 
 Les instructions Gibiane correpondantes sont :
 
@@ -110,17 +142,17 @@ Les instructions Gibiane correpondantes sont :
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 74-83
+      :lines: 78-87
       :linenos:
-      :lineno-start: 74
+      :lineno-start: 78
 
 .. admonition:: Traction monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 596-604
+      :lines: 601-609
       :linenos:
-      :lineno-start: 596
+      :lineno-start: 601
 
 Les blocages et le chargement sont représentés sur les figures suivantes.
 
@@ -131,7 +163,10 @@ Les blocages et le chargement sont représentés sur les figures suivantes.
 .. image:: figures/mazars_trac_mono_char_2daxi.png
    :width: 30%
 
-Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
+.. figure:: figures/mazars_trac_mono_char_2daxi.png
+   :width: 0%
+
+   Traction - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -141,9 +176,70 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/01_traction.dgibi>`
 
 
+.. _sec:modeles_beton_test_mass_comp_mono:
 
 Compression monotone
 ~~~~~~~~~~~~~~~~~~~~
+
+Description
+"""""""""""
+
+Il s'agit d'un test de compression simple monotone. Les dimensions dépendent de l'hypothèse de calcul retenue :
+
+- en 3D, on considère un cube d'arête :math:`L` ;
+- en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
+- en 2D axisymétrique, on considère un cylindre de rayon :math:`R` et de hauteur :math:`H`.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement d'une des faces en l'augmentant progressivement jusqu'à une valeur :math:`u_{max} (<0)`. On bloque les déplacements de l'autre face en laissant libre l'expansion par effet de Poisson.
+
+- En 3D, on pilote le déplacement **UX** de la face "droite" (située dans le plan :math:`x=L`) et
+  on bloque le déplacement **UX** de la face opposée "gauche" (dans le plan :math:`x=0`).
+  Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0).
+- En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
+- En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
+  On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
+
+Les instructions Gibiane correpondantes sont :
+
+.. admonition:: Compression monotone : blocages et chargement pour le cas 3D
+
+   .. literalinclude:: dgibi/02_compression.dgibi
+      :language: gibiane
+      :lines: 78-87
+      :linenos:
+      :lineno-start: 78
+
+.. admonition:: Compression monotone : blocages et chargement pour le cas 2D axisymétrique
+
+   .. literalinclude:: dgibi/02_compression.dgibi
+      :language: gibiane
+      :lines: 665-673
+      :linenos:
+      :lineno-start: 665
+
+Les blocages et le chargement sont représentés sur les figures suivantes.
+
+.. image:: figures/mazars_comp_mono_char_3d.png
+   :width: 30%
+.. image:: figures/mazars_comp_mono_char_2dplan.png
+   :width: 30%
+.. image:: figures/mazars_comp_mono_char_2daxi.png
+   :width: 30%
+
+.. figure:: figures/mazars_comp_mono_char_2daxi.png
+   :width: 0%
+
+   Compression - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/02_compression.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/02_compression.dgibi>`
+
 
 Traction cyclique
 ~~~~~~~~~~~~~~~~~
