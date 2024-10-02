@@ -27,16 +27,20 @@ Anomalies observées
 
 Anomalie 1
 ++++++++++
+Une anomalie a été identifiée dans la source fibmaz.eso concernant le mauvais calibrage du test de bicompression dans le modèle Mazars pour la poutre à fibre. Le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple. Dans un premier temps, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). Dans un second temps, la correction GAMMA a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibre qui ne traîte que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. Cette anomalie est corrigée dans la version du jour actuelle et dans la version 2024.1 de Cast3M.
+
+Anomalie 2
+++++++++++
 [valable au 19/09/2024]
 
 Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazars.eso. Cette anomalie ne rend pas le modèle Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M. Elle est corrigée dans la version du jour ainsi que dans la version 2024.1.
 
-Anomalie 2
+Anomalie 3
 ++++++++++
 nh145313 : L'anomalie suivante est corrigée en bloquant les rotation de l'extrémité libre de la poutre à fibre.
 [**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type multi-fibre est proscrite !**.]
 
-Anomalie 3 (?)
+Anomalie 4 (?)
 ++++++++++++++
 Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazars.eso) que poutres à fibre (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
 
