@@ -44,7 +44,10 @@ L'analyse des résultats porte sur les courbes :
 
 Solution de référence
 +++++++++++++++++++++
-La solution de référence est obtenue de manière analytique à partir de l'équation donnant la loi de l'évolution de l'endommagement en traction :
+La solution de référence est obtenue de manière analytique à partir de l'équation donnant la loi de l'évolution de l'endommagement en traction.
+
+Endommagement
+"""""""""""""
 
 .. math::
    D_t = 1 - \frac{e_0 (1 - A_t)}{e} - A_t\exp\left[-B_t (e - e_0)\right]
@@ -62,60 +65,66 @@ où :math:`\langle\epsilon_{i}\rangle` est la partie positive de la i-ème défo
    
 L'expression de la déformation équivalente :math:`e` dépend du mode de représentation géométrique (choix de modélisation E.F. et dimension spatiale) et doit donc être spécifiée dans chaque cas.
 
-Résultats du cas 3D poutre à fibre
-++++++++++++++++++++++++++++++++++
-
-Déformation équivalente
-"""""""""""""""""""""""
-Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
+Contrainte
+""""""""""
+Pour un problème en déplacement imposé (i.e. en déformation imposée dans la cas présent unitaire géométrique), l'expression de la contrainte se déduit de la relation contrainte-déformation et de l'expression de l'endommagement :
 
 .. math::
 
-   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
+   \boldsymbol{\sigma} = (1-D_{t}) \mathbb{E} : \boldsymbol{\varepsilon}
 
-La traction est uniaxiale dans la direction :math:`x` qui coincide avec la direction de la poutre, d'où l'expression du tenseur des contraintes :
+Résultats du cas 3D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Solution de référence
+"""""""""""""""""""""
+Dans la source fibmaz.eso décrivant le modèle Mazars pour la poutre à fibres, quelque soit la dimension géométrique du problème, le tenseur des déformations est défini en 3D de la façon suivante :
 
 .. math::
 
-   \boldsymbol{\sigma} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \sigma_{xx} & 0 & 0 \\
-         0 & 0 & 0 \\
-         0 & 0 & 0
+         \epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
+         \epsilon_{xy} & -\nu\epsilon_{xx} & 0 \\
+         \epsilon_{xz} & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-et de sa trace :
+Or, la traction est uniaxiale dans la direction :math:`x`, donc :math:`\epsilon_{xy}=\epsilon_{xz}=0`, d'où :
 
 .. math::
 
-   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
-
-Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
-
-D'où l'expression du tenseur des déformations :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \frac{1}{E}\sigma_{xx} & 0 & 0 \\
-         0 & -\frac{\nu}{E}\sigma_{xx} & 0 \\
-         0 & 0 & -\frac{\nu}{E}\sigma_{xx}
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-Or, :math:`\sigma_{xx}>0` (traction)
+Sachant que :math:`\epsilon_{xx}>0` (traction), on a :
 
-D'où :
-
-- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{xx}\rangle=\frac{1}{E}\sigma_{xx}`
-- :math:`\epsilon_{yy}=\epsilon_{zz}=-\frac{\nu}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=0`
+- :math:`\langle\epsilon_{xx}\rangle=\epsilon_{xx}`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=0`
 
 La déformation équivalente s'exprime donc par :
 
 .. math::
-   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\frac{1}{E}\sigma_{xx}=\epsilon_{xx}
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\epsilon_{xx}
 
-Dans Cast3M, :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
 
 Courbe d'évolution de l'endommagement
 """""""""""""""""""""""""""""""""""""
@@ -140,7 +149,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    3.18393.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 3D poutre à fibre sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -151,58 +160,58 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-Résultats du cas 2D poutre à fibre
-++++++++++++++++++++++++++++++++++
+Résultats du cas 2D poutre à fibres
++++++++++++++++++++++++++++++++++++
 
-Déformation équivalente
-"""""""""""""""""""""""
-Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
-
-La traction est uniaxiale dans la direction :math:`x` qui coincide avec la direction de la poutre, d'où l'expression du tenseur des contraintes :
+Solution de référence
+"""""""""""""""""""""
+Dans la mesure où le tenseur des déformations est défini en 3D dans le modèle Mazars pour la poutre à fibres, son expression dans le cas 2D est la même que dans le cas 3D :
 
 .. math::
 
-   \boldsymbol{\sigma} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \sigma_{xx} & 0 \\
-         0 & 0
+         \epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
+         \epsilon_{xy} & -\nu\epsilon_{xx} & 0 \\
+         \epsilon_{xz} & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-et de sa trace :
+Or, la traction est uniaxiale dans la direction :math:`x`, donc :math:`\epsilon_{xy}=\epsilon_{xz}=0`, d'où :
 
 .. math::
 
-   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
-
-Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
-
-D'où l'expression du tenseur des déformations :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \frac{1}{E}\sigma_{xx} & 0 \\
-         0 & -\frac{\nu}{E}\sigma_{xx}
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-Or, :math:`\sigma_{xx}>0` (traction)
+Sachant que :math:`\epsilon_{xx}>0` (traction), on a :
 
-D'où :
-
-- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{xx}\rangle=\frac{1}{E}\sigma_{xx}`
-- :math:`\epsilon_{yy}=-\frac{\nu}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=0`
+- :math:`\langle\epsilon_{xx}\rangle=\epsilon_{xx}`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=0`
 
 La déformation équivalente s'exprime donc par :
 
 .. math::
-   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}}=\frac{1}{E}\sigma_{xx}=\epsilon_{xx}
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\epsilon_{xx}
 
-Dans Cast3M, :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
 
 Courbe d'évolution de l'endommagement
 """""""""""""""""""""""""""""""""""""
@@ -227,7 +236,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    3.18393.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D poutre à fibre sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -241,57 +250,44 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 Résultats du cas 3D volumique
 +++++++++++++++++++++++++++++
 
-Déformation équivalente
-"""""""""""""""""""""""
-Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
+Solution de référence
+"""""""""""""""""""""
+La traction est uniaxiale dans la direction :math:`x`, d'où l'expression du tenseur des déformations :
 
 .. math::
 
-   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
-
-La traction est uniaxiale dans la direction :math:`x`, d'où l'expression du tenseur des contraintes :
-
-.. math::
-
-   \boldsymbol{\sigma} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \sigma_{xx} & 0 & 0 \\
-         0 & 0 & 0 \\
-         0 & 0 & 0
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-et de sa trace :
+Sachant que :math:`\epsilon_{xx}>0` (traction), on a :
 
-.. math::
-
-   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
-
-Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du tenseur des contraintes ``TAB1.'CONTRAINTES'`` en sortie de ``PASAPAS``.
-
-D'où l'expression du tenseur des déformations :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = 
-      \begin{bmatrix}
-         \frac{1}{E}\sigma_{xx} & 0 & 0 \\
-         0 & -\frac{\nu}{E}\sigma_{xx} & 0 \\
-         0 & 0 & -\frac{\nu}{E}\sigma_{xx}
-      \end{bmatrix}
-
-Or, :math:`\sigma_{xx}>0` (traction)
-
-D'où :
-
-- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{xx}\rangle=\frac{1}{E}\sigma_{xx}`
-- :math:`\epsilon_{yy}=\epsilon_{zz}=-\frac{\nu}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=0`
+- :math:`\langle\epsilon_{xx}\rangle=\epsilon_{xx}`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=0`
 
 La déformation équivalente s'exprime donc par :
 
 .. math::
-   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\frac{1}{E}\sigma_{xx}=\epsilon_{xx}
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\epsilon_{xx}
 
-Dans Cast3M, :math:`\epsilon_{xx}` correspond à la composante ``EPXX`` du tenseur des déformations ``TAB1.'DEFORMATIONS'`` en sortie de ``PASAPAS``.
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction :math:`x` :
+
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``EPXX`` du tenseur des déformations ``DEFORMATIONS`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du tenseur des contraintes ``CONTRAINTES`` en sortie de ``PASAPAS``.
 
 Courbe d'évolution de l'endommagement
 """""""""""""""""""""""""""""""""""""
@@ -330,55 +326,44 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 Résultats du cas 2D contraintes planes
 ++++++++++++++++++++++++++++++++++++++
 
-Déformation équivalente
-"""""""""""""""""""""""
-Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
+Solution de référence
+"""""""""""""""""""""
+La traction est uniaxiale dans la direction :math:`x` et, en contraintes planes, la déformation est libre dans la direction :math:`z` orthogonale au plan de représentation géométrique 2D (contration par effet de Poisson), d'où l'expression du tenseur des déformations :
 
 .. math::
 
-   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
-
-La traction est uniaxiale dans la direction :math:`x`, d'où l'expression du tenseur des contraintes :
-
-.. math::
-
-   \boldsymbol{\sigma} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \sigma_{xx} & 0 \\
-         0 & 0
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-et de sa trace :
+Sachant que :math:`\epsilon_{xx}>0` (traction), on a :
 
-.. math::
-
-   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
-
-Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du tenseur des contraintes ``TAB1.'CONTRAINTES'`` en sortie de ``PASAPAS``.
-
-D'où l'expression du tenseur des déformations :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = 
-      \begin{bmatrix}
-         \frac{1}{E}\sigma_{xx} & 0 \\
-         0 & -\frac{\nu}{E}\sigma_{xx}
-      \end{bmatrix}
-
-Or, :math:`\sigma_{xx}>0` (traction)
-
-D'où :
-
-- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{xx}\rangle=\frac{1}{E}\sigma_{xx}`
-- :math:`\epsilon_{yy}=-\frac{\nu}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=0`
+- :math:`\langle\epsilon_{xx}\rangle=\epsilon_{xx}`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}<0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=0`
 
 La déformation équivalente s'exprime donc par :
 
 .. math::
-   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}}=\frac{1}{E}\sigma_{xx}=\epsilon_{xx}
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\epsilon_{xx}
 
-Dans Cast3M, :math:`\epsilon_{xx}` correspond à la composante ``EPXX`` du tenseur des déformations ``TAB1.'DEFORMATIONS'`` en sortie de ``PASAPAS``.
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction :math:`x` :
+
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``EPXX`` du tenseur des déformations ``DEFORMATIONS`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du tenseur des contraintes ``CONTRAINTES`` en sortie de ``PASAPAS``.
 
 Courbe d'évolution de l'endommagement
 """""""""""""""""""""""""""""""""""""
@@ -417,55 +402,44 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 Résultats du cas 2D axisymétrique
 +++++++++++++++++++++++++++++++++
 
-Déformation équivalente
-"""""""""""""""""""""""
-Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
+Solution de référence
+"""""""""""""""""""""
+La traction est uniaxiale dans la direction :math:`z`, d'où l'expression du tenseur des déformations :
 
 .. math::
 
-   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
-
-La traction est uniaxiale dans la direction :math:`z`, d'où l'expression du tenseur des contraintes :
-
-.. math::
-
-   \boldsymbol{\sigma} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         0 & 0 \\
-         0 & \sigma_{zz}
+         -\nu\epsilon_{zz} & 0 & 0 \\
+         0 & -\nu\epsilon_{zz} & 0 \\
+         0 & 0 & \epsilon_{zz}
       \end{bmatrix}
 
-et de sa trace :
+Sachant que :math:`\epsilon_{zz}>0` (traction), on a :
 
-.. math::
-
-   Tr(\boldsymbol{\sigma}) = \sigma_{zz}
-
-Dans Cast3M, :math:`\sigma_{zz}` correspond à la composante ``SMZZ`` du tenseur des contraintes ``TAB1.'CONTRAINTES'`` en sortie de ``PASAPAS``.
-
-D'où l'expression du tenseur des déformations :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = 
-      \begin{bmatrix}
-         -\frac{\nu}{E}\sigma_{zz} & 0 \\
-         0 & \frac{1}{E}\sigma_{zz}
-      \end{bmatrix}
-
-Or, :math:`\sigma_{zz}>0` (traction)
-
-D'où :
-
-- :math:`\epsilon_{rr}=-\frac{\nu}{E}\sigma_{zz}<0`, donc :math:`\langle\epsilon_{rr}\rangle=0`
-- :math:`\epsilon_{zz}=\frac{1}{E}\sigma_{zz}>0`, donc :math:`\langle\epsilon_{zz}\rangle=\frac{1}{E}\sigma_{zz}`
+- :math:`\epsilon_{rr}=\epsilon_{\theta\theta}=-\nu\epsilon_{zz}<0`, donc :math:`\langle\epsilon_{rr}\rangle=\langle\epsilon_{\theta\theta}\rangle=0`
+- :math:`\langle\epsilon_{zz}\rangle=\epsilon_{zz}`
 
 La déformation équivalente s'exprime donc par :
 
 .. math::
-   {e} = \sqrt{\langle\epsilon_{rr}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\frac{1}{E}\sigma_{zz}=\epsilon_{zz}
+   {e} = \sqrt{\langle\epsilon_{rr}\rangle^{2}+\langle\epsilon_{\theta\theta}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\epsilon_{zz}
 
-Dans Cast3M, :math:`\epsilon_{zz}` correspond à la composante ``EPZZ`` du tenseur des déformations ``TAB1.'DEFORMATIONS'`` en sortie de ``PASAPAS``.
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{zz}} - A_t\exp\left[-B_t (\epsilon_{zz} - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction :math:`z` :
+
+.. math::
+   \sigma_{zz}=(1-D_t) E \epsilon_{zz}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{zz}` correspond à la composante ``EPZZ`` du tenseur des déformations ``DEFORMATIONS`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{zz}` correspond à la composante ``SMZZ`` du tenseur des contraintes ``CONTRAINTES`` en sortie de ``PASAPAS``.
 
 Courbe d'évolution de l'endommagement
 """""""""""""""""""""""""""""""""""""
@@ -521,7 +495,10 @@ L'analyse des résultats porte sur les courbes :
 
 Solution de référence
 +++++++++++++++++++++
-La solution de référence est obtenue de manière analytique à partir de l'équation donnant la loi de l'évolution de l'endommagement en compression :
+La solution de référence est obtenue de manière analytique à partir de l'équation donnant la loi de l'évolution de l'endommagement en compression.
+
+Endommagement
+"""""""""""""
 
 .. math::
    D_c = 1 - \frac{e_0 (1 - A_c)}{e} - A_c\exp\left[-B_c (e - e_0)\right]
@@ -539,60 +516,66 @@ où :math:`\langle\epsilon_{i}\rangle` est la partie positive de la i-ème défo
    
 L'expression de la déformation équivalente :math:`e` dépend du mode de représentation géométrique (choix de modélisation E.F. et dimension spatiale) et doit donc être spécifiée dans chaque cas.
 
-Résultats du cas 3D poutre à fibre
-++++++++++++++++++++++++++++++++++
-
-Déformation équivalente
-"""""""""""""""""""""""
-Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
+Contrainte
+""""""""""
+Pour un problème en déplacement imposé (i.e. en déformation imposée dans la cas présent unitaire géométrique), l'expression de la contrainte se déduit de la relation contrainte-déformation et de l'expression de l'endommagement :
 
 .. math::
 
-   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
+   \boldsymbol{\sigma} = (1-D_{t}) \mathbb{E} : \boldsymbol{\varepsilon}
 
-La compression est uniaxiale dans la direction :math:`x` qui coincide avec la direction de la poutre, d'où l'expression du tenseur des contraintes :
+Résultats du cas 3D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Solution de référence
+"""""""""""""""""""""
+Dans la source fibmaz.eso décrivant le modèle Mazars pour la poutre à fibres, quelque soit la dimension géométrique du problème, le tenseur des déformations est défini en 3D de la façon suivante :
 
 .. math::
 
-   \boldsymbol{\sigma} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \sigma_{xx} & 0 & 0 \\
-         0 & 0 & 0 \\
-         0 & 0 & 0
+         \epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
+         \epsilon_{xy} & -\nu\epsilon_{xx} & 0 \\
+         \epsilon_{xz} & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-et de sa trace :
+Or, la traction est uniaxiale dans la direction :math:`x`, donc :math:`\epsilon_{xy}=\epsilon_{xz}=0`, d'où :
 
 .. math::
 
-   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
-
-Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
-
-D'où l'expression du tenseur des déformations :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \frac{1}{E}\sigma_{xx} & 0 & 0 \\
-         0 & -\frac{\nu}{E}\sigma_{xx} & 0 \\
-         0 & 0 & -\frac{\nu}{E}\sigma_{xx}
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-Or, :math:`\sigma_{xx}<0` (compression)
+Sachant que :math:`\epsilon_{xx}<0` (compression), on a :
 
-D'où :
-
-- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{xx}\rangle=0`
-- :math:`\epsilon_{yy}=\epsilon_{zz}=-\frac{\nu}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=-\frac{\nu}{E}\sigma_{xx}`
+- :math:`\langle\epsilon_{xx}\rangle=0`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=-\nu\epsilon_{xx}`
 
 La déformation équivalente s'exprime donc par :
 
 .. math::
-   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=   \frac{\sqrt{2}\nu}{E}\sigma_{xx}=\sqrt{2}\nu|\epsilon_{xx}|
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\sqrt{2}\nu|\epsilon_{xx}|
 
-Dans Cast3M, :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+.. math::
+   \sigma_{xx}=(1-D_c) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
 
 Courbe d'évolution de l'endommagement
 """""""""""""""""""""""""""""""""""""
@@ -617,7 +600,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    8.35516.10^{-09} > 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D poutre à fibre sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -628,58 +611,58 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-Résultats du cas 2D poutre à fibre
-++++++++++++++++++++++++++++++++++
+Résultats du cas 2D poutre à fibres
++++++++++++++++++++++++++++++++++++
 
-Déformation équivalente
-"""""""""""""""""""""""
-Le tenseur des déformations s'obtient en inversant la relation contrainte-déformation en élasticité (loi de Hooke généralisée pour un matériau isotrope) :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = \frac{1 + \nu}{E}\boldsymbol{\sigma} - \frac{\nu}{E} Tr(\boldsymbol{\sigma}) \boldsymbol{I}
-
-La compression est uniaxiale dans la direction :math:`x` qui coincide avec la direction de la poutre, d'où l'expression du tenseur des contraintes :
+Solution de référence
+"""""""""""""""""""""
+Dans la mesure où le tenseur des déformations est défini en 3D dans le modèle Mazars pour la poutre à fibres, son expression dans le cas 2D est la même que dans le cas 3D :
 
 .. math::
 
-   \boldsymbol{\sigma} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \sigma_{xx} & 0 \\
-         0 & 0
+         \epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
+         \epsilon_{xy} & -\nu\epsilon_{xx} & 0 \\
+         \epsilon_{xz} & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-et de sa trace :
+Or, la traction est uniaxiale dans la direction :math:`x`, donc :math:`\epsilon_{xy}=\epsilon_{xz}=0`, d'où :
 
 .. math::
 
-   Tr(\boldsymbol{\sigma}) = \sigma_{xx}
-
-Dans Cast3M, :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
-
-D'où l'expression du tenseur des déformations :
-
-.. math::
-
-   \boldsymbol{\varepsilon} = 
+   \boldsymbol{\epsilon} = 
       \begin{bmatrix}
-         \frac{1}{E}\sigma_{xx} & 0 \\
-         0 & -\frac{\nu}{E}\sigma_{xx}
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
       \end{bmatrix}
 
-Or, :math:`\sigma_{xx}<0` (compression)
+Sachant que :math:`\epsilon_{xx}<0` (compression), on a :
 
-D'où :
-
-- :math:`\epsilon_{xx}=\frac{1}{E}\sigma_{xx}<0`, donc :math:`\langle\epsilon_{xx}\rangle=0`
-- :math:`\epsilon_{yy}=-\frac{\nu}{E}\sigma_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=-\frac{\nu}{E}\sigma_{xx}`
+- :math:`\langle\epsilon_{xx}\rangle=0`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=-\nu\epsilon_{xx}`
 
 La déformation équivalente s'exprime donc par :
 
 .. math::
-   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}}=\frac{\nu}{E}|\sigma_{xx}|=\nu|\epsilon_{xx}|
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\sqrt{2}\nu|\epsilon_{xx}|
 
-*[nh145313 : cette formulation 2D de la déformation équivalente* :math:`{e}=\nu|\epsilon_{xx}|` *donne une solution de référence qui ne colle pas avec la solution calculée. l'accord Calcul-Référence est atteint si, pour la solution de référence, la déformation équivalente est écrite comme en 3D, soit* :math:`{e}=\sqrt{2}\nu|\epsilon_{xx}|` *. En 2D, la poutre à fibre en compression simple doit pouvoir rendre compte de l'expansion de sa section dans ses 2 directions, comme en 3D... Comment écrire analytiquement cet effet 3D dans un espace 2D (matrice 2x2) ?]*
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+.. math::
+   \sigma_{xx}=(1-D_c) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``VISXX``, rebaptisée ``EPXX``, du sous-champs ``VAIS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du sous-champs ``VONS`` du champs des variables internes ``VARIABLES_INTERNES`` en sortie de ``PASAPAS``.
 
 Courbe d'évolution de l'endommagement
 """""""""""""""""""""""""""""""""""""
@@ -704,7 +687,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    8.35516.10^{-09} > 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D poutre à fibre sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -715,6 +698,235 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+Solution de référence
+"""""""""""""""""""""
+La compression est uniaxiale dans la direction :math:`x`, d'où l'expression du tenseur des déformations :
+
+.. math::
+
+   \boldsymbol{\epsilon} = 
+      \begin{bmatrix}
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
+      \end{bmatrix}
+
+Sachant que :math:`\epsilon_{xx}<0` (traction), on a :
+
+- :math:`\langle\epsilon_{xx}\rangle=0`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=-\nu\epsilon_{xx}`
+
+La déformation équivalente s'exprime donc par :
+
+.. math::
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\sqrt{2}\nu|\epsilon_{xx}|
+
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction :math:`x` :
+
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``EPXX`` du tenseur des déformations ``DEFORMATIONS`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du tenseur des contraintes ``CONTRAINTES`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   9.13189.10^{-09} > 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_f_3d.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D contraintes planes
+++++++++++++++++++++++++++++++++++++++
+
+Solution de référence
+"""""""""""""""""""""
+La compression est uniaxiale dans la direction :math:`x` et, en contraintes planes, la déformation est libre dans la direction :math:`z` orthogonale au plan de représentation géométrique 2D (expansion par effet de Poisson), d'où l'expression du tenseur des déformations :
+
+.. math::
+
+   \boldsymbol{\epsilon} = 
+      \begin{bmatrix}
+         \epsilon_{xx} & 0 & 0 \\
+         0 & -\nu\epsilon_{xx} & 0 \\
+         0 & 0 & -\nu\epsilon_{xx}
+      \end{bmatrix}
+
+Sachant que :math:`\epsilon_{xx}<0` (compression), on a :
+
+- :math:`\langle\epsilon_{xx}\rangle=0`
+- :math:`\epsilon_{yy}=\epsilon_{zz}=-\nu\epsilon_{xx}>0`, donc :math:`\langle\epsilon_{yy}\rangle=\langle\epsilon_{zz}\rangle=-\nu\epsilon_{xx}`
+
+La déformation équivalente s'exprime donc par :
+
+.. math::
+   {e} = \sqrt{\langle\epsilon_{xx}\rangle^{2}+\langle\epsilon_{yy}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\sqrt{2}\nu|\epsilon_{xx}|
+
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction :math:`x` :
+
+.. math::
+   \sigma_{xx}=(1-D_c) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``EPXX`` du tenseur des déformations ``DEFORMATIONS`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``SMXX`` du tenseur des contraintes ``CONTRAINTES`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_d_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_s_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   1.26037.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_f_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D axisymétrique
++++++++++++++++++++++++++++++++++
+
+Solution de référence
+"""""""""""""""""""""
+La compression est uniaxiale dans la direction :math:`z`, d'où l'expression du tenseur des déformations :
+
+.. math::
+
+   \boldsymbol{\epsilon} = 
+      \begin{bmatrix}
+         -\nu\epsilon_{zz} & 0 & 0 \\
+         0 & -\nu\epsilon_{zz} & 0 \\
+         0 & 0 & \epsilon_{zz}
+      \end{bmatrix}
+
+Sachant que :math:`\epsilon_{zz}<0` (traction), on a :
+
+- :math:`\epsilon_{rr}=\epsilon_{\theta\theta}=-\nu\epsilon_{zz}>0`, donc :math:`\langle\epsilon_{rr}\rangle=\langle\epsilon_{\theta\theta}\rangle=-\nu\epsilon_{zz}`
+- :math:`\langle\epsilon_{zz}\rangle=0`
+
+La déformation équivalente s'exprime donc par :
+
+.. math::
+   {e} = \sqrt{\langle\epsilon_{rr}\rangle^{2}+\langle\epsilon_{\theta\theta}\rangle^{2}+\langle\epsilon_{zz}\rangle^{2}}=\sqrt{2}\nu|\epsilon_{zz}|
+
+On en déduit la solution de référence de l'endommagement :
+
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{zz}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{zz}| - e_0)\right]
+
+Puis la solution de référence de la contrainte dans la direction :math:`z` :
+
+.. math::
+   \sigma_{zz}=(1-D_c) E \epsilon_{zz}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{zz}` correspond à la composante ``EPZZ`` du tenseur des déformations ``DEFORMATIONS`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{zz}` correspond à la composante ``SMZZ`` du tenseur des contraintes ``CONTRAINTES`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_d_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_s_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   1.15429.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_mono_f_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+**[nh145313 à poursuivre]**
 
 
 Traction cyclique

@@ -13,7 +13,7 @@ aux éléments finis de poutre. On y distingue :
   lois matériaux locales. Ces lois ne comportent aucun couplage entre les différents
   modes de fonctionnement (par exemple, entre les moments de flexion, le
   cisaillement ou bien l'effort normal).
-- Les lois *semi-globales*, pour les modèles de poutres à fibre et leurs éléments finis de
+- Les lois *semi-globales*, pour les modèles de poutres à fibres et leurs éléments finis de
   section **QUAS**, **TRIS**, **SEGS**, **POJS**, qui sont des relations entre les
   déformations locales (:math:`\varepsilon_{xx}, \gamma_{xy},\gamma_{xz}`)
   et les contraintes locales (:math:`\sigma_{xx}, \sigma_{xy}, \sigma_{xz}`) au niveau de la fibre.

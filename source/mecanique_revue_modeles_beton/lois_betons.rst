@@ -27,7 +27,7 @@ Anomalies observées
 
 Anomalie 1
 ++++++++++
-Une anomalie a été identifiée dans la source fibmaz.eso concernant le mauvais calibrage du test de bicompression dans le modèle Mazars pour la poutre à fibre. Le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple. Dans un premier temps, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). Dans un second temps, la correction GAMMA a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibre qui ne traîte que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. Cette anomalie est corrigée dans la version du jour actuelle et dans la version 2024.1 de Cast3M.
+Une anomalie a été identifiée dans la source fibmaz.eso concernant le mauvais calibrage du test de bicompression dans le modèle Mazars pour la poutre à fibre. Le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple. Dans un premier temps, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). Dans un second temps, la correction GAMMA a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. Cette anomalie est corrigée dans la version du jour actuelle et dans la version 2024.1 de Cast3M.
 
 Anomalie 2
 ++++++++++
@@ -38,7 +38,7 @@ Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 2
 Anomalie 3
 ++++++++++
 nh145313 : L'anomalie suivante est corrigée en bloquant les rotation de l'extrémité libre de la poutre à fibre.
-[**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type multi-fibre est proscrite !**.]
+[**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type poutre à fibres est proscrite !**.]
 
 Anomalie 4 (?)
 ++++++++++++++
@@ -150,7 +150,7 @@ Grâce à sa simplicité et sa robustesse, ce modèle a été et est encore larg
 Implémentation Cast3M (esope)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-@Détailler les sources de l'implémentation multi-fibre@ *[nh145313 à placer après le paragraphe suivant à mon avis]*
+@Détailler les sources de l'implémentation pour la poutre à fibres@ *[nh145313 à placer après le paragraphe suivant à mon avis]*
 
 Dans la suite, nous détaillons les étapes du calcul pour les éléments volumiques en mettant l'accent sur les parties de code correspondantes aux aspects théoriques mentionnés précédemment. Pour une analyse détaillée de l'implémentation et des aspects plus strictement techniques concernant la signification des variables, veuillez vous référer aux commentaires présents dans le fichier source cmazar.eso *[nh145313 : cmazar.eso ?]*.	  
 
@@ -285,7 +285,7 @@ Hypothèses de calcul et éléments finis disponibles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Cette loi est disponible pour les éléments massifs 3D et 2D sous l'hypothèse de contraintes/déformations planes (@lien vers section éléments finis?@).
 
-- De plus, elle est également applicable aux poutres multi-fibres (éléments finis de section). Dans ce dernier cas, le modèle a été implémenté dans le modèle à fibre selon sa formulation 3D complète, plutôt qu'uniaxiale.
+- De plus, elle est également applicable aux poutres à fibres (éléments finis poutre à modèle section). Dans ce dernier cas, le modèle a été implémenté dans le modèle poutre à fibres selon sa formulation 3D complète, plutôt qu'uniaxiale.
 
 - Elle peut être utilisée avec des éléments de type coque sous l'hypothèse de contraintes planes. 
 
