@@ -18,7 +18,7 @@ Caracteristiques et limitations principales :
 
 - Dans ce modèle la dégradation des propriétés élastiques du matériau est représentée à l'aide d'une variable scalaire :math:`D` variant entre zéro (matériau sain) et l'unité (matériau totalement endommagé). Cette dernière est obtenue par la combinaison de deux variables scalaires représentant l'endommagement sous sollicitations de compression et de traction séparément ;
 
-- Cela permet de modéliser convenablement la dyssimétrie traction-compression observée expérimentalement pour les bétons. Cependant, aucune reprise de raideur lors du passage d'une sollicitation de traction à une sollicitation de compression ne peut être prise en compte, c'est-à-dire que l'effet unilatéral n'est pas modélisé ;
+- Cela permet de modéliser convenablement la dyssimétrie traction-compression observée expérimentalement pour les bétons. Cependant, aucune reprise de raideur *[nh145313 induite par la refermeture des fissures]* lors du passage d'une sollicitation de traction à une sollicitation de compression ne peut être prise en compte, c'est-à-dire que l'effet unilatéral n'est pas modélisé ;
 
 - Compte tenu de cela, cette loi est adaptée à la simulation de la réponse du béton sous chargement monotone, mais nécessite des modifications pour une utilisation dans le cadre d'un calcul sous sollicitations cycliques et/ou dynamiques. Dans ce dernier cas, des limitations supplémentaires sont présentes (par exemple, l'impossibilité de modéliser des boucles d'hystérésis).
 
@@ -37,12 +37,11 @@ Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 2
 
 Anomalie 3
 ++++++++++
-nh145313 : L'anomalie suivante est corrigée en bloquant les rotation de l'extrémité libre de la poutre à fibre.
-[**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type poutre à fibres est proscrite !**.]
+**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type poutre à fibres est proscrite !**. *[nh145313 : L'anomalie est corrigée en bloquant les rotation de l'extrémité libre de la poutre à fibre.]*
 
 Anomalie 4 (?)
 ++++++++++++++
-Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazars.eso) que poutres à fibre (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
+Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazars.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
 
 .. math::
    D_{max}=(1 - \epsilon)
@@ -50,6 +49,20 @@ Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques 
 où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de de paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
 
 En effet, la consolidation qui en découlerait dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissibles et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle.
+
+L'historique des valeurs attribuées au paramètre :math:`\epsilon` est le suivant :
+
+- dans la configuration éléments volumiques (source cmazars.eso) :
+
+  - :math:`\epsilon=10^{-20}` : valeur d'origine ;
+
+  - :math:`\epsilon=10^{-4}` : valeur dans la version du jour de Cast3M jusqu'au 9/10/2024 ;
+
+  - :math:`\epsilon=10^{-8}` : valeur dans la version du jour de Cast3M depuis le 10/10/2024 ;
+   
+- dans la configuration éléments poutres à fibres (source fibmaz.eso) :
+
+  - :math:`\epsilon=10^{-5}` : valeur d'origine.
 
 .. _mazars:
 
@@ -152,7 +165,7 @@ Implémentation Cast3M (esope)
 
 @Détailler les sources de l'implémentation pour la poutre à fibres@ *[nh145313 à placer après le paragraphe suivant à mon avis]*
 
-Dans la suite, nous détaillons les étapes du calcul pour les éléments volumiques en mettant l'accent sur les parties de code correspondantes aux aspects théoriques mentionnés précédemment. Pour une analyse détaillée de l'implémentation et des aspects plus strictement techniques concernant la signification des variables, veuillez vous référer aux commentaires présents dans le fichier source cmazar.eso *[nh145313 : cmazar.eso ?]*.	  
+Dans la suite, nous détaillons les étapes du calcul pour les éléments volumiques en mettant l'accent sur les parties de code correspondantes aux aspects théoriques mentionnés précédemment. Pour une analyse détaillée de l'implémentation et des aspects plus strictement techniques concernant la signification des variables, veuillez vous référer aux commentaires présents dans le fichier source cmazar.eso *[nh145313 : ce n'est pas la source cmazar.eso mais mazars.eso qui est affichée ci-dessous]*.	  
 
 	.. literalinclude:: sources/mazars.eso
 		:language: fortran
