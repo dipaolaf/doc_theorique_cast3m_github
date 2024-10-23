@@ -27,7 +27,13 @@ Anomalies observées
 
 Anomalie 1
 ++++++++++
-Une anomalie a été identifiée dans la source fibmaz.eso concernant le mauvais calibrage du test de bicompression dans le modèle Mazars pour la poutre à fibre. Le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple. Dans un premier temps, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). Dans un second temps, la correction GAMMA a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. Cette anomalie est corrigée dans la version du jour actuelle et dans la version 2024.1 de Cast3M.
+Une anomalie a été identifiée dans les sources fibmaz.eso (modèles poutres à fibres) et cmazars.eso (modèle massifs) concernant le mauvais calibrage du test de bicompression dans le modèle Mazars. Dans fibmaz.eso, le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple ; tandis que, dans cmazar.eso, il conduisait à mal calculer les contraintes en situation de bicompression. 
+
+En ce qui concerne la source cmazar.eso pour les modèles massif, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). 
+
+En ce qui concerne la source fibmaz.eso pour les modèles poutres à fibres, la correction :math:`\gamma` a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. 
+
+Cette anomalie est corrigée dans la version du jour actuelle et dans la version 2024.1 de Cast3M.
 
 Anomalie 2
 ++++++++++
