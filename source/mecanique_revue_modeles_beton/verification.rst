@@ -1336,6 +1336,7 @@ Le cas-test se dénomme ``06_traction_compression_traction.dgibi``
 TODO
 
 
+
 Cisaillement monotone
 ~~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``07_cisaillement.dgibi``
@@ -1343,35 +1344,127 @@ Le cas-test se dénomme ``07_cisaillement.dgibi``
 TODO
 
 
-Chargement biaxial proportionnel élastique
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Chargement biaxial proportionnel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``08_biaxial.dgibi``
 
-L'analyse des résultats porte sur la courbe :math:`\sigma_{yy} = f(\sigma_{xx})`.
+On n'applique le cas de chargement de traction-compression biaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_biax>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
+
+Le chargement biaxial est en contraintes imposées croissante jusqu'à atteindre un endommagement proche de 1 (ruine complète).
+
+Pour un calcul de valeur :math:`\theta` donnée, le chargement maximal est donné par :
+
+.. math::
+   \sigma_{xx}=\sigma_{max} \textrm{cos} \theta
+
+.. math::
+   \sigma_{yy}=\sigma_{max} \textrm{sin} \theta
+   
+avec :
+
+.. math::
+   \sigma_{max}=\frac{\sigma_{0}}{max(|cos\theta| ; |sin\theta|)}
+   
+- Pour le mode de calcul 3D volumique : :math:`\sigma_{0}=50~MPa`
+- Pour le mode de calcul 2D contraintes planes : :math:`\sigma_{0}=5~MPa`
+
+.. figure:: figures/fig_char_biax.PNG
+   :width: 10cm
+   :align: center
+   
+   Chargement biaxial du mode 3D volumique pour toutes les valeurs de :math:`\theta \in [0°;360°]` (:math:`\sigma_{0}` en bleu, :math:`\sigma_{max}` en vert)
+
+Le calcul est interrompu avant d'atteindre le chargement maximal, lors de la détection de la ruine qui résulte de la combinaison de deux critères : l'un sur le nombre maximum de sous pas de convergence et l'autre sur l'incrément maximum de déformation entre deux pas de calcul. C'est au pas de calcul qui précéde cette détection que sont relevées les valeurs des contraintes maximales atteintes :math:`\sigma_{xx}` et :math:`\sigma_{yy}`.
+
+L’objectif est de caractériser la courbe de biaxialité qui représente la surface de charge du modèle dans le plan :math:`(\sigma_{xx};\sigma_{yy})`.
 
 Les modes de calcul testés sont :
 
 - 3D volumique ;
 - 2D contraintes planes.
 
+L'analyse des résultats porte sur les courbes :
+
+- de biaxialité :math:`(\sigma_{xx};\sigma_{yy})` ;
+- de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|F_{c}|};\frac{\sigma_{yy}}{|F_{c}|})`.
+
+Dans la courbe de biaxialité normalisée, :math:`F_{c}=-25,64~MPa` est la contrainte limite en compression déterminée dans un calcul de référence en contrainte imposée de compression monotone uniaxiale. la courbe calculée de biaxialité normalisée est jugée satisfaite si elle coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
+
+
 Solution de référence
-"""""""""""""""""""""
-La solution de référence est obtenue de manière analytique à partir des équations de la loi.
++++++++++++++++++++++
 
-Résultats
-"""""""""
+Contrairement aux cas de chargements en déplacement imposé traîtés précédemment, dans les cas de chargement en contrainte imposée comme ici l'évolution temporelle de l'endommagement n'est pas prévisible et celle du déplacement qui en dépend ne l'est pas non plus. Or, du fait des dimensions géométriques unitaires du cas-test, la déformation est équivalente au déplacement et donc l'évolution temporelle de la déformation n'est pas définie *a priori*. En conséquence, les évolutions temporelles de l'endommagement qui dépend de celle de la déformation ainsi que l'évolution temporelle de la contrainte qui dépend de celle de l'endommagement ne sont pas définies *a priori*, ce qui ne permet pas de donner une solution analytique au problème.
 
-.. figure:: figures/mazars_biax_3d.png
+Néanmoins, il est possible de donner une solution numérique de référence issue de résultats de calculs dans lesquels on a confiance.
+Cette solution de référence est obtenue dans les conditions de calcul suivantes qui sont comparées à celle du cas-test ``08_biaxial.dgibi`` dénommé "calcul standard" :
+
+- Un pas de calcul deux fois plus fin que le calcul standard (:math:`1.10^{-3}` au lieu de :math:`2.10^{-3}`) ;
+- La réalisation de 360 calculs sur le domaine :math:`\theta \in [0°;360°]`, avec un incrément d'angle :math:`\delta\theta=1°` au lieu de 144 calculs avec :math:`\delta\theta=2,5°` pour le calcul standard.
+
+L'écart entre la solution calculée et la solution de référence est évalué via la surface de la courbe fermée :math:`(\sigma_{xx} ; \sigma_{yy})` :
+
+.. math::
+   Ecart_{relatif} = \frac{Surface_{calc.} - Surface_{ref.}} {Surface_{ref.}}
+
+La surface de la courbe est calculée avec l'opérateur ``'INTG'``, option ``'ABS'`` de Cast3M. Cette commande permet de calculer séparément les surfaces des parties de la courbe d'abscisse négative et celles d'abscisse positive et de les additionner.
+
+Par ailleurs, la qualité de la solution calculée est jugée sur la capacité de la courbe de biaxialité normalisée à couper les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
+
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_biax_SxSy_3d.png
    :width: 15cm
    :align: center
    
-   Domaine élastique 3D.
+   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 
-.. figure:: figures/mazars_biax_2d.png
+L'écart relatif maximum sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.70981.10^{-3} < 3.10^{-2}`.
+
+Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|F_{c}|} ; \frac{\sigma_{yy}}{|F_{c}|})`
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_biax_SxSysFc_3d.png
    :width: 15cm
    :align: center
    
-   Domaine élastique 2D contraintes planes.
+   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+
+La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
+   
+En conséquence de ces deux constats, les résultats du cas-test ``08_biaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+
+Résultats du cas 2D contraintes planes
+++++++++++++++++++++++++++++++++++++++
+
+Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_biax_SxSy_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+
+L'écart relatif maximum sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.44110.10^{-3} < 3.10^{-2}`.
+
+Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|F_{c}|} ; \frac{\sigma_{yy}}{|F_{c}|})`
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_biax_SxSysFc_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+
+La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
+   
+En conséquence de ces deux constats, les résultats du cas-test ``08_biaxial.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 
 

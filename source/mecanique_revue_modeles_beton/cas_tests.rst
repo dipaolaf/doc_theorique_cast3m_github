@@ -366,75 +366,95 @@ Cisaillement
 TODO
 
 
+.. _sec:modeles_beton_test_mass_biax:
+
 Biaxial
 ~~~~~~~
 
 Description
 """""""""""
 
-Il s'agit d'un test de traction biaxial en contrainte imposées de manière proportionnelles.
+Il s'agit d'un test combinant des chargements monotones de traction ou de compression en contrainte imposée, exercés dans deux directions de l'espace tridimensionnel de manière proportionnelle. Les dimensions dépendent de l'hypothèse de calcul retenue :
 
-- En 3D on considère un cube de longueur :math:`L`.
+- En 3D on considère un cube d'arête :math:`L`.
 - En 2D plan on considère un carré de coté :math:`L`.
 
 Blocages et chargement
 """"""""""""""""""""""
 Le chargement consiste à imposer, sur les faces :math:`x=L` et :math:`y=L`, les contraintes
-normales de manière proportionnelle :
+normales de manière proportionnelle via une relation trigonométrique :
 
 .. math::
    \sigma_{xx}=\sigma_{max} \textrm{cos} \theta
 
 .. math::
    \sigma_{yy}=\sigma_{max} \textrm{sin} \theta
+   
+Suivant la valeur de :math:`\theta`, la combinaison biaxiale :math:`(\sigma_{xx};\sigma_{yy})` est de type soit (traction ; traction), soit (traction ; compression) ou l'inverse, soit (compression ; compression).
 
-On effectue un calcul pour plusieurs valeurs de :math:`\theta` en imposant :math:`\sigma_{max}` suffisament
-grand pour initier l'endommagement. Le calcul est arrêté dès que l’endommagement commence.
+On effectue autant de calculs que l'on souhaite de combinaisons biaxiales en faisant varier la valeur de :math:`\theta` et en imposant :math:`\sigma_{max}` suffisament grand pour atteindre la ruine. 
 
-L’objectif est de caractériser la surface de charge du modèle dans le plan :math:`\sigma_{zz}=0`.
-On peut ainsi évaluer la contrainte maximale en traction/compression/cisaillement du modèle.
+Les calculs sont arrêtés à la detection de la ruine complète (dommage proche de 1), qui résulte d'une combinaison entre un critère sur le nombre de sous-pas de convergence limité à 1 et un critère sur l'incrément de déformation entre 2 pas de calcul consécutifs limité à :math:`2.10^{-3}`. C'est au pas de calcul précédant cet instant que sont relevées les valeurs de :math:`\sigma_{xx}` et :math:`\sigma_{yy}` qui constituent les coordonnées des points de la courbe de biaxialité.
+
+Les critères de détection de la ruine pour arrêter le calcul sont définis dans la procédure ``PERSO1`` de Cast3M.
+
+L’objectif est de caractériser la courbe de biaxialité qui représente la surface de charge du modèle dans le plan :math:`(\sigma_{xx} ; \sigma_{yy})`.
+On peut ainsi évaluer la contrainte maximale en traction / compression / cisaillement du modèle.
 
 Les déplacements des faces opposées :math:`x=0` et :math:`y=0` sont bloqués en laissant libre la
-contraction par effet de Poisson (de manière à être en état de contraintes planes). 
-Le mouvement de corps rigide est empeché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0)
-et **UZ** du coin (0 :math:`L` 0).
+contraction ou l'expansion par effet de Poisson (de manière à être en état de contraintes planes). 
+En 3D, le mouvement de corps rigide est empêché en bloquant [les déplacements **UY** et **UZ** du coin (0 0 0)
+et **UZ** du coin (0 :math:`L` 0) -> nh145313 : le déplacement **UZ** du coin (0 0 0)].
 
 Les instructions Gibiane correpondantes sont :
 
-.. admonition:: Traction biaxiale : chargement
+.. admonition:: Biaxial : chargement
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 66
+      :lines: 86
       :linenos:
-      :lineno-start: 66
+      :lineno-start: 86
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 70-71
+      :lines: 90-91
       :linenos:
-      :lineno-start: 70
+      :lineno-start: 90
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 85-90
+      :lines: 97-102
       :linenos:
-      :lineno-start: 85
+      :lineno-start: 97
 
-.. admonition:: Traction biaxiale : blocages
+.. admonition:: Biaxial : blocages pour le cas 3D
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 62-63
+      :lines: 82-83
       :linenos:
-      :lineno-start: 62
+      :lineno-start: 82
+
+.. admonition:: Biaxial : blocages pour le cas 2D plan
+
+   .. literalinclude:: dgibi/08_biaxial.dgibi
+      :language: gibiane
+      :lines: 361-362
+      :linenos:
+      :lineno-start: 361
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
 .. image:: figures/mazars_biax_char_3d.png
    :width: 45%
-.. image:: figures/mazars_biax_char_2d.png
-   :width: 45%
+.. image:: figures/mazars_biax_char_2dplan.png
+   :width: 35%
+
+.. figure:: figures/mazars_biax_char_2dplan.png
+   :width: 0%
+
+   Biaxial - Blocages et chargement biaxial de contraintes imposées sur le cube (3D) et le carré (2D plan).
 
 Liste des exemples dgibi
 """"""""""""""""""""""""

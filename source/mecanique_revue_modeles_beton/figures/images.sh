@@ -88,9 +88,11 @@ psselect -q -p39   05_traction_compression.ps mazars_trac_comp_d_2dpaf.ps
 psselect -q -p40   05_traction_compression.ps mazars_trac_comp_s_2dpaf.ps
 psselect -q -p41   05_traction_compression.ps mazars_trac_comp_f_2dpaf.ps
 psselect -q -p1    08_biaxial.ps  mazars_biax_char_3d.ps
-psselect -q -p2    08_biaxial.ps  mazars_biax_3d.ps
-psselect -q -p3    08_biaxial.ps  mazars_biax_char_2d.ps
-psselect -q -p4    08_biaxial.ps  mazars_biax_2d.ps
+psselect -q -p4    08_biaxial.ps  mazars_biax_SxSy_3d.ps
+psselect -q -p5    08_biaxial.ps  mazars_biax_SxSysFc_3d.ps
+psselect -q -p6    08_biaxial.ps  mazars_biax_char_2dplan.ps
+psselect -q -p9    08_biaxial.ps  mazars_biax_SxSy_2dplan.ps
+psselect -q -p10   08_biaxial.ps  mazars_biax_SxSysFc_2dplan.ps
 
 # Traitement des images
 rm 01_traction.ps
@@ -114,7 +116,7 @@ cast-post.sh -o -l 5 mazars_trac_comp_char_2dplan.ps mazars_trac_comp_char_2dpla
 cast-post.sh -o -l 5 mazars_trac_comp_char_2daxi.ps  mazars_trac_comp_char_2daxi.ps
 cast-post.sh -o -l 5 mazars_trac_comp_char_2dpaf.ps  mazars_trac_comp_char_2dpaf.ps
 cast-post.sh -o -l 5 mazars_biax_char_3d.ps          mazars_biax_char_3d.ps
-cast-post.sh -o -l 5 mazars_biax_char_2d.ps          mazars_biax_char_2d.ps
+cast-post.sh -o -l 5 mazars_biax_char_2dplan.ps      mazars_biax_char_2dplan.ps
 echo "  --> Convertion en eps (ajout de la bounding box)"
 for fic in *.ps
 do
