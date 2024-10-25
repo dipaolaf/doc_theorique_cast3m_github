@@ -6,7 +6,7 @@ Elle est mise en forme avec grace au générateur de documentation [Sphinx](http
 
 ## Prérecquis :
 Les prérequis sont :
-- le générateur **sphinx** (version 6.2.1 construction non garantie pour des versions supérieures)
+- le générateur **sphinx** version 6.2.1 (construction non garantie pour des versions supérieures)
 - l'extension **sphinx-new-tab-link**
 - le thème **renku-sphinx-theme**
 
