@@ -33,8 +33,7 @@ sphinx:
 python:
   install:
     - method: pip
-      path: .
-      extra_requirements:
-      - sphinx-new-tab-link
-      - renku-sphinx-theme
+      path: sphinx-new-tab-link
+    - method: pip
+      path: renku-sphinx-theme
     - requirements: requirements.txt
