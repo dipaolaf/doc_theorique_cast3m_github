@@ -1,2 +1,6 @@
+sphinx-new-tab-link
+renku-sphinx-theme
+
 # Defining the exact version will make sure things don't break
 sphinx==6.2.1
+
