@@ -1,12 +1,12 @@
 ************************************************************************
 * Exemple de méthode d'optimisation topologique                        *
-* Méthode SIMP                                                         *
+* Méthode SIMP + OC (Optimility Criteria - Bendsoe)                    *
 * Application à une poutre en flexion                                  *
 ************************************************************************
 
 
 ** Paramètres globaux
-OPTI 'DIME' 2 'MODE' 'PLAN' 'DEFO' 'ELEM' 'QUA4' ;
+OPTI 'DIME' 2 'MODE' 'PLAN' 'DEFO' 'ELEM' 'QUA4' 'ECHO' 0 'TRAC' 'X' ;
 l      = 1. ;
 h      = 0.2 ;
 yo     = 200.E9 ;
@@ -41,18 +41,20 @@ m      = 0.1 ;
 xmin   = 0.001 ;
 xmax   = 1. ;
 
-** Optimisation topologique
-* initialisation de la topologie
+** Initialisation de la topologie (avec la fraction volumique cible)
 x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
+* volume initial et cible
 vini   = MESU mail ;
 vcib   = vini * fv ;
-* matrice de filtrage
+
+** Matrice de filtrage
 un     = MANU 'CHML' mod 'SCAL' 1. 'GRAVITE' ;
 vole   = INTG mod un 'ELEM' ;
 mcg    = un POIN 'SUPERIEUR' 0. ;
 wg     = PROI mcg vole ;
 kfil   = MFIL wg rmin 1. 0. ;
-* boucle d'optimisation
+
+** Boucle d'optimisation topologique
 liso  = PROG 0. 'PAS' 0.05 1. ;
 REPE b1 100 ;
 * pénalisation de la rigidité
@@ -63,7 +65,7 @@ REPE b1 100 ;
   u      = RESO (rip ET blo) f ;
 * déformée et tracé de la topologie
   def1   = DEFO mail u 1000. ;
-  TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) ;
+  TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) 'NCLK' ;
 * fonction objectif : compliance = uT.K.u = Int(sig:eps)dV
   eps    = EPSI 'LINE' mod u ;
   sig    = ELAS mod map eps ;
@@ -104,7 +106,7 @@ REPE b1 100 ;
   FIN b2 ;
 * bilan de l'itération
   change = MAXI 'ABS' (x - xnew) ;
-  MESS 'It.' ' ' &b1 '   Obj.' ' ' c '   Change' ' ' change '   Fvol.' ' ' (vnew / vini) '   Dicho.' ' ' &b2 ;
+  MESS 'It.' ' ' &b1 '   Obj.' ' ' psi '   Change' ' ' change '   Fvol.' ' ' (vnew / vini) '   Dicho.' ' ' &b2 ;
   SI (change < 0.01) ;
     QUIT b1 ;
   FINSI ;

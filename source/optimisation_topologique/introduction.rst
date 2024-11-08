@@ -143,13 +143,13 @@ courantes :math:`\textbf{x}` vers une nouvelle valeur :math:`\textbf{x}^{\textrm
 
 avec :
 
-- :math:`m` est une limite d'incrément de densité sur l'itération pour stabiliser la
-  convergence
-- :math:`\eta` est un coefficient d'amortissement (généralement :math:`\eta=0,5`)
 - :math:`x_e^- = \max (x_{\textrm{min}},x_e-m)` une borne inférieure pour respecter
   l'inégalité :math:`x_{\textrm{min}} \le x_e^{\textrm{new}}`
 - :math:`x_e^+ = \min (1,x_e+m)` la borne supérieure sur :math:`x_e` pour respecter
   l'inégalité :math:`x_e^{\textrm{new}} \le 1`
+- :math:`\eta` est un coefficient d'amortissement (généralement :math:`\eta=0,5`)
+- :math:`m` est une limite d'incrément de densité sur l'itération pour stabiliser la
+  convergence
 
 Le terme :math:`B_e` guidant la mise à jour de :math:`x_e` est obtenu par la condition d'optimalité :
 
@@ -253,8 +253,8 @@ où tous les éléments ont un volume :math:`V_f=1`.
 Illustration sur un cas mécanique
 ---------------------------------
 
-Une mise en donnée de l'algorithme d'optimisation précédent est fournie en :ref:`annexe <ann:opti_topo_dgibi1>`
-et disponible sur le `site Cast3M <http://www-cast3m.cea.fr/index.php?page=exemples&exemple=opti_topo_1>`_.
+Une mise en donnée de l'algorithme d'optimisation précédent est fournie en :ref:`annexe <ann:opti_topo_oc_dgibi>`
+et disponible sur le `site Cast3M <http://www-cast3m.cea.fr/index.php?page=exemples&exemple=opti_topo_oc>`_.
 
 Il s'agit d'optimiser la poutre en flexion présentée plus haut
 
@@ -280,14 +280,14 @@ en intégrant un champ unitaire par élément.
 
 .. admonition:: Initialisation : topologie initiale et matrice de filtrage
 
-   .. literalinclude:: dgibi/opti_topo_1.dgibi
+   .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 44-54
+      :lines: 44-55
       :lineno-start: 44
 
 On démarre ensuite une boucle d'optimisation limitée à 100 itérations.
 
-On calcule alors ``rip``, la matrice de rigidité pondérée :math:`\mathbb{K}(\textbf{x})` de la
+On calcule alors ``rip``, la matrice de rigidité pénalisée :math:`\mathbb{K}(\textbf{x})` de la
 topologie courante selon la loi puissance de la méthode SIMP. Le comportement étant isotrope,
 le *module d'Young pénalisé* ``yop`` de chaque élément vaut :math:`E_e=(x_e)^pE_0` avec
 :math:`E_0` le module d'Young du matériau.
@@ -296,10 +296,10 @@ On résoud ensuite le problème mécanique :math:`\mathbb{K}(\textbf{x}).\textbf
 
 .. admonition:: Pénalisation de la rigidité et résolution
 
-   .. literalinclude:: dgibi/opti_topo_1.dgibi
+   .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 55-63
-      :lineno-start: 55
+      :lines: 57-65
+      :lineno-start: 57
 
 On peut calculer la valeur ``psi`` de la fonction objectif :math:`\psi(\textbf{x}) = \textbf{F}^T.\textbf{U}`
 en remarquant que si celle-ci est égale au travail des forces extérieures, elle est donc aussi égale au travail des
@@ -323,10 +323,10 @@ de la matrice de Hooke :math:`\mathcal{C}_0` du matériau plein :
 
 .. admonition:: Calcul de la fonction objectif et de sa sensibilités
 
-   .. literalinclude:: dgibi/opti_topo_1.dgibi
+   .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 67-75
-      :lineno-start: 67
+      :lines: 69-77
+      :lineno-start: 69
 
 L'étape de filtrage de la sensibilité est réalisée en multipliant la matrice de filtrage ``kfil`` par le
 champ par point ``xdpsi = x * dpsi`` représentant le produit :math:`x_f\dfrac{\partial \psi}{\partial x_f}` dans
@@ -334,10 +334,10 @@ l'équation :eq:`eq:opti_topo_filtrage`.
 
 .. admonition:: Filtrage de la sensibilité
 
-   .. literalinclude:: dgibi/opti_topo_1.dgibi
+   .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 76-81
-      :lineno-start: 76
+      :lines: 78-83
+      :lineno-start: 78
 
 La mise à jour de la topologie (passage du champ ``x`` à ``xnew``) suivant le schéma :eq:`eq:opti_topo_bendsoe`
 est réalisée en suivant l':ref:`algorithme de dichotomie <algo:opti_topo_dichotomie>` pour la recherche du
@@ -353,20 +353,20 @@ et en le comparant au volume cible ``vcib``.
 
 .. admonition:: Optimisation (critère d'optimalité)
 
-   .. literalinclude:: dgibi/opti_topo_1.dgibi
+   .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 82-104
-      :lineno-start: 82
+      :lines: 84-106
+      :lineno-start: 84
 
 Un affichage bilan de l'itération est fait, puis un cirtère d'arrêt de la boucle d'optimisation
 est proposé lorsque l'incrément maximal de densité est inférieur à 0,01
 
 .. admonition:: Fin de boucle et critère d'arrêt
 
-   .. literalinclude:: dgibi/opti_topo_1.dgibi
+   .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 105-113
-      :lineno-start: 105
+      :lines: 107-115
+      :lineno-start: 107
 
 Les résultats de cette optimisation sont présentés dans l'animation ci-dessous qui montre les topologies
 (champs par éléments de densités) obtenues au cours des itérations. La topologie finale est atteinte
