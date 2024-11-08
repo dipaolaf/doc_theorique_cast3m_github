@@ -282,8 +282,8 @@ en intégrant un champ unitaire par élément.
 
    .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 44-55
-      :lineno-start: 44
+      :lines: 46-61
+      :lineno-start: 46
 
 On démarre ensuite une boucle d'optimisation limitée à 100 itérations.
 
@@ -298,8 +298,8 @@ On résoud ensuite le problème mécanique :math:`\mathbb{K}(\textbf{x}).\textbf
 
    .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 57-65
-      :lineno-start: 57
+      :lines: 63-71
+      :lineno-start: 63
 
 On peut calculer la valeur ``psi`` de la fonction objectif :math:`\psi(\textbf{x}) = \textbf{F}^T.\textbf{U}`
 en remarquant que si celle-ci est égale au travail des forces extérieures, elle est donc aussi égale au travail des
@@ -325,8 +325,8 @@ de la matrice de Hooke :math:`\mathcal{C}_0` du matériau plein :
 
    .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 69-77
-      :lineno-start: 69
+      :lines: 72-80
+      :lineno-start: 72
 
 L'étape de filtrage de la sensibilité est réalisée en multipliant la matrice de filtrage ``kfil`` par le
 champ par point ``xdpsi = x * dpsi`` représentant le produit :math:`x_f\dfrac{\partial \psi}{\partial x_f}` dans
@@ -336,27 +336,26 @@ l'équation :eq:`eq:opti_topo_filtrage`.
 
    .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 78-83
-      :lineno-start: 78
+      :lines: 81-86
+      :lineno-start: 81
 
 La mise à jour de la topologie (passage du champ ``x`` à ``xnew``) suivant le schéma :eq:`eq:opti_topo_bendsoe`
 est réalisée en suivant l':ref:`algorithme de dichotomie <algo:opti_topo_dichotomie>` pour la recherche du
 multiplicateur de Lagrange ``lmid`` qui nécessite une nouvelle boucle (limitée à 50 itérations).
 
-La limitation d'incrément :math:`m` et le recpect des bornes :math:`x_\textrm{min} \le x_e \le 1` sont réaliséespace
+La limitation d'incrément :math:`m` et le recpect des bornes :math:`x_\textrm{min} \le x_e \le 1` sont réalisées
 grâce aux opérateurs `BORN <http://www-cast3m.cea.fr/index.php?page=notices&notice=BORN>`_ et
-`MASQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=MASQ>`_, ce dernier produisant un champ
-unitiare aux éléments respectant une inégalité et nul ailleur.
+`MASQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=MASQ>`_.
 
-La vérification de la contrainte de volume est faite en calculant le volume ``vnew`` de chaque toplogie ``xnew``
+La vérification de la contrainte de volume est faite en calculant le volume ``vxnew`` de chaque toplogie ``xnew``
 et en le comparant au volume cible ``vcib``.
 
 .. admonition:: Optimisation (critère d'optimalité)
 
    .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 84-106
-      :lineno-start: 84
+      :lines: 94-116
+      :lineno-start: 94
 
 Un affichage bilan de l'itération est fait, puis un cirtère d'arrêt de la boucle d'optimisation
 est proposé lorsque l'incrément maximal de densité est inférieur à 0,01
@@ -365,14 +364,14 @@ est proposé lorsque l'incrément maximal de densité est inférieur à 0,01
 
    .. literalinclude:: dgibi/opti_topo_oc.dgibi
       :language: gibiane
-      :lines: 107-115
-      :lineno-start: 107
+      :lines: 117-127
+      :lineno-start: 117
 
 Les résultats de cette optimisation sont présentés dans l'animation ci-dessous qui montre les topologies
 (champs par éléments de densités) obtenues au cours des itérations. La topologie finale est atteinte
 après 42 itérations.
 
-.. figure:: figures/opti_topo_1.gif
+.. figure:: figures/opti_topo_oc.gif
    :name: fig:opti_topo_anim1
    :width: 20cm
    :align: center

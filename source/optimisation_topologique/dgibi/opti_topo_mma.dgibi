@@ -1,12 +1,14 @@
 ************************************************************************
 * Exemple de méthode d'optimisation topologique                        *
-* Méthode SIMP + MMA (Method of Moving Asymptots - Svanberg)           *
+* Méthode à densité + pénalisation SIMP                                *
+* Algorithme d'optimisation : Method of moving asymptotes - Svanberg)  *
 * Application à une poutre en flexion                                  *
 ************************************************************************
 
 
 ** Paramètres globaux
-OPTI 'DIME' 2 'MODE' 'PLAN' 'DEFO' 'ELEM' 'QUA4' 'ECHO' 0 'TRAC' 'PSC' ;
+itrac  = FAUX ;
+OPTI 'DIME' 2 'MODE' 'PLAN' 'DEFO' 'ELEM' 'QUA4' 'ECHO' 0 ;
 l      = 1. ;
 h      = 0.2 ;
 yo     = 200.E9 ;
@@ -41,43 +43,50 @@ m      = 0.1 ;
 xmin   = 0.001 ;
 xmax   = 1. ;
 
-** Optimisation topologique
-* initialisation de la topologie
-x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
-* volume initial et cible
+** Initialisation de la topologie (avec la fraction volumique cible)
+* volume initial et volume cible
 vini   = MESU mail ;
 vcib   = vini * fv ;
-* matrice de filtrage
+* densités initiales
+x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
+vx     = INTG mod x ;
+fvx    = vx / vini ;
+chgx   = 0. ;
+
+** Matrice de filtrage
 un     = MANU 'CHML' mod 'SCAL' 1. 'GRAVITE' ;
 vole   = INTG mod un 'ELEM' ;
 mcg    = un POIN 'SUPERIEUR' 0. ;
 wg     = PROI mcg vole ;
 kfil   = MFIL wg rmin 1. 0. ;
-* initialisation de la table pour la mma
-nx = NBEL mail ;
-tmma = TABL ;
-* -- valeurs initiales de x
+
+** Initialisation de la table pour la mma
+nx     = NBEL mail ;
+tmma   = TABL ;
+* valeurs initiales de x
 tmma . 'VX0' = TABL 'VECTEUR' ;
 REPE bx nx ;
   tmma . 'VX0' . &bx = EXTR x 'SCAL' 1 &bx 1 ;
 FIN bx ;
-* -- bornes pour les valeurs de x
+* bornes pour les valeurs de x
 tmma . 'VXMIN' = TABL 'VECTEUR' ;
 tmma . 'VXMAX' = TABL 'VECTEUR' ;
 REPE bx nx ;
   tmma . 'VXMIN' . &bx = xmin ;
   tmma . 'VXMAX' . &bx = xmax ;
 FIN bx ;
-* -- indices pour la fonction objectif et la fonction contrainte
+* indices pour la fonction objectif et la fonction contrainte
 tmma . 'VF' = TABL 'VECTEUR' ;
 tmma . 'MC' = TABL ;
 tmma . 'MC' . 1 = TABL 'VECTEUR' ;
-* -- bornes pour la fonction contrainte
+* bornes pour la fonction contrainte
 tmma . 'VCMAX' = TABL 'VECTEUR' ;
 tmma . 'VCMAX' . 1 = vcib ;
+* paramètre pour la mma
 tmma . 'T0' = 0.1 ;
-* boucle d'optimisation
-liso  = PROG 0. 'PAS' 0.05 1. ;
+
+** Boucle d'optimisation topologique
+liso   = PROG 0. 'PAS' 0.05 1. ;
 REPE b1 100 ;
 * pénalisation de la rigidité
   yop    = (x ** p) * yo ;
@@ -85,9 +94,6 @@ REPE b1 100 ;
 * résolution du problème mécanique
   rip    = RIGI mod map ;
   u      = RESO (rip ET blo) f ;
-* déformée et tracé de la topologie
-  def1   = DEFO mail u 1000. ;
-  TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) 'NCLK' ;
 * fonction objectif : compliance = uT.K.u = Int(sig:eps)dV
   eps    = EPSI 'LINE' mod u ;
   sig    = ELAS mod map eps ;
@@ -103,30 +109,35 @@ REPE b1 100 ;
   xdpsi1 = kfil * xdpsi0 ;
   xdpsi  = MANU 'CHML' mod 'REPA' 'SCAL' (EXTR xdpsi1 'VALE') 'TYPE' 'SCALAIRE' 'GRAVITE' ;
   dpsi   = xdpsi / x ;
+* infos sur la topologie courante
+  info   = CHAI 'It:' (&b1 - 1) / 5 'Obj:' / 10  psi > 1 'Fvol:' > 4 fvx > 1 'Change:' > 4 chgx > 1 ;
+  MESS info ;
+  SI itrac ;
+    def1   = DEFO mail u 1000. ;
+    TRAC x mod con def1 liso 'TITR' info 'NCLK' ;
+  FINSI ;
 * optimisation d'une nouvelle topologie (méthode des asymptotes mobiles)
-* valeur de la fonction objectif et valeurs de ses sensibilités
   tmma . 'VF' . 0 = psi ;
   REPE bx nx ;
     tmma . 'VF' . &bx = EXTR dpsi 'SCAL' 1 &bx 1 ;
   FIN bx ;
-* valeurs de la fonction contrainte (le volume) et de ses sensibilités
   tmma . 'MC' . 1 . 0 = INTG mod x ;
   REPE bx nx ;
     tmma . 'MC' . 1 . &bx = EXTR vole 'SCAL' 1 &bx 1 ;
   FIN bx ;
-* calcul d'un nouveau x
   tmma_new = EXCE tmma ;
-  lxnew = PROG ;
+  lxnew  = PROG ;
   REPE b2 nx ;
-    lxnew = lxnew ET (tmma_new . 'VX0' . &b2) ;
+    lxnew  = lxnew ET (tmma_new . 'VX0' . &b2) ;
   FIN b2 ;
-  xnew  = MANU 'CHML' mod 'REPA' 'SCAL' lxnew 'TYPE' 'SCALAIRE' 'GRAVITE' ;
-  xnew = REDU xnew mod ;
+  xnew   = MANU 'CHML' mod 'REPA' 'SCAL' lxnew 'TYPE' 'SCALAIRE' 'GRAVITE' ;
+  vxnew  = INTG mod xnew ;
 * bilan de l'itération
-  vnew   = INTG mod xnew ;
-  change = MAXI 'ABS' (x - xnew) ;
-  MESS 'It.' ' ' &b1 '   Obj.' ' ' psi '   Change' ' ' change '   Fvol.' ' ' (vnew / vini) ;
-  SI (change < 0.01) ;
+  fvx    = vxnew / vini ;
+  chgx   = MAXI 'ABS' (x - xnew) ;
+  SI (chgx < 0.01) ;
+    info   = CHAI 'It:' &b1 / 5 'Obj:' / 10  psi > 1 'Fvol:' > 4 fvx > 1 'Change:' > 4 chgx > 1 ;
+    MESS info ;
     QUIT b1 ;
   FINSI ;
 * préparation de la nouvelle itération
@@ -134,13 +145,10 @@ REPE b1 100 ;
   tmma . 'VX0' = tmma_new . 'VX0' ;
 FIN  b1 ;
 
-** Tracé de la topologie finale
-yop    = (xnew ** p) * yo ;
-map    = MATE mod 'YOUN' yop 'NU' nu ;
-rip    = RIGI mod map ;
-u      = RESO (rip ET blo) f ;
-def1   = DEFO mail u 1000. ;
-TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) ;
-
+* Tracé de la dernière itération
+SI itrac ;
+  def1   = DEFO mail u 1000. ;
+  TRAC xnew mod con def1 liso 'TITR' info ;
+FINSI ;
 
 FIN ;

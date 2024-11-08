@@ -1,12 +1,14 @@
 ************************************************************************
 * Exemple de méthode d'optimisation topologique                        *
-* Méthode SIMP + OC (Optimility Criteria - Bendsoe)                    *
+* Méthode à densité + pénalisation SIMP                                *
+* Algorithme d'optimisation : Optimility Criteria - Bendsoe)           *
 * Application à une poutre en flexion                                  *
 ************************************************************************
 
 
 ** Paramètres globaux
-OPTI 'DIME' 2 'MODE' 'PLAN' 'DEFO' 'ELEM' 'QUA4' 'ECHO' 0 'TRAC' 'X' ;
+itrac  = FAUX ;
+OPTI 'DIME' 2 'MODE' 'PLAN' 'DEFO' 'ELEM' 'QUA4' 'ECHO' 0 ;
 l      = 1. ;
 h      = 0.2 ;
 yo     = 200.E9 ;
@@ -42,10 +44,14 @@ xmin   = 0.001 ;
 xmax   = 1. ;
 
 ** Initialisation de la topologie (avec la fraction volumique cible)
-x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
-* volume initial et cible
+* volume initial et volume cible
 vini   = MESU mail ;
 vcib   = vini * fv ;
+* densités initiales
+x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
+vx     = INTG mod x ;
+fvx    = vx / vini ;
+chgx   = 0. ;
 
 ** Matrice de filtrage
 un     = MANU 'CHML' mod 'SCAL' 1. 'GRAVITE' ;
@@ -55,7 +61,7 @@ wg     = PROI mcg vole ;
 kfil   = MFIL wg rmin 1. 0. ;
 
 ** Boucle d'optimisation topologique
-liso  = PROG 0. 'PAS' 0.05 1. ;
+liso   = PROG 0. 'PAS' 0.05 1. ;
 REPE b1 100 ;
 * pénalisation de la rigidité
   yop    = (x ** p) * yo ;
@@ -63,9 +69,6 @@ REPE b1 100 ;
 * résolution du problème mécanique
   rip    = RIGI mod map ;
   u      = RESO (rip ET blo) f ;
-* déformée et tracé de la topologie
-  def1   = DEFO mail u 1000. ;
-  TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) 'NCLK' ;
 * fonction objectif : compliance = uT.K.u = Int(sig:eps)dV
   eps    = EPSI 'LINE' mod u ;
   sig    = ELAS mod map eps ;
@@ -81,6 +84,13 @@ REPE b1 100 ;
   xdpsi1 = kfil * xdpsi0 ;
   xdpsi  = MANU 'CHML' mod 'REPA' 'SCAL' (EXTR xdpsi1 'VALE') 'TYPE' 'SCALAIRE' 'GRAVITE' ;
   dpsi   = xdpsi / x ;
+* infos sur la topologie courante
+  info   = CHAI 'It:' (&b1 - 1) / 5 'Obj:' / 10  psi > 1 'Fvol:' > 4 fvx > 1 'Change:' > 4 chgx > 1 ;
+  MESS info ;
+  SI itrac ;
+    def1   = DEFO mail u 1000. ;
+    TRAC x mod con def1 liso 'TITR' info 'NCLK' ;
+  FINSI ;
 * optimisation d'une nouvelle topologie (méthode du critère d'optimalité)
   l1     = 0. ;
   l2     = MAXI 'ABS' dpsi ;
@@ -97,30 +107,29 @@ REPE b1 100 ;
     mmil   = ((xnew - xinf) MASQ 'SUPERIEUR' 0.) * ((xnew - xsup) MASQ 'INFERIEUR' 0.) ;
     msup   =  (xnew - xsup) MASQ 'SUPERIEUR' 0. ;
     xnew   = (xinf * minf) + (xnew * mmil) + (xsup * msup) ;
-    vnew   = INTG mod xnew ;
-    SI (vnew > vcib) ;
+    vxnew  = INTG mod xnew ;
+    SI (vxnew > vcib) ;
       l1     = lmid ;
     SINON ;
       l2     = lmid ;
     FINSI ;
   FIN b2 ;
 * bilan de l'itération
-  change = MAXI 'ABS' (x - xnew) ;
-  MESS 'It.' ' ' &b1 '   Obj.' ' ' psi '   Change' ' ' change '   Fvol.' ' ' (vnew / vini) '   Dicho.' ' ' &b2 ;
-  SI (change < 0.01) ;
+  fvx    = vxnew / vini ;
+  chgx   = MAXI 'ABS' (x - xnew) ;
+  SI (chgx < 0.01) ;
+    info   = CHAI 'It:' &b1 / 5 'Obj:' / 10  psi > 1 'Fvol:' > 4 fvx > 1 'Change:' > 4 chgx > 1 ;
+    MESS info ;
     QUIT b1 ;
   FINSI ;
 * préparation de la nouvelle itération
   x      = xnew ;
 FIN  b1 ;
 
-** Tracé de la topologie finale
-yop    = (xnew ** p) * yo ;
-map    = MATE mod 'YOUN' yop 'NU' nu ;
-rip    = RIGI mod map ;
-u      = RESO (rip ET blo) f ;
-def1   = DEFO mail u 1000. ;
-TRAC x mod con def1 liso 'TITR' (CHAI 'Iteration' ' ' (&b1 - 1)) ;
-
+* Tracé de la dernière itération
+SI itrac ;
+  def1   = DEFO mail u 1000. ;
+  TRAC xnew mod con def1 liso 'TITR' info ;
+FINSI ;
 
 FIN ;
