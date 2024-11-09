@@ -71,7 +71,7 @@ Détaillons les variables :
 - :math:`V(\textbf{x})` est le volume de la topologie :math:`\textbf{x}` et :math:`V_e` le volume de
   l'élément :math:`e`
 - :math:`f` la fraction volumique imposée
-- :math:`V_0` le volume de domaine de conception :math:`\Omega`
+- :math:`V_0` le volume du domaine de conception :math:`\Omega`
 
 Remarquons que la compliance :math:`\psi(\textbf{x}) = \textbf{F}^T.\textbf{U}` correspond aussi au travail des
 forces extérieures.
@@ -81,16 +81,16 @@ forces extérieures.
 La méthode SIMP
 ---------------
 
-Dans ce document nous illustrerons brièvement la méthode SIMP, pour *Solid Isotropic Material with Penalization*
+Dans ce document nous illustrerons brièvement la méthode SIMP, pour *Solid Isotropic Material with Penalization*,
 qui est la méthode d'optimisation topologique la plus répendue dans les codes inustriels et celle mise en oeuvre
-dans Cast3M via la procédure TOPOPTIM. Le lecteur intéressé pourra consulter de nombreux ouvrages
-sur le sujet dont :
+dans Cast3M via la procédure `TOPOPTIM <http://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_.
+Le lecteur intéressé pourra consulter de nombreux ouvrages sur le sujet dont :
 
 - Les livres de référence [BENDSOE-1995]_ et [BENDSOE-SIGMUND-2004]_ qui détaillent rigouresement la théorie derrière l'optimisation
   topologique
 - L'article pédagogique [SIGMUND-2001]_ qui présente une implémentation sur Matlab en 99 lignes d'un algorithme
-  d'optimisation topologique. La procédure TOPOPTIM de Cast3M, ainsi que l'exemple utilisé dans ce document en
-  sont grandement inspirés
+  d'optimisation topologique. La procédure `TOPOPTIM <http://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_ de Cast3M,
+  ainsi que l'exemple utilisé dans ce document en sont grandement inspirés
 
 Les principales idées de la méthode sont les suivantes :
 
@@ -187,7 +187,7 @@ est alors faite et le processus est répété dans le demi intervalle *ad hoc* 
 
 **Initialisation des bornes**
 
-:math:`\lambda^- =0 \quad \lambda^+ =100 000`
+:math:`\lambda^- =0 \quad \lambda^+ =100000000`
 
 **Tant que** \ :math:`(\lambda^+ - \lambda^-) > 0,0001` :
 
@@ -276,7 +276,10 @@ l'opérateur `MFIL <http://www-cast3m.cea.fr/index.php?page=notices&notice=MFIL>
 Notons que pour cela, il est nécessaire de disposer du maillage ``mcg`` des centres de gravité du maillage ainsi que
 du champ par points ``wg`` des volumes :math:`V_e` de chaque éléments, exprimé sur ces centres de gravité.
 Le champ des volumes élémentaires ``vole`` est obtenu grâce à l'opérateur `INTG 'ELEM' <http://www-cast3m.cea.fr/index.php?page=notices&notice=INTG>`_
-en intégrant un champ unitaire par élément.
+en intégrant le champ ``un`` unitaire par élément.
+
+Les volumes utiles sont aussi calculés : ``v0`` le volume du domaine de conception, ``vx`` le volume de la topologie ``x`` courante
+et ``vcib`` le volume cible.
 
 .. admonition:: Initialisation : topologie initiale et matrice de filtrage
 
@@ -292,7 +295,8 @@ topologie courante selon la loi puissance de la méthode SIMP. Le comportement �
 le *module d'Young pénalisé* ``yop`` de chaque élément vaut :math:`E_e=(x_e)^pE_0` avec
 :math:`E_0` le module d'Young du matériau.
 
-On résoud ensuite le problème mécanique :math:`\mathbb{K}(\textbf{x}).\textbf{U} =\textbf{F}`.
+On résoud ensuite le problème mécanique :math:`\mathbb{K}(\textbf{x}).\textbf{U} =\textbf{F}` en calculant Les
+déplacements ``u`` avec l'opérateur `RESO <http://www-cast3m.cea.fr/index.php?page=notices&notice=RESO>`_.
 
 .. admonition:: Pénalisation de la rigidité et résolution
 
@@ -358,7 +362,7 @@ et en le comparant au volume cible ``vcib``.
       :lineno-start: 94
 
 Un affichage bilan de l'itération est fait, puis un cirtère d'arrêt de la boucle d'optimisation
-est proposé lorsque l'incrément maximal de densité est inférieur à 0,01
+est proposé lorsque l'incrément maximal de densité ``change`` est inférieur à 0,01
 
 .. admonition:: Fin de boucle et critère d'arrêt
 

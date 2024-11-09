@@ -1,7 +1,7 @@
 ************************************************************************
 * Exemple de méthode d'optimisation topologique                        *
 * Méthode à densité + pénalisation SIMP                                *
-* Algorithme d'optimisation : Method of moving asymptotes - Svanberg)  *
+* Algorithme d'optimisation : Method of Moving Asymptotes - Svanberg   *
 * Application à une poutre en flexion                                  *
 ************************************************************************
 
@@ -37,21 +37,13 @@ f      = FORC (0. -1.E5) p3 ;
 ** Paramètres d'optimisation
 p      = 3. ;
 fv     = 0.4 ;
-eta    = 0.5 ;
 rmin   = 1.5 * den1 ;
 m      = 0.1 ;
 xmin   = 0.001 ;
 xmax   = 1. ;
 
 ** Initialisation de la topologie (avec la fraction volumique cible)
-* volume initial et volume cible
-vini   = MESU mail ;
-vcib   = vini * fv ;
-* densités initiales
 x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
-vx     = INTG mod x ;
-fvx    = vx / vini ;
-chgx   = 0. ;
 
 ** Matrice de filtrage
 un     = MANU 'CHML' mod 'SCAL' 1. 'GRAVITE' ;
@@ -59,6 +51,13 @@ vole   = INTG mod un 'ELEM' ;
 mcg    = un POIN 'SUPERIEUR' 0. ;
 wg     = PROI mcg vole ;
 kfil   = MFIL wg rmin 1. 0. ;
+
+** Volume plein, initial et cible
+v0     = INTG mod un ;
+vx     = INTG mod x ;
+fvx    = vx / v0 ;
+vcib   = v0 * fv ;
+chgx   = 0. ;
 
 ** Initialisation de la table pour la mma
 nx     = NBEL mail ;
@@ -72,17 +71,23 @@ FIN bx ;
 tmma . 'VXMIN' = TABL 'VECTEUR' ;
 tmma . 'VXMAX' = TABL 'VECTEUR' ;
 REPE bx nx ;
-  tmma . 'VXMIN' . &bx = xmin ;
-  tmma . 'VXMAX' . &bx = xmax ;
+  tmma . 'VXMIN' . &bx = MAXI (PROG xmin (fv - m)) ;
+  tmma . 'VXMAX' . &bx = MINI (PROG xmax (fv + m)) ;
 FIN bx ;
-* indices pour la fonction objectif et la fonction contrainte
+* fonction objectif et ses sensibilités
 tmma . 'VF' = TABL 'VECTEUR' ;
+* fonction contrainte et ses sensibilités
 tmma . 'MC' = TABL ;
 tmma . 'MC' . 1 = TABL 'VECTEUR' ;
+tmma . 'MC' . 1 . 0 = vx ;
+REPE bx nx ;
+  tmma . 'MC' . 1 . &bx = EXTR vole 'SCAL' 1 &bx 1 ;
+FIN bx ;
 * bornes pour la fonction contrainte
 tmma . 'VCMAX' = TABL 'VECTEUR' ;
 tmma . 'VCMAX' . 1 = vcib ;
-* paramètre pour la mma
+* paramètres pour la mma
+tmma . 'METHODE' = 'STA' ;
 tmma . 'T0' = 0.1 ;
 
 ** Boucle d'optimisation topologique
@@ -122,18 +127,15 @@ REPE b1 100 ;
     tmma . 'VF' . &bx = EXTR dpsi 'SCAL' 1 &bx 1 ;
   FIN bx ;
   tmma . 'MC' . 1 . 0 = INTG mod x ;
-  REPE bx nx ;
-    tmma . 'MC' . 1 . &bx = EXTR vole 'SCAL' 1 &bx 1 ;
-  FIN bx ;
   tmma_new = EXCE tmma ;
   lxnew  = PROG ;
-  REPE b2 nx ;
-    lxnew  = lxnew ET (tmma_new . 'VX0' . &b2) ;
-  FIN b2 ;
+  REPE bx nx ;
+    lxnew  = lxnew ET (tmma_new . 'VX0' . &bx) ;
+  FIN bx ;
   xnew   = MANU 'CHML' mod 'REPA' 'SCAL' lxnew 'TYPE' 'SCALAIRE' 'GRAVITE' ;
   vxnew  = INTG mod xnew ;
 * bilan de l'itération
-  fvx    = vxnew / vini ;
+  fvx    = vxnew / v0 ;
   chgx   = MAXI 'ABS' (x - xnew) ;
   SI (chgx < 0.01) ;
     info   = CHAI 'It:' &b1 / 5 'Obj:' / 10  psi > 1 'Fvol:' > 4 fvx > 1 'Change:' > 4 chgx > 1 ;
@@ -143,6 +145,12 @@ REPE b1 100 ;
 * préparation de la nouvelle itération
   x      = xnew ;
   tmma . 'VX0' = tmma_new . 'VX0' ;
+  lxmin = BORN (lxnew - m) 'MINIMUM' xmin ;
+  lxmax = BORN (lxnew + m) 'MAXIMUM' xmax ;
+  REPE bx nx ;
+    tmma . 'VXMIN' . &bx = EXTR lxmin &bx ;
+    tmma . 'VXMAX' . &bx = EXTR lxmax &bx ;
+  FIN bx ;
 FIN  b1 ;
 
 * Tracé de la dernière itération

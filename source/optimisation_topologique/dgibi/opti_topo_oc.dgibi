@@ -1,7 +1,7 @@
 ************************************************************************
 * Exemple de méthode d'optimisation topologique                        *
 * Méthode à densité + pénalisation SIMP                                *
-* Algorithme d'optimisation : Optimility Criteria - Bendsoe)           *
+* Algorithme d'optimisation : Optimality Criteria - Bendsoe            *
 * Application à une poutre en flexion                                  *
 ************************************************************************
 
@@ -44,14 +44,7 @@ xmin   = 0.001 ;
 xmax   = 1. ;
 
 ** Initialisation de la topologie (avec la fraction volumique cible)
-* volume initial et volume cible
-vini   = MESU mail ;
-vcib   = vini * fv ;
-* densités initiales
 x      = MANU 'CHML' mod 'SCAL' fv 'GRAVITE' ;
-vx     = INTG mod x ;
-fvx    = vx / vini ;
-chgx   = 0. ;
 
 ** Matrice de filtrage
 un     = MANU 'CHML' mod 'SCAL' 1. 'GRAVITE' ;
@@ -59,6 +52,13 @@ vole   = INTG mod un 'ELEM' ;
 mcg    = un POIN 'SUPERIEUR' 0. ;
 wg     = PROI mcg vole ;
 kfil   = MFIL wg rmin 1. 0. ;
+
+** Volume plein, initial et cible
+v0     = INTG mod un ;
+vx     = INTG mod x ;
+fvx    = vx / v0 ;
+vcib   = v0 * fv ;
+chgx   = 0. ;
 
 ** Boucle d'optimisation topologique
 liso   = PROG 0. 'PAS' 0.05 1. ;
@@ -93,13 +93,13 @@ REPE b1 100 ;
   FINSI ;
 * optimisation d'une nouvelle topologie (méthode du critère d'optimalité)
   l1     = 0. ;
-  l2     = MAXI 'ABS' dpsi ;
+  l2     = 100000000. ;
   REPE b2 50 ;
-    SI ((l2 - l1) < 1.E-4) ;
+    SI ((l2 - l1) < 0.0001) ;
       QUIT b2 ;
     FINSI ;
-    lmid   = 0.5 * (l1 + l2) ;
-    b      = -1. * dpsi / lmid ;
+    lmid   = (l1 + l2) / 2. ;
+    b      = -1. * dpsi / (lmid * vole) ;
     xinf   = BORN (x - m) 'MINIMUM' xmin ;
     xsup   = BORN (x + m) 'MAXIMUM' xmax ;
     xnew   = x * (b ** eta) ;
@@ -115,7 +115,7 @@ REPE b1 100 ;
     FINSI ;
   FIN b2 ;
 * bilan de l'itération
-  fvx    = vxnew / vini ;
+  fvx    = vxnew / v0 ;
   chgx   = MAXI 'ABS' (x - xnew) ;
   SI (chgx < 0.01) ;
     info   = CHAI 'It:' &b1 / 5 'Obj:' / 10  psi > 1 'Fvol:' > 4 fvx > 1 'Change:' > 4 chgx > 1 ;
