@@ -94,7 +94,7 @@ REPE b1 100 ;
 * optimisation d'une nouvelle topologie (méthode du critère d'optimalité)
   l1     = 0. ;
   l2     = 100000000. ;
-  REPE b2 50 ;
+  REPE b2 100 ;
     SI ((l2 - l1) < 0.0001) ;
       QUIT b2 ;
     FINSI ;

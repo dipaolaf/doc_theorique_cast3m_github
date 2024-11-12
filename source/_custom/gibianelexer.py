@@ -517,6 +517,13 @@ class GibianeLexer(RegexLexer):
                  'MIXE'   ,
                  'MFIL'   ,
                  'PROL'   ,
+                 'SIN'   ,
+                 'EPSI'   ,
+                 'REPE'   ,
+                 'FIN'   ,
+                 'SI'   ,
+                 'SINON'   ,
+                 'FINSI'   ,
                  )
             , prefix=r'(\b|\s)', suffix=r'(\b|\s|;)'
             ),

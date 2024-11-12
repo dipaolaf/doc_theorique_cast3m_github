@@ -345,7 +345,7 @@ l'équation :eq:`eq:opti_topo_filtrage`.
 
 La mise à jour de la topologie (passage du champ ``x`` à ``xnew``) suivant le schéma :eq:`eq:opti_topo_bendsoe`
 est réalisée en suivant l':ref:`algorithme de dichotomie <algo:opti_topo_dichotomie>` pour la recherche du
-multiplicateur de Lagrange ``lmid`` qui nécessite une nouvelle boucle (limitée à 50 itérations).
+multiplicateur de Lagrange ``lmid`` qui nécessite une nouvelle boucle (limitée à 100 itérations).
 
 La limitation d'incrément :math:`m` et le recpect des bornes :math:`x_\textrm{min} \le x_e \le 1` sont réalisées
 grâce aux opérateurs `BORN <http://www-cast3m.cea.fr/index.php?page=notices&notice=BORN>`_ et
