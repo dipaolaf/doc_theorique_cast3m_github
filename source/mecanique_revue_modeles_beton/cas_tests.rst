@@ -33,7 +33,7 @@ Blocages et chargement
 """"""""""""""""""""""
 Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
 
-Les instructions Gibiane correpondantes sont :
+Les instructions Gibiane correspondantes sont :
 
 .. admonition:: Traction monotone : blocages et chargement
 
@@ -71,7 +71,7 @@ Blocages et chargement
 """"""""""""""""""""""
 Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max} (<0)`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
 
-Les instructions Gibiane correpondantes sont :
+Les instructions Gibiane correspondantes sont :
 
 .. admonition:: Compression monotone : blocages et chargement
 
@@ -119,7 +119,7 @@ Blocages et chargement
 """"""""""""""""""""""
 Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en deux phases successives de sens opposés : tout  d'abord en augmentant progressivement le déplacement jusqu'à la valeur :math:`u_{t max} > 0` (traction), puis après changement de sens en l'augmentant (en valeur absolue) progressivement jusqu'à la valeur :math:`u_{c max} < 0` (compression). On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
 
-Les instructions Gibiane correpondantes sont :
+Les instructions Gibiane correspondantes sont :
 
 .. admonition:: Compression traction : blocages et chargement
 
@@ -176,7 +176,7 @@ Le chargement consiste à piloter le déplacement d'une des faces en l'augmentan
 - En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
   On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
 
-Les instructions Gibiane correpondantes sont :
+Les instructions Gibiane correspondantes sont :
 
 .. admonition:: Traction monotone : blocages et chargement pour le cas 3D
 
@@ -241,7 +241,7 @@ Le chargement consiste à piloter le déplacement d'une des faces en l'augmentan
 - En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
   On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
 
-Les instructions Gibiane correpondantes sont :
+Les instructions Gibiane correspondantes sont :
 
 .. admonition:: Compression monotone : blocages et chargement pour le cas 3D
 
@@ -316,7 +316,7 @@ Le chargement consiste à piloter le déplacement d'une des faces en deux phases
 - En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
   On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
 
-Les instructions Gibiane correpondantes sont :
+Les instructions Gibiane correspondantes sont :
 
 .. admonition:: Traction compression : blocages et chargement pour le cas 3D
 
@@ -328,7 +328,7 @@ Les instructions Gibiane correpondantes sont :
 
 .. admonition:: Traction compression : blocages et chargement pour le cas 2D axisymétrique
 
-   .. literalinclude:: dgibi/01_traction.dgibi
+   .. literalinclude:: dgibi/05_traction_compression.dgibi
       :language: gibiane
       :lines: 1067-1076
       :linenos:
@@ -406,7 +406,7 @@ contraction ou l'expansion par effet de Poisson (de manière à être en état d
 En 3D, le mouvement de corps rigide est empêché en bloquant [les déplacements **UY** et **UZ** du coin (0 0 0)
 et **UZ** du coin (0 :math:`L` 0) -> nh145313 : le déplacement **UZ** du coin (0 0 0)].
 
-Les instructions Gibiane correpondantes sont :
+Les instructions Gibiane correspondantes sont :
 
 .. admonition:: Biaxial : chargement
 
@@ -464,9 +464,154 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/08_biaxial.dgibi>`
 
 
+.. _sec:modeles_beton_test_mass_triax:
+
 Triaxial
 ~~~~~~~~
-TODO
+
+Description
+"""""""""""
+
+Il s'agit d'un test combinant un chargement de pression hydrostatique et un chargement de compression axiale simple monotone. 
+Quatre calculs successifs sont effectués pour autant de valeurs croissantes de la pression hydrostatique. Les dimensions dépendent de l'hypothèse de calcul retenue :
+
+- en 3D, on considère un parallélépipède rectangle de base carrée de côté :math:`L=\sqrt{\pi}R` et de hauteur :math:`H` ;
+- en 2D axisymétrique, on considère un cylindre de rayon :math:`R` et de hauteur :math:`H`.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à imposé au préalable une contrainte normale de compression sur l'enveloppe de l'échantillon, puis à piloter le déplacement de sa face supérieure en l'augmentant (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max}(<0)`. La particularité de l'essai est que l'expansion par effet de Poisson est entravée par la pression hydrostatique.
+
+- En 3D, la contrainte normale de compression est appliquée sur les faces "droite" (située dans le plan :math:`x=L`), "arrière" (dans le plan :math:`y=L`) et "supérieure" (dans le plan :math:`z=H`) et on bloque les déplacements des faces opposées dans les directions normales aux faces. Puis on pilote le déplacement **UZ** de la face supérieure (dans le plan :math:`z=H`), le déplacement **UZ** de la face opposée inférieure (dans le plan :math:`z=0`) étant déjà bloqué.
+- En 2D axisymétrique, la contrainte normale de compression est appliquée sur la surface latérale cylindrique (située en :math:`r=R`) et sur la surface plane supérieure (dans le plan :math:`z=H`), puis on pilote le déplacement **UZ** de cette même face. On bloque le déplacement **UZ** de la face opposée inférieure (dans le plan :math:`z=0`).
+
+Les quatres valeurs de contrainte normale de compression (pression hydrostatique) pour lesquelles on effectue des calculs sont les suivantes : P = 0 Pa/ 1,5 MPa/ 4,5 MPa/ 9 MPa.
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Triaxial : chargements de pression hydrostatique pour les cas 3D et 2D axisymétrique
+
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 40-41
+      :linenos:
+      :lineno-start: 40
+
+.. admonition:: Triaxial : blocages et chargements pour le cas 3D
+
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 85-91
+      :linenos:
+      :lineno-start: 85
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 96-99
+      :linenos:
+      :lineno-start: 96
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 102-107
+      :linenos:
+      :lineno-start: 102
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 109-110
+      :linenos:
+      :lineno-start: 109
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 118-122
+      :linenos:
+      :lineno-start: 118
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 137-138
+      :linenos:
+      :lineno-start: 137
+
+.. admonition:: Triaxial : blocages et chargements pour le cas 2D axisymétrique
+
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 243-249
+      :linenos:
+      :lineno-start: 243
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 254-257
+      :linenos:
+      :lineno-start: 254
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 260-264
+      :linenos:
+      :lineno-start: 260
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 268-269
+      :linenos:
+      :lineno-start: 268
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 275-279
+      :linenos:
+      :lineno-start: 275
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 294-295
+      :linenos:
+      :lineno-start: 294
+
+Les blocages et les chargements (pour la pression hydrostatique maximale de 9 MPa) sont représentés sur les figures suivantes.
+
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_triax_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_triax_char_2daxi.png
+          :width: 50%
+          :align: center
+
+.. figure:: figures/mazars_triax_char_2daxi.png
+   :width: 0%
+
+   Triaxial - Blocages et chargement triaxial de pression hydrostatique (9 MPa, en vert) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
+
+.. image:: figures/mazars_triax_char_2daxi.png
+   :width: 22%
+   :align: right
+.. image:: figures/mazars_triax_char_3d.png
+   :width: 45%
+   
+.. figure:: figures/mazars_triax_char_2daxi.png
+   :width: 0%
+
+   Triaxial - Blocages et chargement triaxial de pression hydrostatique (9 MPa, en vert) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
+
+|pic1| .............................. |pic2|
+
+.. |pic1| image:: figures/mazars_triax_char_3d.png
+   :width: 45%
+.. |pic2| image:: figures/mazars_triax_char_2daxi.png
+   :width: 22%
+
+.. figure:: figures/mazars_triax_char_2daxi.png
+   :width: 0%
+
+   Triaxial - Blocages et chargement triaxial de pression hydrostatique (9 MPa, en vert) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/09_triaxial.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/09_triaxial.dgibi>`
+
 
 Test de Willam
 ~~~~~~~~~~~~~~

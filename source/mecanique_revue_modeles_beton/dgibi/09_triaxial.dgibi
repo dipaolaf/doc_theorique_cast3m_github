@@ -18,9 +18,13 @@ OPTI 'TRAC' 'PSC' ;
 
 ** Liste des modes de calcul a traiter
 lcas = LECT 1 2 ;
+*nh145313
+*lcas = LECT 1 ; COMM '3D volumique' ;
+*lcas = LECT 2 ; COMM '2D axisymetrique' ;
 
 ** Parametres geometriques
 rayo = 75.E-3 ;
+long = rayo * (pi ** 0.5) ;
 haut = 300.E-3 ;
 
 ** Parametres materiau
@@ -34,8 +38,16 @@ bc    = 1200. ;
 beta  = 1. ;
 
 ** Parametres chargement
-lpres  = PROG 0. 1.5E6 4.5E6 9.E6 ;
-uzimp  = 0.015 * haut ;
+lpres = PROG 0. 1.5E6 4.5E6 9.E6 ;
+umax  = 0.015 * haut ;
+
+** Legende courbes
+tleg   = TABL ;
+tleg . 'TITRE' = TABL ;
+
+*nh145313 .csv recuperes => resext = vrai
+resexp = vrai ;
+
 
 
 
@@ -46,7 +58,6 @@ SI (EXIS lcas 1) ;
   OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
 
 ** Maillage
-  long    = rayo * (pi ** 0.5) ;
   p1      = 0. 0. 0. ;
   p2      = 0. long 0. ;
   l12     = DROI 1 p1 p2 ;
@@ -60,6 +71,12 @@ SI (EXIS lcas 1) ;
   sderrie = env1 ELEM 3 ;
   p3      = mail POIN 'PROC' (0. 0. haut) ;
   mes1    = MESU mail ;
+*nh145313
+*rep1 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) 'TURQ' ;
+*TRAC 'QUAL' (rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage - sgauche, sdroite' ;
+*TRAC 'QUAL' (rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[3D V] Maillage - sbas, shaut' ;
+*TRAC 'QUAL' (rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' '[3D V] Maillage - sdevant, sderrie' ;
+*TRAC 'QUAL' (rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -76,13 +93,16 @@ SI (EXIS lcas 1) ;
   evtot0 = VIDE 'EVOLUTIO' ;
   evtot1 = VIDE 'EVOLUTIO' ;
   evtot2 = VIDE 'EVOLUTIO' ;
-  tleg   = TABL ;
-  tleg . 'TITRE' = TABL ;
   npres = DIME lpres ;
   REPE b0 npres ;
 * On fait un premier calcul avec seulement la pression imposee
     pre1 = EXTR lpres &b0 ;
-    fpr  = PRES 'MASS' mo (sdroite ET sderrie ET shaut) pre1 ;
+*nh145313
+*    fpr  = PRES 'MASS' mo (sdroite ET sderrie ET shaut) pre1 ;
+    fprx = PRES 'MASS' mo sdroite pre1 ;
+    fpry = PRES 'MASS' mo sderrie pre1 ;
+    fprz = PRES 'MASS' mo shaut pre1 ;
+    fpr = fprx ET fpry ET fprz ;
     chap = CHAR 'MECA' fpr evc1 ;
 * Resolution 1 : mise en pression seulement
     t                               = TABL ;
@@ -96,10 +116,22 @@ SI (EXIS lcas 1) ;
     t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
     PASAPAS t ;
 * Resolution 2 : pression + ajout du deplacement impose
-    dihaut = DEPI blhaut 1. ;
-    uz0    = EXTR (t . 'DEPLACEMENTS' . 5) 'UZ' p3 ;
-    evc2   = EVOL 'MANU' (PROG 0.5 1.) (PROG uz0 (uz0 - uzimp)) ;
+    dihaut = DEPI blhaut -1. ;
+    uz0    = ABS (EXTR (t . 'DEPLACEMENTS' . 5) 'UZ' p3) ;
+    evc2   = EVOL 'MANU' (PROG 0.5 1.) (PROG uz0 (umax - uz0)) ;
     chadi  = CHAR 'DIMP' dihaut evc2 ;
+*nh145313
+** Trace des blocages et du chargement
+    re0 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) ;
+    mor = MODE re0 'MECANIQUE' 'BARR' ;
+    mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
+    rir = RIGI mor mar ;
+    vprx = VECT fprx 'FORC' 'VERT' 1.2E-6 ;
+    vpry = VECT fpry 'FORC' 'VERT' 1.2E-6 ;
+    vprz = VECT fprz 'FORC' 'VERT' 1.2E-6 ;
+    vdiz = VECT dihaut ' ' ' ' 'FLX' 'ROUG' 3.E-2 ;
+    tit0 = CHAI '[3D V] Blocages et chargement Uimp et Pres.imp =' pre1 ' Pa' ;
+    TRAC ((RIGI mo ma) ET bl ET rir) (vprx ET vpry ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
     t . 'BLOCAGES_MECANIQUES'       = bl ;
     t . 'CHARGEMENT'                = chap ET chadi ;
     t . 'TEMPS_CALCULES'            = PROG 0.505 'PAS' 0.005 1. ;
@@ -145,34 +177,85 @@ SI (EXIS lcas 1) ;
     evtot0 = evtot0 ET (EVOL (EXTR lcoul &b0) 'MANU' 'Temps' ltps 'D'    lend) ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
-    tleg . 'TITRE' . &b0 = CHAI 'P =' ' ' pre1 ;
+    tleg . 'TITRE' . &b0 = CHAI 'FORMAT' '(F3.1)' 'Calcul_P=' (pre1*1.E-6) '_MPa' ;
   FIN b0 ;
 
-** Donnees experimentales de reference
-  evxp = VIDE 'EVOLUTIO' ;
+** Donnees experimentales de reference (FdP)
+si (resexp);
+  evxp0 = VIDE 'EVOLUTIO' ;
   tleg . (npres + 1) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 1) = 'Exp. P = 0 MPa' ;
-  txp  = LIRE 'CSV' '09_triaxial_0MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  tleg . 'TITRE' . (npres + 1) = 'Ref_Exp_P=0.0_MPa' ;
   tleg . (npres + 2) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 2) = 'Exp. P = 1.5 MPa' ;
-  txp  = LIRE 'CSV' '09_triaxial_1.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'ORAN' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  tleg . 'TITRE' . (npres + 2) = 'Ref_Exp_P=1.5_MPa' ;
   tleg . (npres + 3) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 3) = 'Exp. P = 4.5 MPa' ;
-  txp  = LIRE 'CSV' '09_triaxial_4.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'VERT' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  tleg . 'TITRE' . (npres + 3) = 'Ref_Exp_P=4.5_MPa' ;
   tleg . (npres + 4) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 4) = 'Exp. P = 9 MPa' ;
+  tleg . 'TITRE' . (npres + 4) = 'Ref_Exp_P=9.0_MPa' ;
+* Courbes Contrainte vs Deformation  
+  txp  = LIRE 'CSV' '09_triaxial_0MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  evxp0 = evxp0 ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  txp  = LIRE 'CSV' '09_triaxial_1.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  evxp0 = evxp0 ET (EVOL 'ORAN' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  txp  = LIRE 'CSV' '09_triaxial_4.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  evxp0 = evxp0 ET (EVOL 'VERT' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
   txp  = LIRE 'CSV' '09_triaxial_9MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'ROUG' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-
+  evxp0 = evxp0 ET (EVOL 'ROUG' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+fins;
 ** Trace des courbes pour les differents niveaux de pression
   DESS evtot0 'TITR' '[3D V] Endommagement vs Temps'    'LEGE' tleg ;
-  DESS (evtot1 ET evxp) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
+si (resexp);
+  DESS (evtot1 ET evxp0) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
+sino;
+  DESS evtot1 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
+fins;
   DESS evtot2 'TITR' '[3D V] Reaction vs Deplacement'   'LEGE' tleg ;
+*nh145313
+** Comparaison Calcul / Reference sur l'aire sous la courbe Contrainte vs Deformation
+si (resexp);
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
+  SAUT 1 LIGN ;
+  tbid = TABL ;
+  tbid . 'TITRE' = TABL ;
+  tbid . 1 = 'MARQ PLUS' ;
+  tbid . 'TITRE' . 1 = 'Cal.init.' ;
+  tbid . 2 = 'MARQ ETOI' ;
+  tbid . 'TITRE' . 2 = 'Ref.exp.' ;
+  tbid . 3 = 'MARQ CROI' ;
+  tbid . 'TITRE' . 3 = 'Cal.lim.' ;
+  REPE b2 (DIME evxp0) ;
+    evexp = EXTR evxp0  'COUR' &b2 ;
+    xmexp = EXTR (EXTR evexp 'ABSC') (DIME (EXTR evexp 'ABSC')) ;
+    evcal = EXTR evtot1 'COUR' &b2 ;
+    ymcal = IPOL xmexp evcal ;
+    xcal2 = PROG ;
+    ycal2 = PROG ; 
+    REPE b3 (DIME (EXTR evcal 'ABSC')) ;
+      xx = EXTR (EXTR evcal 'ABSC') &b3 ;
+      yy = EXTR (EXTR evcal 'ORDO') &b3 ;
+      SI (< xx xmexp) ;
+        QUIT b3 ;
+      FINSI ;
+      xcal2 = xcal2 ET (PROG xx) ;
+      ycal2 = ycal2 ET (PROG yy) ;
+    FIN b3 ;
+    xcal2 = xcal2 ET (PROG xmexp) ;
+    ycal2 = ycal2 ET (PROG ymcal) ;
+    evcal2 = EVOL MANU 'EPZZ' xcal2 'SMZZ' ycal2 ;
+    ivexp = INTG evexp ;
+    ivcal = INTG evcal2 ;
+    ec1 = ivcal - ivexp ;
+    er1 = ec1 / ivexp ;
+*    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Defo.max' xmexp ' -> Contr.cal' ymcal ;
+    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Aire courb.exp' ivexp ' Aire courb.cal' ivcal '   Ec.Rel.' er1;
+    DESS (evcal et evexp et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    MESS ' Pres.hydrostat :' (tleg . 'TITRE' . &b2) ', Ecart relatif entre Calcul et Reference :' er1 ;
+    SAUT 1 LIGN ;
+  FIN b2 ;
+  OPTI ECHO 1 ;
+fins;
 FINSI ;
-
 
 
 
@@ -190,6 +273,9 @@ SI (EXIS lcas 2) ;
   shaut   = mail COTE 3 ;
   p3      = shaut POIN 'PROC' (0. haut) ;
   sdroite = mail COTE 2 ;
+*nh145313
+*rep1 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) 'TURQ' ;
+*TRAC 'QUAL' (rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -209,13 +295,15 @@ SI (EXIS lcas 2) ;
   evtot0 = VIDE 'EVOLUTIO' ;
   evtot1 = VIDE 'EVOLUTIO' ;
   evtot2 = VIDE 'EVOLUTIO' ;
-  tleg   = TABL ;
-  tleg . 'TITRE' = TABL ;
   npres = DIME lpres ;
   REPE b0 npres ;
 * On fait un premier calcul avec seulement la pression imposee
     pre1 = EXTR lpres &b0 ;
-    fpr  = PRES 'MASS' mo (sdroite ET shaut) pre1 ;
+*nh145313
+*    fpr  = PRES 'MASS' mo (sdroite ET shaut) pre1 ;
+    fprr = PRES 'MASS' mo sdroite pre1 ;
+    fprz = PRES 'MASS' mo shaut pre1 ;
+    fpr = fprr ET fprz ;
     chap = CHAR 'MECA' fpr evc1 ;
 * Resolution 1 : mise en pression seulement
     t                               = TABL ;
@@ -229,10 +317,22 @@ SI (EXIS lcas 2) ;
     t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
     PASAPAS t ;
 * Resolution 2 : pression + ajout du deplacement impose
-    dihaut = DEPI blhaut 1. ;
-    uz0    = EXTR (t . 'DEPLACEMENTS' . 5) 'UZ' p3 ;
-    evc2   = EVOL 'MANU' (PROG 0.5 1.) (PROG uz0 (uz0 - uzimp)) ;
+    dihaut = DEPI blhaut -1. ;
+    uz0    = ABS (EXTR (t . 'DEPLACEMENTS' . 5) 'UZ' p3) ;
+    evc2   = EVOL 'MANU' (PROG 0.5 1.) (PROG uz0 (umax - uz0)) ;
     chadi  = CHAR 'DIMP' dihaut evc2 ;
+*nh145313
+** Trace des blocages et du chargement
+    re0 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) ;
+
+    mor = MODE re0 'MECANIQUE' 'BARR' ;
+    mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
+    rir = RIGI mor mar ;
+    vprr = VECT fprr 'FORC' 'VERT' 1.E-7 ;
+    vprz = VECT fprz 'FORC' 'VERT' 1.E-7 ;
+    vdiz = VECT dihaut ' ' 'FLX' 'ROUG' 3.E-2 ;
+    tit0 = CHAI '[2D Axi.] Blocages et chargement Uimp et Pres.imp =' pre1 ' Pa' ;
+    TRAC ((RIGI mo ma) ET bl ET rir) (vprr ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
     t . 'BLOCAGES_MECANIQUES'       = bl ;
     t . 'CHARGEMENT'                = chap ET chadi ;
     t . 'TEMPS_CALCULES'            = PROG 0.505 'PAS' 0.005 1. ;
@@ -278,32 +378,84 @@ SI (EXIS lcas 2) ;
     evtot0 = evtot0 ET (EVOL (EXTR lcoul &b0) 'MANU' 'Temps' ltps 'D'    lend) ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
-    tleg . 'TITRE' . &b0 = CHAI 'P =' ' ' pre1 ;
+    tleg . 'TITRE' . &b0 = CHAI 'FORMAT' '(F3.1)' 'Calcul_P=' (pre1*1.E-6) '_MPa' ;
   FIN b0 ;
 
-** Donnees experimentales de reference
-  evxp = VIDE 'EVOLUTIO' ;
+** Donnees experimentales de reference (FdP)
+si (resexp);
+  evxp0 = VIDE 'EVOLUTIO' ;
   tleg . (npres + 1) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 1) = 'Exp. P = 0 MPa' ;
-  txp  = LIRE 'CSV' '09_triaxial_0MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  tleg . 'TITRE' . (npres + 1) = 'Ref_Exp_P=0.0_MPa' ;
   tleg . (npres + 2) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 2) = 'Exp. P = 1.5 MPa' ;
-  txp  = LIRE 'CSV' '09_triaxial_1.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'ORAN' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  tleg . 'TITRE' . (npres + 2) = 'Ref_Exp_P=1.5_MPa' ;
   tleg . (npres + 3) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 3) = 'Exp. P = 4.5 MPa' ;
-  txp  = LIRE 'CSV' '09_triaxial_4.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'VERT' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  tleg . 'TITRE' . (npres + 3) = 'Ref_Exp_P=4.5_MPa' ;
   tleg . (npres + 4) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 4) = 'Exp. P = 9 MPa' ;
+  tleg . 'TITRE' . (npres + 4) = 'Ref_Exp_P=9.0_MPa' ;
+* Courbes Contrainte vs Deformation  
+  txp  = LIRE 'CSV' '09_triaxial_0MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  evxp0 = evxp0 ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  txp  = LIRE 'CSV' '09_triaxial_1.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  evxp0 = evxp0 ET (EVOL 'ORAN' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+  txp  = LIRE 'CSV' '09_triaxial_4.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  evxp0 = evxp0 ET (EVOL 'VERT' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
   txp  = LIRE 'CSV' '09_triaxial_9MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
-  evxp = evxp ET (EVOL 'ROUG' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-
+  evxp0 = evxp0 ET (EVOL 'ROUG' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
+fins;
 ** Trace des courbes pour les differents niveaux de pression
   DESS evtot0 'TITR' '[2D Axi.] Endommagement vs Temps'    'LEGE' tleg ;
-  DESS (evtot1 ET evxp) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
+si (resexp);
+  DESS (evtot1 ET evxp0) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
+sino;
+  DESS evtot1 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
+fins;
   DESS evtot2 'TITR' '[2D Axi.] Reaction vs Deplacement'   'LEGE' tleg ;
+*nh145313
+** Comparaison Calcul / Reference sur l'aire sous la courbe Contrainte vs Deformation
+si (resexp);
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' **************** C A S  #2  :  2 D   A X I S Y M E T R I Q U E ****************';
+  SAUT 1 LIGN ;
+  tbid = TABL ;
+  tbid . 'TITRE' = TABL ;
+  tbid . 1 = 'MARQ PLUS' ;
+  tbid . 'TITRE' . 1 = 'Cal.init.' ;
+  tbid . 2 = 'MARQ ETOI' ;
+  tbid . 'TITRE' . 2 = 'Ref.exp.' ;
+  tbid . 3 = 'MARQ CROI' ;
+  tbid . 'TITRE' . 3 = 'Cal.lim.' ;
+  REPE b2 (DIME evxp0) ;
+    evexp = EXTR evxp0  'COUR' &b2 ;
+    xmexp = EXTR (EXTR evexp 'ABSC') (DIME (EXTR evexp 'ABSC')) ;
+    evcal = EXTR evtot1 'COUR' &b2 ;
+    ymcal = IPOL xmexp evcal ;
+    xcal2 = PROG ;
+    ycal2 = PROG ; 
+    REPE b3 (DIME (EXTR evcal 'ABSC')) ;
+      xx = EXTR (EXTR evcal 'ABSC') &b3 ;
+      yy = EXTR (EXTR evcal 'ORDO') &b3 ;
+      SI (< xx xmexp) ;
+        QUIT b3 ;
+      FINSI ;
+      xcal2 = xcal2 ET (PROG xx) ;
+      ycal2 = ycal2 ET (PROG yy) ;
+    FIN b3 ;
+    xcal2 = xcal2 ET (PROG xmexp) ;
+    ycal2 = ycal2 ET (PROG ymcal) ;
+    evcal2 = EVOL MANU 'EPZZ' xcal2 'SMZZ' ycal2 ;
+    ivexp = INTG evexp ;
+    ivcal = INTG evcal2 ;
+    ec1 = ivcal - ivexp ;
+    er1 = ec1 / ivexp ;
+*    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Defo.max' xmexp ' -> Contr.cal' ymcal ;
+    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Aire courb.exp' ivexp ' Aire courb.cal' ivcal '   Ec.Rel.' er1;
+    DESS (evcal et evexp et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    MESS ' Pres.hydrostat :' (tleg . 'TITRE' . &b2) ', Ecart relatif entre Calcul et Reference :' er1 ;
+    SAUT 1 LIGN ;
+  FIN b2 ;
+  OPTI ECHO 1 ;
+fins;
 FINSI ;
 
 

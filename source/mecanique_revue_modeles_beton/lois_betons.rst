@@ -45,16 +45,18 @@ Anomalie 3
 ++++++++++
 **Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type poutre à fibres est proscrite !**. *[nh145313 : L'anomalie est corrigée en bloquant les rotation de l'extrémité libre de la poutre à fibre.]*
 
-Anomalie 4 (?)
-++++++++++++++
+Limitation numérique
+++++++++++++++++++++
 Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazars.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
 
 .. math::
    D_{max}=(1 - \epsilon)
    
-où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de de paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
+où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de ce paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
 
-En effet, la consolidation qui en découlerait dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissibles et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle.
+En effet, la consolidation qui en découlerait dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissibles et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle. 
+
+Le choix de la valeur du paramètre :math:`\epsilon` résulte donc d'un compromis à faire entre convergence numérique et représentativité physique du modèle.
 
 L'historique des valeurs attribuées au paramètre :math:`\epsilon` est le suivant :
 

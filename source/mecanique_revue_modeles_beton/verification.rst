@@ -1387,10 +1387,9 @@ Les modes de calcul testés sont :
 L'analyse des résultats porte sur les courbes :
 
 - de biaxialité :math:`(\sigma_{xx};\sigma_{yy})` ;
-- de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|F_{c}|};\frac{\sigma_{yy}}{|F_{c}|})`.
+- de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|};\frac{\sigma_{yy}}{|f_{c}|})`.
 
-Dans la courbe de biaxialité normalisée, :math:`F_{c}=-25,64~MPa` est la contrainte limite en compression déterminée dans un calcul de référence en contrainte imposée de compression monotone uniaxiale. la courbe calculée de biaxialité normalisée est jugée satisfaite si elle coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
-
+Dans la courbe de biaxialité normalisée, :math:`f_{c}=-25,64~MPa` est la contrainte limite en compression déterminée dans un calcul de référence en contrainte imposée de compression monotone uniaxiale. la courbe calculée de biaxialité normalisée est jugée satisfaite si elle coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
 
 Solution de référence
 +++++++++++++++++++++
@@ -1424,9 +1423,9 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    
    Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 
-L'écart relatif maximum sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.70981.10^{-3} < 3.10^{-2}`.
+L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.70981.10^{-3} < 3.10^{-2}`.
 
-Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|F_{c}|} ; \frac{\sigma_{yy}}{|F_{c}|})`
+Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 .. figure:: figures/mazars_biax_SxSysFc_3d.png
@@ -1451,9 +1450,9 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    
    Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 
-L'écart relatif maximum sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.44110.10^{-3} < 3.10^{-2}`.
+L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.44110.10^{-3} < 3.10^{-2}`.
 
-Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|F_{c}|} ; \frac{\sigma_{yy}}{|F_{c}|})`
+Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 .. figure:: figures/mazars_biax_SxSysFc_2dplan.png
@@ -1468,11 +1467,109 @@ En conséquence de ces deux constats, les résultats du cas-test ``08_biaxial.dg
 
 
 
-Chargement Triaxial proportionnel élastique
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Chargement triaxial
+~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``09_triaxial.dgibi``
 
-TODO
+On n'applique le cas de chargement triaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_triax>`. En effet, la triaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
+
+Le chargement triaxial est la combinaison de deux phases successives : La mise en place au préalable d'un état de confinement auquel on ajoute ensuite un chargement de compression simple en déplacement imposé négatif. On réalise le test dans quatre états de confinement différents qui correspondent aux quatre valeurs de pression hydrostatique, c'est-à-dire de contrainte normale de compression, suivantes : P = 0 Pa/ 1,5 MPa/ 4,5 MPa/ 9 MPa. On applique ensuite le chargement de compression en déplacement imposé négatif, croissant en valeur absolue, jusqu'à atteindre le déplacement maximal : :math:`u_{max}=-4,5.10^{-3}` m.
+
+L'objectif est d'évaluer l'influence du confinement sur la limite en compression et le comportement post-pic du modèle.
+
+L'analyse des résultats porte sur les courbes :
+
+- d'endommagement moyen en fonction du temps ;
+- de la contrainte moyenne en fonction de la déformation moyenne ;
+- de la force de réaction globale en fonction du déplacement imposé.
+
+Solution de référence
++++++++++++++++++++++
+
+On dispose, pour les quatre valeurs de pression hydrostatique, de résultats expérimentaux en termes de contrainte moyenne et déformation moyenne auxquels les courbes calculées d'évolution de la contrainte en fonction de la déformation peuvent être comparées. 
+
+L'écart entre la courbe calculée et la courbe expérimentale de référence est évalué via l'aire sous les courbes, jusqu'à l'abscisse maximale de l'une ou l'autre des courbes :
+
+.. math::
+   Ecart_{relatif} = \frac{Surface_{calc.} - Surface_{ref.}} {Surface_{ref.}}
+
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+Courbes d'évolution de l'endommagement
+""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_triax_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbes d'évolution de la contrainte en fonction de la déformation
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_triax_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+Pour les quatre valeurs de pression hydrostatique, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe expérimentale de référence est :
+
+- Pour P = 0 MPa   : :math:`Ecart_{relatif} = -1.08171.10^{-1}` ;
+- Pour P = 1,5 MPa : :math:`Ecart_{relatif} = -7.35369.10^{-3}` ;
+- Pour P = 4,5 MPa : :math:`Ecart_{relatif} = 8.54961.10^{-2}` ;
+- Pour P = 9 MPa   : :math:`Ecart_{relatif} = 1.68086.10^{-1}`.
+
+En conséquence, les résultats du cas-test ``09_triaxial.dgibi`` en mode 3D volumique sont jugés ???.
+
+Courbes d'évolution de la force de réaction en fonction du déplacement imposé
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_triax_f_3d.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D axisymétrique
++++++++++++++++++++++++++++++++++
+
+Courbes d'évolution de l'endommagement
+""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_triax_d_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbes d'évolution de la contrainte en fonction de la déformation
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_triax_s_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+Pour les quatre valeurs de pression hydrostatique, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe expérimentale de référence est :
+
+- Pour P = 0 MPa   : :math:`Ecart_{relatif} = -1.08171.10^{-1}` ;
+- Pour P = 1,5 MPa : :math:`Ecart_{relatif} = -7.37534.10^{-3}` ;
+- Pour P = 4,5 MPa : :math:`Ecart_{relatif} = 8.55150.10^{-2}` ;
+- Pour P = 9 MPa   : :math:`Ecart_{relatif} = 1.68078.10^{-1}`.
+
+En conséquence, les résultats du cas-test ``09_triaxial.dgibi`` en mode 2D axisymétrique sont jugés ???.
+
+Courbes d'évolution de la force de réaction en fonction du déplacement imposé
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_triax_f_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
 
 
 
