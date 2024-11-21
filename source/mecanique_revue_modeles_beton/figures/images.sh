@@ -15,6 +15,8 @@
 # Création d'un répertoire qui contiendra les images créées
 cp ../dgibi/01_traction.ps .
 cp ../dgibi/02_compression.ps .
+cp ../dgibi/03_traction_cyclique.ps .
+cp ../dgibi/04_compression_cyclique.ps .
 cp ../dgibi/05_traction_compression.ps .
 cp ../dgibi/08_biaxial.ps .
 cp ../dgibi/09_triaxial.ps .
@@ -23,6 +25,8 @@ cp ../dgibi/09_triaxial.ps .
 echo "  --> Suppression des titres"
 cast-post.sh -o -t 01_traction.ps 01_traction.ps
 cast-post.sh -o -t 02_compression.ps 02_compression.ps
+cast-post.sh -o -t 03_traction_cyclique.ps 03_traction_cyclique.ps
+cast-post.sh -o -t 04_compression_cyclique.ps 04_compression_cyclique.ps
 cast-post.sh -o -t 05_traction_compression.ps 05_traction_compression.ps
 cast-post.sh -o -t 08_biaxial.ps 08_biaxial.ps
 cast-post.sh -o -t 09_triaxial.ps 09_triaxial.ps
@@ -69,6 +73,46 @@ psselect -q -p30   02_compression.ps mazars_comp_mono_char_2dpaf.ps
 psselect -q -p31   02_compression.ps mazars_comp_mono_d_2dpaf.ps
 psselect -q -p32   02_compression.ps mazars_comp_mono_s_2dpaf.ps
 psselect -q -p33   02_compression.ps mazars_comp_mono_f_2dpaf.ps
+psselect -q -p1    03_traction_cyclique.ps mazars_trac_cycl_char_3d.ps
+psselect -q -p2    03_traction_cyclique.ps mazars_trac_cycl_d_3d.ps
+psselect -q -p3    03_traction_cyclique.ps mazars_trac_cycl_s_3d.ps
+psselect -q -p4    03_traction_cyclique.ps mazars_trac_cycl_f_3d.ps
+psselect -q -p9    03_traction_cyclique.ps mazars_trac_cycl_char_3dpaf.ps
+psselect -q -p10   03_traction_cyclique.ps mazars_trac_cycl_d_3dpaf.ps
+psselect -q -p11   03_traction_cyclique.ps mazars_trac_cycl_s_3dpaf.ps
+psselect -q -p12   03_traction_cyclique.ps mazars_trac_cycl_f_3dpaf.ps
+psselect -q -p14   03_traction_cyclique.ps mazars_trac_cycl_char_2dplan.ps
+psselect -q -p15   03_traction_cyclique.ps mazars_trac_cycl_d_2dplan.ps
+psselect -q -p16   03_traction_cyclique.ps mazars_trac_cycl_s_2dplan.ps
+psselect -q -p17   03_traction_cyclique.ps mazars_trac_cycl_f_2dplan.ps
+psselect -q -p22   03_traction_cyclique.ps mazars_trac_cycl_char_2daxi.ps
+psselect -q -p23   03_traction_cyclique.ps mazars_trac_cycl_d_2daxi.ps
+psselect -q -p24   03_traction_cyclique.ps mazars_trac_cycl_s_2daxi.ps
+psselect -q -p25   03_traction_cyclique.ps mazars_trac_cycl_f_2daxi.ps
+psselect -q -p30   03_traction_cyclique.ps mazars_trac_cycl_char_2dpaf.ps
+psselect -q -p31   03_traction_cyclique.ps mazars_trac_cycl_d_2dpaf.ps
+psselect -q -p32   03_traction_cyclique.ps mazars_trac_cycl_s_2dpaf.ps
+psselect -q -p33   03_traction_cyclique.ps mazars_trac_cycl_f_2dpaf.ps
+psselect -q -p1    04_compression_cyclique.ps mazars_comp_cycl_char_3d.ps
+psselect -q -p2    04_compression_cyclique.ps mazars_comp_cycl_d_3d.ps
+psselect -q -p3    04_compression_cyclique.ps mazars_comp_cycl_s_3d.ps
+psselect -q -p4    04_compression_cyclique.ps mazars_comp_cycl_f_3d.ps
+psselect -q -p9    04_compression_cyclique.ps mazars_comp_cycl_char_3dpaf.ps
+psselect -q -p10   04_compression_cyclique.ps mazars_comp_cycl_d_3dpaf.ps
+psselect -q -p11   04_compression_cyclique.ps mazars_comp_cycl_s_3dpaf.ps
+psselect -q -p12   04_compression_cyclique.ps mazars_comp_cycl_f_3dpaf.ps
+psselect -q -p14   04_compression_cyclique.ps mazars_comp_cycl_char_2dplan.ps
+psselect -q -p15   04_compression_cyclique.ps mazars_comp_cycl_d_2dplan.ps
+psselect -q -p16   04_compression_cyclique.ps mazars_comp_cycl_s_2dplan.ps
+psselect -q -p17   04_compression_cyclique.ps mazars_comp_cycl_f_2dplan.ps
+psselect -q -p22   04_compression_cyclique.ps mazars_comp_cycl_char_2daxi.ps
+psselect -q -p23   04_compression_cyclique.ps mazars_comp_cycl_d_2daxi.ps
+psselect -q -p24   04_compression_cyclique.ps mazars_comp_cycl_s_2daxi.ps
+psselect -q -p25   04_compression_cyclique.ps mazars_comp_cycl_f_2daxi.ps
+psselect -q -p30   04_compression_cyclique.ps mazars_comp_cycl_char_2dpaf.ps
+psselect -q -p31   04_compression_cyclique.ps mazars_comp_cycl_d_2dpaf.ps
+psselect -q -p32   04_compression_cyclique.ps mazars_comp_cycl_s_2dpaf.ps
+psselect -q -p33   04_compression_cyclique.ps mazars_comp_cycl_f_2dpaf.ps
 psselect -q -p1    05_traction_compression.ps mazars_trac_comp_char_3d.ps
 psselect -q -p2    05_traction_compression.ps mazars_trac_comp_d_3d.ps
 psselect -q -p3    05_traction_compression.ps mazars_trac_comp_s_3d.ps
@@ -107,6 +151,8 @@ psselect -q -p18   09_triaxial.ps mazars_triax_f_2daxi.ps
 # Traitement des images
 rm 01_traction.ps
 rm 02_compression.ps
+rm 03_traction_cyclique.ps
+rm 04_compression_cyclique.ps
 rm 05_traction_compression.ps
 rm 08_biaxial.ps
 rm 09_triaxial.ps
@@ -121,6 +167,21 @@ cast-post.sh -o -l 5 mazars_comp_mono_char_3dpaf.ps  mazars_comp_mono_char_3dpaf
 cast-post.sh -o -l 5 mazars_comp_mono_char_2dplan.ps mazars_comp_mono_char_2dplan.ps
 cast-post.sh -o -l 5 mazars_comp_mono_char_2daxi.ps  mazars_comp_mono_char_2daxi.ps
 cast-post.sh -o -l 5 mazars_comp_mono_char_2dpaf.ps  mazars_comp_mono_char_2dpaf.ps
+cast-post.sh -o -l 5 mazars_trac_cycl_char_3d.ps     mazars_trac_cycl_char_3d.ps
+cast-post.sh -o -l 5 mazars_trac_cycl_char_3dpaf.ps  mazars_trac_cycl_char_3dpaf.ps
+cast-post.sh -o -l 5 mazars_trac_cycl_char_2dplan.ps mazars_trac_cycl_char_2dplan.ps
+cast-post.sh -o -l 5 mazars_trac_cycl_char_2daxi.ps  mazars_trac_cycl_char_2daxi.ps
+cast-post.sh -o -l 5 mazars_trac_cycl_char_2dpaf.ps  mazars_trac_cycl_char_2dpaf.ps
+cast-post.sh -o -l 5 mazars_comp_cycl_char_3d.ps     mazars_comp_cycl_char_3d.ps
+cast-post.sh -o -l 5 mazars_comp_cycl_char_3dpaf.ps  mazars_comp_cycl_char_3dpaf.ps
+cast-post.sh -o -l 5 mazars_comp_cycl_char_2dplan.ps mazars_comp_cycl_char_2dplan.ps
+cast-post.sh -o -l 5 mazars_comp_cycl_char_2daxi.ps  mazars_comp_cycl_char_2daxi.ps
+cast-post.sh -o -l 5 mazars_comp_cycl_char_2dpaf.ps  mazars_comp_cycl_char_2dpaf.ps
+cast-post.sh -o -l 5 mazars_trac_comp_char_3d.ps     mazars_trac_comp_char_3d.ps
+cast-post.sh -o -l 5 mazars_trac_comp_char_3dpaf.ps  mazars_trac_comp_char_3dpaf.ps
+cast-post.sh -o -l 5 mazars_trac_comp_char_2dplan.ps mazars_trac_comp_char_2dplan.ps
+cast-post.sh -o -l 5 mazars_trac_comp_char_2daxi.ps  mazars_trac_comp_char_2daxi.ps
+cast-post.sh -o -l 5 mazars_trac_comp_char_2dpaf.ps  mazars_trac_comp_char_2dpaf.ps
 cast-post.sh -o -l 5 mazars_trac_comp_char_3d.ps     mazars_trac_comp_char_3d.ps
 cast-post.sh -o -l 5 mazars_trac_comp_char_3dpaf.ps  mazars_trac_comp_char_3dpaf.ps
 cast-post.sh -o -l 5 mazars_trac_comp_char_2dplan.ps mazars_trac_comp_char_2dplan.ps

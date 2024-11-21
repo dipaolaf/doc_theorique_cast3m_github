@@ -89,14 +89,80 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/02_compression.dgibi>`
 
 
+.. _sec:modeles_beton_test_pout_trac_cycl:
+
 Traction cyclique
 ~~~~~~~~~~~~~~~~~
-TODO
 
+.. figure:: figures/mazars_trac_cycl_char_3dpaf.png
+   :width: 15cm
+   :align: center
+
+   Traction simple cyclique sur un modèle d'éléments finis poutre.
+
+Description
+"""""""""""
+
+Il s'agit d'un test de traction simple cyclique. On considère une poutre de longueur :math:`L` et section transversale :math:`S` soumise à un chargement de traction dans la direction de son axe.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur du déplacement au pic augmente progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément ainsi que les rotations de l'extrémité pilotée en déplacement.
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Traction cyclique : blocages et chargement
+
+   .. literalinclude:: dgibi/03_traction_cyclique.dgibi
+      :language: gibiane
+      :lines: 300-312
+      :linenos:
+      :lineno-start: 300
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/03_traction_cyclique.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/03_traction_cyclique.dgibi>`
+
+
+.. _sec:modeles_beton_test_pout_comp_cycl:
 
 Compression cyclique
 ~~~~~~~~~~~~~~~~~~~~
-TODO
+
+.. figure:: figures/mazars_comp_cycl_char_3dpaf.png
+   :width: 15cm
+   :align: center
+
+   Compression simple cyclique sur un modèle d'éléments finis poutre.
+
+Description
+"""""""""""
+
+Il s'agit d'un test de compression simple cyclique. On considère une poutre de longueur :math:`L` et section transversale :math:`S` soumise à un chargement de compression dans la direction de son axe.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur du déplacement au pic augmente (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max} (<0)`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément ainsi que les rotations de l'extrémité pilotée en déplacement.
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Compression cyclique : blocages et chargement
+
+   .. literalinclude:: dgibi/04_compression_cyclique.dgibi
+      :language: gibiane
+      :lines: 329-341
+      :linenos:
+      :lineno-start: 329
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/04_compression_cyclique.trace>`
+- :download:`Test pour la loi de RICBET <./dgibi/04_compression_cyclique.trace>`
 
 
 .. _sec:modeles_beton_test_pout_trac_comp:
@@ -281,14 +347,134 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/02_compression.dgibi>`
 
 
+.. _sec:modeles_beton_test_mass_trac_cycl:
+
 Traction cyclique
 ~~~~~~~~~~~~~~~~~
-TODO
 
+Description
+"""""""""""
+
+Il s'agit d'un test de traction simple cyclique. Les dimensions dépendent de l'hypothèse de calcul retenue :
+
+- en 3D, on considère un cube d'arête :math:`L` ;
+- en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
+- en 2D axisymétrique, on considère un cylindre de rayon :math:`R` et de hauteur :math:`H`.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement d'une des faces entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur du déplacement au pic augmente progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements de l'autre face en laissant libre la contraction par effet de Poisson.
+
+- En 3D, on pilote le déplacement **UX** de la face "droite" (située dans le plan :math:`x=L`) et
+  on bloque le déplacement **UX** de la face opposée "gauche" (dans le plan :math:`x=0`).
+  Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0).
+- En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
+- En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
+  On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Traction cyclique : blocages et chargement pour le cas 3D
+
+   .. literalinclude:: dgibi/03_traction_cyclique.dgibi
+      :language: gibiane
+      :lines: 78-88
+      :linenos:
+      :lineno-start: 78
+
+.. admonition:: Traction cyclique : blocages et chargement pour le cas 2D axisymétrique
+
+   .. literalinclude:: dgibi/03_traction_cyclique.dgibi
+      :language: gibiane
+      :lines: 737-746
+      :linenos:
+      :lineno-start: 737
+
+Les blocages et le chargement sont représentés sur les figures suivantes.
+
+.. image:: figures/mazars_trac_cycl_char_3d.png
+   :width: 30%
+.. image:: figures/mazars_trac_cycl_char_2dplan.png
+   :width: 30%
+.. image:: figures/mazars_trac_cycl_char_2daxi.png
+   :width: 30%
+
+.. figure:: figures/mazars_trac_cycl_char_2daxi.png
+   :width: 0%
+
+   Traction cyclique - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/03_traction_cyclique.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/03_traction_cyclique.dgibi>`
+
+
+.. _sec:modeles_beton_test_mass_comp_cycl:
 
 Compression cyclique
 ~~~~~~~~~~~~~~~~~~~~
-TODO
+
+Description
+"""""""""""
+
+Il s'agit d'un test de compression simple cyclique. Les dimensions dépendent de l'hypothèse de calcul retenue :
+
+- en 3D, on considère un cube d'arête :math:`L` ;
+- en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
+- en 2D axisymétrique, on considère un cylindre de rayon :math:`R` et de hauteur :math:`H`.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement d'une des faces entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur du déplacement au pic augmentant (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max} (<0)`. On bloque les déplacements de l'autre face en laissant libre l'expansion par effet de Poisson.
+
+- En 3D, on pilote le déplacement **UX** de la face "droite" (située dans le plan :math:`x=L`) et
+  on bloque le déplacement **UX** de la face opposée "gauche" (dans le plan :math:`x=0`).
+  Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0).
+- En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
+- En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
+  On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Compression cyclique : blocages et chargement pour le cas 3D
+
+   .. literalinclude:: dgibi/04_compression_cyclique.dgibi
+      :language: gibiane
+      :lines: 78-88
+      :linenos:
+      :lineno-start: 78
+
+.. admonition:: Compression cyclique : blocages et chargement pour le cas 2D axisymétrique
+
+   .. literalinclude:: dgibi/04_compression_cyclique.dgibi
+      :language: gibiane
+      :lines: 789-798
+      :linenos:
+      :lineno-start: 789
+
+Les blocages et le chargement sont représentés sur les figures suivantes.
+
+.. image:: figures/mazars_comp_cycl_char_3d.png
+   :width: 30%
+.. image:: figures/mazars_comp_cycl_char_2dplan.png
+   :width: 30%
+.. image:: figures/mazars_comp_cycl_char_2daxi.png
+   :width: 30%
+
+.. figure:: figures/mazars_comp_cycl_char_2daxi.png
+   :width: 0%
+
+   Compression cyclique - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/04_compression_cyclique.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/04_compression_cyclique.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_trac_comp:

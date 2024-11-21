@@ -25,6 +25,8 @@ Pour les tests unitaires, c'est-à-dire portant sur un seul élément fini, la g
 Loi MAZARS
 ----------
 
+.. _sec:mazars_ana_trac:
+
 Traction monotone
 ~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``01_traction.dgibi``
@@ -477,6 +479,8 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 
 
+.. _sec:mazars_ana_comp:
+
 Compression monotone
 ~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``02_compression.dgibi``
@@ -927,11 +931,227 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    Force de réaction en fonction du déplacement imposé.
 
 
+
 Traction cyclique
 ~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``03_traction_cyclique.dgibi``
 
-TODO
+On applique le cas de chargement de traction simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_trac_cycl>`
+et :ref:`massif <sec:modeles_beton_test_mass_trac_cycl>` en déplacement imposé entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur du déplacement au pic augmente progressivement jusqu’à atteindre l’endommagement autour de 0,9.
+
+Pour tous les modes de calcul le déplacement imposé vaut :math:`u_{max}=5.10^{-4}` m.
+
+On choisit l'incrément du déplacement au pic de chaque cycle de façon à ce que le seuil d'endommagement soit franchi à chaque fois. Le module élastique est alors multiplié par :math:`(1 - D_{e})`, où :math:`D_{e}` est l'endommagement élémentaire consécutif à chaque franchissement du seuil. Il en résulte une diminution du module élastique avec l'endommagement. Du fait de l'accroissement du déplacement au pic des cycles, l'endommagement s'accroit, ce qui conduit à une diminution du module élastique.
+
+L’objectif est de vérifier la dégradation progressive des propriétés mécaniques du matériau au cours du chargement via la diminution du module élastique à chaque cycle.
+
+L'analyse des résultats porte sur les courbes :
+
+- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la force de réaction globale en fonction du déplacement imposé.
+
+Pour chaque configuration géométrique, la solution de référence est identique à celle décrite dans le chapitre :ref:`Traction monotone <sec:mazars_ana_trac>`.
+
+Résultats du cas 3D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_d_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_s_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   3.35150.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_f_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_d_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_s_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   3.35150.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_f_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   7.86303.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_f_3d.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D contraintes planes
+++++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_d_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_s_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   4.11873.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_f_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D axisymétrique
++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_d_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_s_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   3.92767.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_cycl_f_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
 
 
 
@@ -939,7 +1159,221 @@ Compression cyclique
 ~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``04_compression_cyclique.dgibi``
 
-TODO
+On applique le cas de chargement de compression simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_comp_cycl>` et :ref:`massif <sec:modeles_beton_test_mass_comp_cycl>` en déplacement imposé négatif entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur absolue du déplacement au pic augmente progressivement jusqu’à atteindre l’endommagement autour de 0,9.
+
+Pour tous les modes de calcul le déplacement imposé vaut :math:`u_{max}=-5.10^{-3}` m.
+
+On choisit l'incrément du déplacement au pic de chaque cycle de façon à ce que le seuil d'endommagement soit franchi à chaque fois. Le module élastique est alors multiplié par :math:`(1 - D_{e})`, où :math:`D_{e}` est l'endommagement élémentaire consécutif à chaque franchissement du seuil. Il en résulte une diminution du module élastique avec l'endommagement. Du fait de l'accroissement de la valeur absolue du déplacement au pic des cycles, l'endommagement s'accroit, ce qui conduit à une diminution du module élastique.
+
+L’objectif est de vérifier la dégradation progressive des propriétés mécaniques du matériau au cours du chargement via la diminution du module élastique à chaque cycle.
+
+L'analyse des résultats porte sur les courbes :
+
+- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la force de réaction globale en fonction du déplacement imposé.
+
+Pour chaque configuration géométrique, la solution de référence est identique à celle décrite dans le chapitre :ref:`Compression monotone <sec:mazars_ana_comp>`.
+
+Résultats du cas 3D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_d_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_s_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   3.66400.10^{-9} > 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_f_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_d_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_s_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   3.66400.10^{-9} > 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_f_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   3.29566.10^{-9} > 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_f_3d.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D contraintes planes
+++++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_d_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_s_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   6.59015.10^{-15} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_f_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D axisymétrique
++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_d_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_s_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+On observe que :
+
+- La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
+- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+.. math::
+   1.02395.10^{-14} < 1.10^{-10}
+   
+En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_comp_cycl_f_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
 
 
 
