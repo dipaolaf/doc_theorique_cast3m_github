@@ -149,7 +149,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.18393.10^{-15} < 1.10^{-10}
+   3,18393.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -236,7 +236,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.18393.10^{-15} < 1.10^{-10}
+   3,18393.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -312,7 +312,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   5.57047.10^{-15} < 1.10^{-10}
+   5,57047.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -388,7 +388,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   5.74126.10^{-15} < 1.10^{-10}
+   5,74126.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -464,7 +464,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   5.61645.10^{-15} < 1.10^{-10}
+   5,61645.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -602,7 +602,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   8.35516.10^{-09} > 1.10^{-10}
+   8,35516.10^{-09} > 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -689,7 +689,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   8.35516.10^{-09} > 1.10^{-10}
+   8,35516.10^{-09} > 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -765,7 +765,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   9.13189.10^{-09} > 1.10^{-10}
+   9,13189.10^{-09} > 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -841,7 +841,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1.26037.10^{-15} < 1.10^{-10}
+   1,26037.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -917,7 +917,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1.15429.10^{-15} < 1.10^{-10}
+   1,15429.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -980,7 +980,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.35150.10^{-15} < 1.10^{-10}
+   3,35150.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -1020,7 +1020,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.35150.10^{-15} < 1.10^{-10}
+   3,35150.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -1060,7 +1060,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   7.86303.10^{-15} < 1.10^{-10}
+   7,86303.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -1100,7 +1100,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   4.11873.10^{-15} < 1.10^{-10}
+   4,11873.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -1140,7 +1140,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.92767.10^{-15} < 1.10^{-10}
+   3,92767.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -1202,7 +1202,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.66400.10^{-9} > 1.10^{-10}
+   3,66400.10^{-9} > 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -1242,7 +1242,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.66400.10^{-9} > 1.10^{-10}
+   3,66400.10^{-9} > 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -1282,7 +1282,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3.29566.10^{-9} > 1.10^{-10}
+   3,29566.10^{-9} > 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -1322,7 +1322,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   6.59015.10^{-15} < 1.10^{-10}
+   6,59015.10^{-15} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -1362,7 +1362,7 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1.02395.10^{-14} < 1.10^{-10}
+   1,02395.10^{-14} < 1.10^{-10}
    
 En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -1384,9 +1384,9 @@ Le cas-test se dénomme ``05_traction_compression.dgibi``
 On applique le cas de chargement de traction compression alternées pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_trac_comp>`
 et :ref:`massif <sec:modeles_beton_test_mass_trac_comp>` en déplacement imposé croissant en valeur absolue (positif en traction, puis négatif en compression) jusqu’à atteindre l’endommagement autour de 0,9.
 
-Pour tous les modes de calcul le déplacement imposé vaut, en traction, :math:`u_{tmax}=2.10^{-4}` m et, en compression, :math:`u_{cmax}=-5.10^{-3}` m.
+Pour tous les modes de calcul le déplacement imposé vaut, en traction :math:`u_{tmax}=2.10^{-4}` m et en compression :math:`u_{cmax}=-5.10^{-3}` m.
 
-L’objectif est d’évaluer, lorsque le chargement passe de la traction à la compression pendant le calcul, que le modèle commute correctement d'un mode d'endommagement à l'autre.
+L’objectif est de vérifier, lorsque le chargement passe de la traction à la compression pendant le calcul, que le modèle commute correctement d'un mode d'endommagement à l'autre.
 
 L'analyse des résultats porte sur les courbes :
 
@@ -1459,8 +1459,8 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`6.98622.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`9.55546.10^{-09} > 1.10^{-10}`.
+- en traction : :math:`6,98622.10^{-16} < 1.10^{-10}` ;
+- en compression : :math:`9,55546.10^{-09} > 1.10^{-10}`.
    
 En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -1531,8 +1531,8 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`6.98622.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`9.55546.10^{-09} > 1.10^{-10}`.
+- en traction : :math:`6,98622.10^{-16} < 1.10^{-10}` ;
+- en compression : :math:`9,55546.10^{-09} > 1.10^{-10}`.
    
 En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -1603,8 +1603,8 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`5.58898.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`1.10157.10^{-08} > 1.10^{-10}`.
+- en traction : :math:`5,58898.10^{-16} < 1.10^{-10}` ;
+- en compression : :math:`1,10157.10^{-08} > 1.10^{-10}`.
    
 En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
 
@@ -1675,8 +1675,8 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`4.01321.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`1.64633.10^{-15} < 1.10^{-10}`.
+- en traction : :math:`4,01321.10^{-16} < 1.10^{-10}` ;
+- en compression : :math:`1,64633.10^{-15} < 1.10^{-10}`.
    
 En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -1694,29 +1694,29 @@ Résultats du cas 2D axisymétrique
 
 On a montré précédemment que la déformation équivalente s'exprime par :
 
-- en traction (:math:`\epsilon_{xx}>0`) : :math:`e=\epsilon_{zz}` ;
-- en compression (:math:`\epsilon_{xx}<0`) : :math:`e=\sqrt{2}\nu|\epsilon_{zz}|`.
+- en traction (:math:`\epsilon_{zz}>0`) : :math:`e=\epsilon_{zz}` ;
+- en compression (:math:`\epsilon_{zz}<0`) : :math:`e=\sqrt{2}\nu|\epsilon_{zz}|`.
 
 On en déduit les solutions de référence de l'endommagement :
 
-- en traction (:math:`\epsilon_{xx}>0`) :
+- en traction (:math:`\epsilon_{zz}>0`) :
 
 .. math::
    D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{zz}} - A_t\exp\left[-B_t (\epsilon_{zz} - e_0)\right]
 
-- en compression (:math:`\epsilon_{xx}<0`) :
+- en compression (:math:`\epsilon_{zz}<0`) :
    
 .. math::
    D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{zz}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{zz}| - e_0)\right]
    
 Puis la solution de référence de la contrainte dans la direction de la poutre :
 
-- en traction (:math:`\epsilon_{xx}>0`) :
+- en traction (:math:`\epsilon_{zz}>0`) :
    
 .. math::
    \sigma_{zz}=(1-D_t) E \epsilon_{zz}
 
-- en compression (:math:`\epsilon_{xx}<0`) :
+- en compression (:math:`\epsilon_{zz}<0`) :
    
 .. math::
    \sigma_{zz}=(1-D_c) E \epsilon_{zz}
@@ -1747,8 +1747,8 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`4.35418.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`1.56858.10^{-15} < 1.10^{-10}`.
+- en traction : :math:`4,35418.10^{-16} < 1.10^{-10}` ;
+- en compression : :math:`1,56858.10^{-15} < 1.10^{-10}`.
    
 En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -1763,11 +1763,394 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 
 
-Traction-compression-traction alternées
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Traction compression traction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``06_traction_compression_traction.dgibi``
 
-TODO
+On applique le cas de chargement de traction compression traction alternées pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_trac_comp_trac>`
+et :ref:`massif <sec:modeles_beton_test_mass_trac_comp_trac>` en déplacement imposé dont la valeur absolue est croissante dans chacun des sens, jusqu’à atteindre un endommagement supérieur à 0,95.
+
+Pour tous les modes de calcul, le déplacement imposé maximum vaut, dans la première phase de traction :math:`u_{t1max}=2.10^{-4}` m, dans la deuxième phase de  compression :math:`u_{c2max}=-4.10^{-3}` m, puis dans la troisième phase de traction :math:`u_{t3max}=5.10^{-4}` m.
+
+L’objectif est de vérifier, lorsque le chargement passe pendant le calcul de la traction à la compression puis à nouveau à la traction, que le modèle commute correctement d'un mode d'endommagement à l'autre.
+
+L'analyse des résultats porte sur les courbes :
+
+- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la force de réaction globale en fonction du déplacement imposé.
+
+Solution de référence
++++++++++++++++++++++
+La solution de référence est obtenue de manière analytique à partir des équations donnant la loi de l'évolution de l'endommagement en traction et en compression. Ces deux lois sont fonctions de la déformation équivalente selon la formulation de Mazars qui est dépendante du mode de chargement et du mode de représentation géométrique.
+
+Résultats du cas 3D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Solution de référence
+"""""""""""""""""""""
+
+On a montré précédemment que la déformation équivalente s'exprime par :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) : :math:`e=\epsilon_{xx}` ;
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) : :math:`e=\sqrt{2}\nu|\epsilon_{xx}|`.
+
+On en déduit les solutions de référence de l'endommagement :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+   
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_c) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``'VISXX'``, rebaptisée ci-dessous ``'EPXX'``, du sous-champs ``'VAIS'`` du champs des variables internes ``TAB1.'VARIABLES_INTERNES'`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``'SMXX'`` du sous-champs ``'VONS'`` du champs des variables internes ``TAB1.'VARIABLES_INTERNES'`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_d_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_s_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+- dans la phase 1 de traction : :math:`6,89936.10^{-16} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`7,42313.10^{-09} > 1.10^{-10}`.
+- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}` ;
+   
+En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_f_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+On a montré précédemment que la déformation équivalente s'exprime par :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) : :math:`e=\epsilon_{xx}` ;
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) : :math:`e=\sqrt{2}\nu|\epsilon_{xx}|`.
+
+On en déduit les solutions de référence de l'endommagement :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+   
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_c) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``'VISXX'``, rebaptisée ci-dessous ``'EPXX'``, du sous-champs ``'VAIS'`` du champs des variables internes ``TAB1.'VARIABLES_INTERNES'`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``'SMXX'`` du sous-champs ``'VONS'`` du champs des variables internes ``TAB1.'VARIABLES_INTERNES'`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_d_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_s_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+- dans la phase 1 de traction : :math:`6,89936.10^{-16} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`7,42313.10^{-09} > 1.10^{-10}`.
+- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}` ;
+   
+En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_f_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+On a montré précédemment que la déformation équivalente s'exprime par :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) : :math:`e=\epsilon_{xx}` ;
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) : :math:`e=\sqrt{2}\nu|\epsilon_{xx}|`.
+
+On en déduit les solutions de référence de l'endommagement :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+   
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_c) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``'EPXX'`` du tenseur des déformations ``TAB.'DEFORMATIONS'`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``'SMXX'`` du tenseur des contraintes ``TAB1.'CONTRAINTES'`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+- dans la phase 1 de traction : :math:`8,27923.10^{-16} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`1,40855.10^{-09} > 1.10^{-10}`.
+- dans la phase 3 de traction : :math:`1,18978.10^{-14} < 1.10^{-10}` ;
+   
+En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_f_3d.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D contraintes planes
+++++++++++++++++++++++++++++++++++++++
+
+On a montré précédemment que la déformation équivalente s'exprime par :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) : :math:`e=\epsilon_{xx}` ;
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) : :math:`e=\sqrt{2}\nu|\epsilon_{xx}|`.
+
+On en déduit les solutions de référence de l'endommagement :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{xx}} - A_t\exp\left[-B_t (\epsilon_{xx} - e_0)\right]
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{xx}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{xx}| - e_0)\right]
+   
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{xx}>0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_t) E \epsilon_{xx}
+
+- en compression, phase 2 (:math:`\epsilon_{xx}<0`) :
+   
+.. math::
+   \sigma_{xx}=(1-D_c) E \epsilon_{xx}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{xx}` correspond à la composante ``'EPXX'`` du tenseur des déformations ``TAB.'DEFORMATIONS'`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{xx}` correspond à la composante ``'SMXX'`` du tenseur des contraintes ``TAB1.'CONTRAINTES'`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_d_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_s_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+- dans la phase 1 de traction : :math:`3,04041.10^{-16} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`1,24288.10^{-15} < 1.10^{-10}`.
+- dans la phase 3 de traction : :math:`2,84878.10^{-15} < 1.10^{-10}` ;
+   
+En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_f_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
+
+Résultats du cas 2D axisymétrique
++++++++++++++++++++++++++++++++++
+
+On a montré précédemment que la déformation équivalente s'exprime par :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{zz}>0`) : :math:`e=\epsilon_{zz}` ;
+- en compression, phase 2 (:math:`\epsilon_{zz}<0`) : :math:`e=\sqrt{2}\nu|\epsilon_{zz}|`.
+
+On en déduit les solutions de référence de l'endommagement :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{zz}>0`) :
+
+.. math::
+   D_t = 1 - \frac{e_0 (1 - A_t)}{\epsilon_{zz}} - A_t\exp\left[-B_t (\epsilon_{zz} - e_0)\right]
+
+- en compression, phase 2 (:math:`\epsilon_{zz}<0`) :
+   
+.. math::
+   D_c = 1 - \frac{e_0 (1 - A_c)}{\sqrt{2}\nu|\epsilon_{zz}|} - A_c\exp\left[-B_c (\sqrt{2}\nu|\epsilon_{zz}| - e_0)\right]
+   
+Puis la solution de référence de la contrainte dans la direction de la poutre :
+
+- en traction, phases 1 et 3 (:math:`\epsilon_{zz}>0`) :
+   
+.. math::
+   \sigma_{zz}=(1-D_t) E \epsilon_{zz}
+
+- en compression, phase 2 (:math:`\epsilon_{zz}<0`) :
+   
+.. math::
+   \sigma_{zz}=(1-D_c) E \epsilon_{zz}
+
+Dans Cast3M, 
+
+- :math:`\epsilon_{zz}` correspond à la composante ``'EPZZ'`` du tenseur des déformations ``TAB.'DEFORMATIONS'`` en sortie de ``PASAPAS``.
+
+- :math:`\sigma_{zz}` correspond à la composante ``'SMZZ'`` du tenseur des contraintes ``TAB1.'CONTRAINTES'`` en sortie de ``PASAPAS``.
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_d_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps.
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_s_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+
+- dans la phase 1 de traction : :math:`1,52021.10^{-16} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`7,96489.10^{-16} < 1.10^{-10}`.
+- dans la phase 3 de traction : :math:`1,45408.10^{-14} < 1.10^{-10}` ;
+   
+En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+
+Courbe d'évolution de la force de réaction en fonction du déplacement imposé
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_trac_comp_trac_f_2daxi.png
+   :width: 15cm
+   :align: center
+   
+   Force de réaction en fonction du déplacement imposé.
 
 
 

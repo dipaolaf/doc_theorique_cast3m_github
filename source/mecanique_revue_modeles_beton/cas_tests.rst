@@ -187,7 +187,7 @@ Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math
 
 Les instructions Gibiane correspondantes sont :
 
-.. admonition:: Compression traction : blocages et chargement
+.. admonition:: Traction compression : blocages et chargement
 
    .. literalinclude:: dgibi/05_traction_compression.dgibi
       :language: gibiane
@@ -203,9 +203,42 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/05_traction_compression.dgibi>`
 
 
+.. _sec:modeles_beton_test_pout_trac_comp_trac:
+
 Traction compression traction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-TODO
+
+.. figure:: figures/mazars_trac_comp_trac_char_3dpaf.png
+   :width: 15cm
+   :align: center
+
+   Traction compression traction sur un modèle d'éléments finis poutre.
+
+Description
+"""""""""""
+
+Il s'agit d'un test dont le chargement passe alternativement de traction à compression puis à nouveau traction. On considère une poutre de longueur :math:`L` et section transversale :math:`S` soumise successivement à un chargement de traction, de compression, puis à nouveau de traction dans la direction de son axe.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en trois phases successives de sens opposés : tout  d'abord en augmentant progressivement le déplacement jusqu'à la valeur :math:`u_{t1 max} > 0` (traction), puis après changement de sens en l'augmentant (en valeur absolue) progressivement jusqu'à la valeur :math:`u_{c2 max} < 0` (compression) et enfin, après un ultime retour au sens initial, en augmentant à nouveau progressivement le déplacement jusqu'à la valeur :math:`u_{t3 max} > 0` (traction). On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément ainsi que les rotations de l'extrémité pilotée en déplacement.
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Traction compression traction : blocages et chargement
+
+   .. literalinclude:: dgibi/06_traction_compression_traction.dgibi
+      :language: gibiane
+      :lines: 590-602
+      :linenos:
+      :lineno-start: 590
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/06_traction_compression_traction.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/06_traction_compression_traction.dgibi>`
 
 
 
@@ -542,9 +575,69 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/05_traction_compression.dgibi>`
 
 
+.. _sec:modeles_beton_test_mass_trac_comp_trac:
+
 Traction compression traction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-TODO
+
+Description
+"""""""""""
+
+Il s'agit d'un test dont le chargement passe alternativement de traction à compression puis à nouveau traction. Les dimensions dépendent de l'hypothèse de calcul retenue :
+
+- en 3D, on considère un cube d'arête :math:`L` ;
+- en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
+- en 2D axisymétrique, on considère un cylindre de rayon :math:`R` et de hauteur :math:`H`.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement d'une des faces en trois phases successives de sens opposés : tout  d'abord en augmentant progressivement le déplacement jusqu'à la valeur :math:`u_{t1 max} > 0` (traction), puis après changement de sens en l'augmentant (en valeur absolue) progressivement jusqu'à la valeur :math:`u_{c2 max} < 0` (compression) et enfin, après un ultime retour au sens initial, en augmentant à nouveau progressivement le déplacement jusqu'à la valeur :math:`u_{t3 max} > 0` (traction). On bloque les déplacements de l'autre face en laissant libre la contraction par effet de Poisson.
+
+- En 3D, on pilote le déplacement **UX** de la face "droite" (située dans le plan :math:`x=L`) et
+  on bloque le déplacement **UX** de la face opposée "gauche" (dans le plan :math:`x=0`).
+  Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0).
+- En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
+- En 2D axisymétrique on pilote le déplacement **UZ** de la ligne "haute" (située en :math:`z=L`).
+  On bloque alors le déplacement **UZ** de la ligne opposée "basse" (en :math:`z=0`).
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Traction compression traction : blocages et chargement pour le cas 3D
+
+   .. literalinclude:: dgibi/06_traction_compression_traction.dgibi
+      :language: gibiane
+      :lines: 90-100
+      :linenos:
+      :lineno-start: 90
+
+.. admonition:: Traction compression traction : blocages et chargement pour le cas 2D axisymétrique
+
+   .. literalinclude:: dgibi/06_traction_compression_traction.dgibi
+      :language: gibiane
+      :lines: 1586-1595
+      :linenos:
+      :lineno-start: 1586
+
+Les blocages et le chargement sont représentés sur les figures suivantes.
+
+.. image:: figures/mazars_trac_comp_trac_char_3d.png
+   :width: 30%
+.. image:: figures/mazars_trac_comp_trac_char_2dplan.png
+   :width: 30%
+.. image:: figures/mazars_trac_comp_trac_char_2daxi.png
+   :width: 30%
+
+.. figure:: figures/mazars_trac_comp_trac_char_2daxi.png
+   :width: 0%
+
+   Traction compression traction - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/06_traction_compression_traction.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/06_traction_compression_traction.dgibi>`
 
 
 Cisaillement
