@@ -3,12 +3,11 @@ from pygments.token import Keyword, Operator, Name, Comment, String, Error, Text
      Number, Generic, Whitespace, Punctuation, Other, Literal
 
 
-class BpStyle(Style):
+class MyStyle(Style):
     default_style = ""
     background_color = "#f8f8f8"
     styles = {
         Comment:    "italic #999999",
-        #Keyword:    "bold #1919d1", #operateurs gibiane
         Keyword:    "bold #2986cc", #operateurs gibiane
         Operator:   "bold #2986cc", #operateurs arithmetique (+ - * / >EG ...)
         Name.Builtin: "bold #6aa84f", #procedures gibiane

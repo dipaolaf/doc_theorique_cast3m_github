@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import os
 import sys
 sys.path.append(os.path.abspath('./_custom')) 
@@ -7,23 +6,22 @@ sys.path.append(os.path.abspath('./_custom'))
 
 # Configuration générale
 project = 'Cast3M - Théorie'
-version = '2024.0'
-release = '2024.0'
+version = '2024.1'
+release = '2024.1'
 author = ''
 copyright = 'CEA'
 language = 'fr'
 
 extensions = [
     'sphinx.ext.todo',   # pour ajouter des avertissements "todo"
-    'gibianelexer',       # lexer pour le langage Gibiane
-    'sphinx_new_tab_link'
+    'gibianelexer'       # lexer pour le langage Gibiane
 ]
 
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
 
-pygments_style = 'style.BpStyle'  # style de coloration de Benoit
+pygments_style = 'my_style.MyStyle'  # style de coloration choisit
 rst_prolog = """
 .. role:: gibiane(code)
   :language: gibiane
@@ -35,10 +33,10 @@ smartquotes = False  # pour éviter le remplacement automatique de simple quote 
 # Options for HTML output
 html_theme = 'renku'
 html_theme_options = {
-    'logo_only': True,
-    'style_nav_header_background': '#006B60',
-    'collapse_navigation': False,
-  }
+     'logo_only': True,
+     'style_nav_header_background': '#006B60',
+     'collapse_navigation': False,
+   }
 html_logo = '_static/Logo_Cast3M_blanc.png'
 html_static_path = ['_static']
 

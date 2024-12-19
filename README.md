@@ -7,13 +7,11 @@ Elle est mise en forme avec grace au générateur de documentation [Sphinx](http
 ## Prérecquis :
 Les prérequis sont :
 - le générateur **sphinx** version 6.2.1 (construction non garantie pour des versions supérieures)
-- l'extension **sphinx-new-tab-link**
 - le thème **renku-sphinx-theme**
 
 Ceux-ci peuvent être installés avec pip :
 ```bash
 pip install -U sphinx==6.2.1
-pip install -U sphinx-new-tab-link
 pip install -U renku-sphinx-theme
 ```
 

@@ -1,5 +1,4 @@
 # List of python packages used to build this documentation
-sphinx-new-tab-link
 renku-sphinx-theme
 
 # Defining the exact version will make sure things don't break
