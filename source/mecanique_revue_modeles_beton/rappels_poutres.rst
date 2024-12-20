@@ -29,8 +29,10 @@ Ces éléments finis fonctionnent en 3D et en 2D (contraintes planes et déforma
 modèle de section représentant une échelle plus fine : celle de la section droite.
 Le *modèle de section* est basé sur un maillage d'éléments finis massifs classique 2D.
 
-*TODO : Récapitulatif des paramètres materiau et géométriques obligatoires en élasticité*
-*YOUN, NU, SECT, INRY, INRZ, INRX, et aussi sections réduites*
+.. admonition:: To Do
+
+   *Récapitulatif des paramètres materiau et géométriques obligatoires en élasticité
+   YOUN, NU, SECT, INRY, INRZ, INRX, et aussi sections réduites*
 
 Dans la suite de cette documentation, nous traiterons de l'élément fini **TIMO** car plus générique
 et distinguerons l'élément **POUT** quand nécessaire.
@@ -398,10 +400,10 @@ Dans Cast3M, les lois de comportement locales des poutres multifibres sont
 axiale :math:`x`.
 
 
-*TODO : exemple d'utilisation modèle de SECTION sur les éléments TIMO
-et de leurs paramètres obligatoires MODS, MATS, VECT*
+.. admonition:: To Do
 
-*TODO : exemple d'utilisation modèles non linéaires sur les éléments QUAS/TRIS/SEGS/POJS*
+   *exemple d'utilisation modèle de SECTION sur les éléments TIMO et de leurs paramètres obligatoires MODS, MATS, VECT*
 
-*TODO : récapitulatif paramètres materiau/géométriques obligatoires en élasticité
-YOUN, NU, ALPY, ALPZ, SECT (pour les POJS et BARR), LARG (pour les SEGS)*
+   *exemple d'utilisation modèles non linéaires sur les éléments QUAS/TRIS/SEGS/POJS*
+   
+   *récapitulatif paramètres materiau/géométriques obligatoires en élasticité YOUN, NU, ALPY, ALPZ, SECT (pour les POJS et BARR), LARG (pour les SEGS)*

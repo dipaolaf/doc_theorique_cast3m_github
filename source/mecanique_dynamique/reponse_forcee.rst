@@ -202,5 +202,3 @@ Exemples commentés avec un calcul spectral de régime forcé
 ----------------------------------------------------------
 
 - Exemple de calcul d'un :ref:`rotor de Laval <ex:rotor_laval_poutre>`
-
-- *TODO : tube soumis à un écoulement turbulent*

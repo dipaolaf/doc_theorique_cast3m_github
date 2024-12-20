@@ -663,4 +663,6 @@ Paramètres de la loi non linéaire
 - **BETA**: correction pour le cisaillement
 
 
-*TODO : modèles RICBET_UNI, STRUT_UNI ? Modèles pour aciers, ancrages et recouvrements*
+.. admonition:: To Do
+
+   *modèles RICBET_UNI, STRUT_UNI ? Modèles pour aciers, ancrages et recouvrements*
