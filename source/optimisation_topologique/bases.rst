@@ -1,7 +1,7 @@
 .. _sec:opti_topo_intro:
 
-Introduction à l'optimisation topologique
-=========================================
+Éléments de base
+================
 
 Généralités
 -----------
@@ -23,12 +23,9 @@ Explicitons certains termes :
 
 - Par **répartition optimale de la matière** on entend la distribution spatiale de rigidité :math:`\mathbb{k}(m)`
   en tout point :math:`m \in \Omega` qui minimise une fonction :math:`\psi` indicatrice du souhait de l'utilisateur.
-
 - Par **pièce donnée** on entend que la recherche de la topologie se fait sur un domaine limité de l'espace :math:`\Omega`.
-
 - Par **chargements** on entend que cette pièce subit des conditions aux limites, par exemple des déplacements
   imposés et des forces appliquées sur certaines zones.
-
 - Par **limitations** on entend que l'optimisation se fait *sous contraintes*. C'est l'ensemble des fonctions
   :math:`\chi_i(\mathbb{k}) = 0`. En effet, afin d'éviter les solutions triviales, il est nécessaire d'imposer des
   contraintes. Par exemple, on peut chercher à minimiser le volume d'une pièce sous contrainte que celle-ci ne se
@@ -362,7 +359,7 @@ et en le comparant au volume cible ``vcib``.
       :lineno-start: 94
 
 Un affichage bilan de l'itération est fait, puis un cirtère d'arrêt de la boucle d'optimisation
-est proposé lorsque l'incrément maximal de densité ``change`` est inférieur à 0,01
+est proposé lorsque l'incrément maximal de densité ``chgx`` est inférieur à 0,01
 
 .. admonition:: Fin de boucle et critère d'arrêt
 

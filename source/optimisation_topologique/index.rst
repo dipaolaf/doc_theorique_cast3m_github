@@ -8,7 +8,7 @@ Optimisation topologique
    :maxdepth: 1
    :caption: Sommaire
 
-   introduction
+   bases
    topoptim
    dgibi
    references
