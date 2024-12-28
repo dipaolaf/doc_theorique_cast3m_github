@@ -2,7 +2,7 @@
 
 Cette documentation détaille les aspects théoriques derrière certains opérateurs/directives et procédures de Cast3M
 
-Elle est mise en forme avec grace au générateur de documentation [Sphinx](https://www.sphinx-doc.org/en/master/)
+Elle est mise en forme grâce au générateur de documentation [Sphinx](https://www.sphinx-doc.org/en/master/)
 
 ## Prérecquis :
 Les prérequis sont :

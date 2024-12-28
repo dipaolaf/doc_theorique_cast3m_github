@@ -3,7 +3,7 @@
 La procédure TOPOPTIM
 =====================
 
-La `procédure TOPOPIM <https://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_ de Cast3M
+La procédure `TOPOPIM <https://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_ de Cast3M
 reprend l'algotithme 99 lignes de [SIGMUND-2001]_ :
 
 - Le problème d'optimisation est celui de la **minimisation de la compliance** sous contrainte d'une **fraction volumique imposée**
@@ -12,27 +12,52 @@ reprend l'algotithme 99 lignes de [SIGMUND-2001]_ :
 - Le :ref:`filtrage de la sensibilité <sec:opti_topo_filtre>` est réalisé par convolution
 - L'utilisateur peut imposer des **zones figées** qui feront obligatoirement partie de la topologie optimisée :math:`(x_e=1)`
 
-De surcroît, elle élargie son cadre d'application à différents types de modélisation (2D/3D, maillages linéaires/quadratiques, tout type d'éléments, etc...) et dispose de fonctionnalités supplémentaires :
+De surcroît, elle élargie son cadre d'application à différents types de modélisation (2D/3D, maillages linéaires/quadratiques, tout type d'éléments, etc...) et dispose de fonctionnalités supplémentaires :
 
 - L'utilisation de **maillages non structurés**
 - L'application à des comportement mécaniques **non linéaires** (plasticité, contact, grands déplacements ...)
-- La prise en compte de **plusieurs cas de chargements**
-- L'application à des problèmes **thermiques** et/ou **thermo mécaniques**. Dans ce second cas, les compliances mécaniques et thermiques sont pondérées et additionnées
+- La prise en compte de **plusieurs cas de chargements**. L'utilisateur peut ainsi définir :math:`N_c` problèmes différents à résoudre
+- L'application à des problèmes **thermiques** et/ou **thermo mécaniques**. Dans ce second cas, les compliances mécaniques :math:`\psi^{\textrm{méca}}` et thermiques :math:`\psi^{\textrm{ther}}` sont pondérées et additionnées
 - La possibilité d'utiliser des **restrictions géométriques** avec des *symétries* (centrale, axiale et plane) ou des *conditions de pérodicité* (axiale ou circulaire)
 - La possibilité de faire évoluer les paramètres au cours des itérations de l'optimisation
 - La prise en compte de **synthèse de mécanisme souple**
 
+Quelques définitions
+--------------------
+
+La fonction objectif pour un problème mécanique est la compliance qui correspond au travail des forces extérieures, ou aussi à l'énergie de déformation :
+
+.. math::
+   :name: eq:objectif_meca
+
+   \psi^{\textrm{méca}}(\textbf{x}) = \textbf{U}^T(\textbf{x}).\mathbfcal{K}(\textbf{x}).\textbf{U}(\textbf{x}) = \int_{\Omega} \sigma(\textbf{x}):\varepsilon(\textbf{x}) dV
+
+La fonction objectif pour un problème thermique est construite de manière similaire à celle de la mécanique :
+
+.. math::
+   :name: eq:objectif_ther
+
+   \psi^{\textrm{ther}}(\textbf{x}) = \Theta^T(\textbf{x}).\mathbfcal{\Lambda}(\textbf{x}).\Theta(\textbf{x}) = \int_{\Omega} \phi(\textbf{x}).\textrm{grad}\,\theta(\textbf{x}) dV
+
+avec
+
+- :math:`\theta` la température
+- :math:`\lambda` la conductivité thermique
+- :math:`\phi = -\lambda\,\textrm{grad}\,\theta` la densité de flux thermique
+- :math:`\Theta` le vecteur des températures aux noeuds du maillage
+- :math:`\mathbfcal{\Lambda}` la matrice de conductivité globale, assemblée sur le maillage
+
 Étapes de la procédure
 ----------------------
 
-La procédure `procédure TOPOPIM <https://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_ est segmentée en plusieurs étapes grace à des sous procédures spécifiques. Outre la facilité de la compréhension et de la maintenance, cette segmentation permet à l'utilisateur/développeur de pouvoir modifier la procédure facilment pour l'adapter à son propre problème d'optimisation.
+La procédure `TOPOPIM <https://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_ est segmentée en plusieurs étapes grace à des sous procédures spécifiques. Outre la facilité de la compréhension et de la maintenance, cette segmentation permet à l'utilisateur/développeur de pouvoir modifier la procédure facilment pour l'adapter à son propre problème d'optimisation.
 
-- **Pré tratement** (avec `TOPOBOOT <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOBOOT>`_). Cette procédure initialise une table de travail (indice **WTABLE**) contenant les indicateurs et les valeurs des paramètres choisis par l'utilisateur ainsi que des variables de travail (champs unitaires, volumes élémentaires, etc). On initialise notament la topologie :math:`\textbf{x}` comme uniforme et égale à la fraction volumique imposée :math:`x_e=f`
-- **Informations** (avec `TOPOINFO <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOINFO>`_). Il s'agit d'afficher les informations principales du calcul.
+- **Pré traitement** (procédure `TOPOBOOT <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOBOOT>`_). Cette procédure initialise une table de travail (indice **WTABLE**) contenant les indicateurs et les valeurs des paramètres choisis par l'utilisateur ainsi que des variables de travail (champs unitaires, volumes élémentaires, etc). On initialise notament la topologie :math:`\textbf{x}` comme uniforme et égale à la fraction volumique imposée :math:`x_e=f`
+- **Informations** (procédure `TOPOINFO <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOINFO>`_). Il s'agit d'afficher les informations principales du calcul.
 - **Début de la boucle d'optimisation**
 
-  - **Évolution des paramètres** (avec `TOPOFCTR <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOFCTR>`_). Cette procédure fait évoluer les principaux coefficients (d'amortissement, de pénalisation et de niveau de gris) au cours des itérations, à condition que l'utilisateur ai fourni une liste de valeur pour ces coefficients en fonction du numéro d'itération.
-  - **Pénalisation des densités** (avec `TOPODENS <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPODENS>`_). Ici sont calculés les champs de *densité pénalisées* :math:`\tilde{\textbf{x}}`, selon la topologie courante :math:`\textbf{x}`, le coefficient de pénalisation :math:`p` et la raideur/conductivité minimale en mécanique/thermique :math:`E_{\textrm{min}}` / :math:`\lambda_{\textrm{min}}` :
+  - **Évolution des paramètres** (procédure `TOPOFCTR <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOFCTR>`_). Cette procédure fait évoluer les principaux coefficients (d'amortissement, de pénalisation et de niveau de gris) au cours des itérations, à condition que l'utilisateur ai fourni une liste de valeur pour ces coefficients en fonction du numéro d'itération.
+  - **Pénalisation des densités** (procédure `TOPODENS <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPODENS>`_). Ici sont calculés les champs de *densité pénalisées* :math:`\tilde{\textbf{x}}`, selon la topologie courante :math:`\textbf{x}`, le coefficient de pénalisation :math:`p` et la raideur/conductivité minimale en mécanique/thermique :math:`E_{\textrm{min}}` / :math:`\lambda_{\textrm{min}}` :
   
   .. math::
    :name: eq:maj_dens
@@ -40,7 +65,7 @@ La procédure `procédure TOPOPIM <https://www-cast3m.cea.fr/index.php?page=noti
    \tilde{x}_e^{\textrm{méca}}& =\frac{E_{\textrm{min}}}{E_0}+\left(1-\frac{E_{\textrm{min}}}{E_0}\right)x_e^p \\
    \tilde{x}_e^{\textrm{ther}}& =\frac{\lambda_{\textrm{min}}}{\lambda_0}+\left(1-\frac{\lambda_{\textrm{min}}}{\lambda_0}\right)x_e^p
 
-  - **Mise à jour des zones actives et matériau** (avec `TOPOACTI <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOACTI>`_). Ici sont mises à jour les *zones actives* du maillage et des modèles. Il s'agit des éléments où la densité pénalisée :math:`\tilde{x}_e` est supérieure à un *seuil d'activation* :math:`x_a`. Les modèles et caractéristiques sont alors réduits sur le maillage actif. Les caractéristiques matériau sont également mises à jour selon la densité pénalisée avec la procédure `TOPOMATE <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOMATE>`_ :
+  - **Mise à jour des zones actives et matériau** (procédure `TOPOACTI <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOACTI>`_). Ici sont mises à jour les *zones actives* du maillage et des modèles. Il s'agit des éléments où la densité pénalisée :math:`\tilde{x}_e` est supérieure à un *seuil d'activation* :math:`x_a`. Les modèles et caractéristiques sont alors réduits sur le maillage actif. Les caractéristiques matériau sont également mises à jour selon la densité pénalisée avec la procédure `TOPOMATE <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOMATE>`_ :
 
   .. math::
    :name: eq:maj_mate
@@ -48,28 +73,28 @@ La procédure `procédure TOPOPIM <https://www-cast3m.cea.fr/index.php?page=noti
    \tilde{E}_e       & =       E_0 \tilde{x}_e \\
    \tilde{\lambda}_e & = \lambda_0 \tilde{x}_e
 
-  - **Résolution** des problèmes physiques (avec `TOPORESO <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPORESO>`_). Il s'agit ici de résoudre les problèmes mécaniques et/ou thermiques en appellant le solveur RESO (problèmes linéaires) ou PASAPAS (problèmes non linéaires). S'il y a plusieurs cas de chargements, ceux-ci sont tous résolus successivement.
-  - **Instructions personnelles** (avec `TOPOPERS <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOPERS>`_). Ici, l'utilisateur peut faire appel à une procédure presonnelle pour modifier l'algorithme.
-  - **Objectif et sensibilités** (avec `TOPOSENS <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOSENS>`_). Cette procédure calcule la fonction objectif :math:`\psi(\tilde{\textbf{x}})` ainsi que le champ de sensibilité :math:`\frac{\partial\psi}{\partial \tilde{x}_e}`. S'il y a plusieurs cas de chargement, les objectifs/sensibilités de chacun d'eux sont sommés. Dans le cas thermo mécanique, les complicances des deux physiques correspondent à une énergie et sont donc aussi sommées mais peuvent être pondérées différement :
+  - **Résolution** des problèmes physiques (procédure `TOPORESO <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPORESO>`_). Il s'agit ici de résoudre les problèmes mécaniques et/ou thermiques en appellant le solveur RESO (problèmes linéaires) ou PASAPAS (problèmes non linéaires). S'il y a plusieurs cas de chargements, ceux-ci sont tous résolus successivement.
+  - **Instructions personnelles** (procédure `TOPOPERS <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOPERS>`_). Ici, l'utilisateur peut faire appel à une procédure presonnelle pour modifier l'algorithme.
+  - **Objectif et sensibilités** (procédure `TOPOSENS <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOSENS>`_). Cette procédure calcule la fonction objectif :math:`\psi(\tilde{\textbf{x}})` ainsi que le champ de sensibilité :math:`\frac{\partial\psi}{\partial \tilde{x}_e}`. S'il y a un plusieurs cas de chargement (:math:`N_c`), les objectifs/sensibilités de chacun d'eux sont sommés. Dans le cas thermo mécanique, les complicances des deux physiques correspondent à une énergie et sont donc aussi sommées mais peuvent être pondérées différement par les coefficients :math:`\omega^{\textrm{méca}}` et :math:`\omega^{\textrm{ther}}` :
 
   .. math::
    :name: eq:som_objectif
 
-   \psi(\tilde{\textbf{x}}) = \sum_{i=1}^{N_c} \frac{1}{N_c} \left( \omega^{\textrm{méca}} \psi_i^{\textrm{méca}}(\tilde{\textbf{x}}) + \omega^{\textrm{ther}} \psi_i^{\textrm{ther}}(\tilde{\textbf{x}}) \right)
+   \psi(\tilde{\textbf{x}}) = \frac{1}{N_c} \sum_{i=1}^{N_c} \left( \omega^{\textrm{méca}} \psi_i^{\textrm{méca}}(\tilde{\textbf{x}}) + \omega^{\textrm{ther}} \psi_i^{\textrm{ther}}(\tilde{\textbf{x}}) \right)
 
   .. math::
    :name: eq:som_sensibilite
 
-   \frac{\partial\psi}{\partial \tilde{x}_e} = \sum_{i=1}^{N_c} \frac{1}{N_c} \left( \omega^{\textrm{méca}} \frac{\partial\psi_i^{\textrm{méca}}}{\partial \tilde{x}_e} + \omega^{\textrm{ther}} \frac{\partial\psi_i^{\textrm{ther}}}{\partial \tilde{x}_e} \right)
+   \frac{\partial\psi}{\partial \tilde{x}_e} = \frac{1}{N_c} \sum_{i=1}^{N_c} \left( \omega^{\textrm{méca}} \frac{\partial\psi_i^{\textrm{méca}}}{\partial \tilde{x}_e} + \omega^{\textrm{ther}} \frac{\partial\psi_i^{\textrm{ther}}}{\partial \tilde{x}_e} \right)
 
-  - **Restrictions** (avec `TOPORSTR <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPORSTR>`_). Cette procédure applique les restrictions géométriques.
-  - **Filtrage** (avec `TOPOFILT <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOFILT>`_). Le filtrage de la sensibilité peut être réalisé selon 2 méthodes :
+  - **Restrictions** (procédure `TOPORSTR <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPORSTR>`_). Cette procédure applique les restrictions géométriques.
+  - **Filtrage** (procédure `TOPOFILT <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOFILT>`_). Le filtrage de la sensibilité peut être réalisé selon 2 méthodes :
 
     - Le filtre `GIBIANE` qui procède par des applications successives des opérateurs `CHAN 'CHPO' <https://www-cast3m.cea.fr/index.php?page=notices&notice=CHAN#Resultat%20de%20type%20CHPOINT03>`_ puis `CHAN 'CHAM' <https://www-cast3m.cea.fr/index.php?page=notices&notice=CHAN#Resultat%20de%20type%20MCHAML04>`_ sur le champ :math:`\tilde{x}_e \frac{\partial\psi}{\partial \tilde{x}_e}`
     - Le filtre `MATRICE` qui applique une *convolution* :ref:`(décrite ici) <sec:opti_topo_filtre>` sur le champ :math:`\tilde{x}_e \frac{\partial\psi}{\partial \tilde{x}_e}` via l'opérateur `MFIL <https://www-cast3m.cea.fr/index.php?page=notices&notice=MFIL>`_
 
-  - **Optimisation de la topologie** (avec `TOPOLOGY <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOLOGY>`_). Cette procédure procède à la mise à jour de la topologie :math:`\textbf{x}` selon le *critère d'optimalité* :ref:`(décrit ici) <sec:opti_topo_oc>` avec un *algorithme de dichotomie* :ref:`(décrit ici) <algo:opti_topo_dichotomie>`.
-  - **Sauvegarde** des résultats (avec `TOPOSAUV <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOSAUV>`_).
+  - **Optimisation de la topologie** (procédure `TOPOLOGY <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOLOGY>`_). Cette procédure procède à la mise à jour de la topologie :math:`\textbf{x}` selon le *critère d'optimalité* :ref:`(décrit ici) <sec:opti_topo_oc>` avec un *algorithme de dichotomie* :ref:`(décrit ici) <algo:opti_topo_dichotomie>`.
+  - **Sauvegarde** des résultats (procédure `TOPOSAUV <https://www-cast3m.cea.fr/index.php?page=procedures&procedure=TOPOSAUV>`_).
   - **Tracé et infos** éventuel de la topologie et affichage des informations sur l'itération courante.
   - **Test de convergence** : la boucle d'optimisation est quittée si l'*incrément maximal de densité* entre deux itérations est inférieur au critère :math:`Z_{\textrm{stop}}`, ou bien si le nombre maximal d'itérations :math:`N_{\textrm{it}}` est atteint.
 - **Fin de la boucle d'optimisation**
@@ -110,6 +135,8 @@ Les valeurs choisies par défaut de certains paramètres sont également indiqu�
    | :math:`\omega^{\textrm{méca}}`                      | **POIDS_ENERGIE_DEFO**           | 1                 |
    +-----------------------------------------------------+----------------------------------+-------------------+
    | :math:`\omega^{\textrm{ther}}`                      | **POIDS_TEMPERATURE**            | 1                 |
+   +-----------------------------------------------------+----------------------------------+-------------------+
+   | :math:`N_c`                                         | **WTABLE . NB_CAS**              | 1                 |
    +-----------------------------------------------------+----------------------------------+-------------------+
    | :math:`x_a`                                         | **SEUIL**                        | 10\ :sup:`-9`     |
    +-----------------------------------------------------+----------------------------------+-------------------+

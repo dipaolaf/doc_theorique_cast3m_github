@@ -20,9 +20,9 @@ d'équations suivant est vérifié :
 
    \left\{
    \begin{array}{rcll}
-     div\,\sigma + {f}  & = & 0 &  \textrm{sur $\Omega$} \\
-             {\sigma.n} & = & t & \textrm{sur $\partial\Omega_t$} \\
-                      u & = & d & \textrm{sur $\partial\Omega_d$} \\
+     \textrm{div}\,\sigma + {f}  & = & 0 &  \textrm{sur $\Omega$} \\
+                      {\sigma.n} & = & t & \textrm{sur $\partial\Omega_t$} \\
+                               u & = & d & \textrm{sur $\partial\Omega_d$} \\
    \end{array}
    \right.
 
