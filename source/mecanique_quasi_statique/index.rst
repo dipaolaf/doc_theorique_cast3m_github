@@ -36,5 +36,5 @@ ne fait pas partie du processus de développement de Cast3M.
    comportement
    cl_depi
    reso
-   applications
+   application
    dgibi
