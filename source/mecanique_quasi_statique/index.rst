@@ -3,7 +3,7 @@
 Analyse quasi statique des structures
 *************************************
 
-Ce document est une copie du document sur la statique disponible sur le site
+Ce document est une autre version du document sur la statique disponible sur le site
 `Cast3M <http://www-cast3m.cea.fr/html/Documentation_Cast3M/mecanique.pdf>`_.
 
 L'objectif est de rappeler aux utilisateurs quelques
