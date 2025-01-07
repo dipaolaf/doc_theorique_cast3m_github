@@ -892,7 +892,117 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/09_triaxial.dgibi>`
 
 
+.. _sec:modeles_beton_test_mass_willam:
+
 Test de Willam
 ~~~~~~~~~~~~~~
+
+Description
+"""""""""""
+
+Il s'agit d'un test comprenant une première phase de chargement en traction simple, suivie d'une seconde phase combinant de la bi-traction dans la direction de la traction initiale et dans sa direction orthogonale et du cisaillement dans le plan orthogonal à la direction de traction initiale. Les dimensions dépendent de l'hypothèse de calcul retenue :
+
+- en 3D, on considère un cube d'arête :math:`L` ;
+- en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
+
+L'objectif du test est d'observer la réponse du modèle de comportement lorsque le repère du chargement, c'est-à-dire le repère des contraintes principales, tourne. Il n'existe pas de résultat expérimental de référence pour ce test, étant données les conditions aux limites et de chargement difficiles à mettre en oeuvre expérimentalement. En revanche, il existe un certain nombre de résultats numériques dans la littérature auxquels les résultats de calcul peuvent être comparés.
+
+Paramètres issus de la bibliographie
+""""""""""""""""""""""""""""""""""""
+
+L'article d'origine décrivant le test de Willam est le suivant :
+
+ [1] Willam, K.; Pramono, E.; Sture, S. Fundamental issues of smeared crack models. In Proc. of the SEM-RILEM Int. conf. on fracture of concrete and rock, TX USA 17-19 June 1987, Shah S.P., Swartz S.E. (eds), 1989, pp. 142-157.
+
+La géométrie du problème, les paramètres élastiques du matériau et certains paramètres du modèle de comportement, ainsi que les réultats numériques de références (courbes **4a. LGCNSN Iso**) otenues avec un modèle d'endommagement isotrope comparable au modèle Mazars implémenté dans Cast3M, sont issus de l'article suivant :
+
+ [2] Ghavamian, S.; Carol, I.; Delaplace A. Discussions over MECA project results. Revue Française de Génie Civil. 7 (2003) pp. 543-581. doi:10.1080/127951119.2003.9692509.
+
+Les paramètres de la seconde phase de chargement sont issus de l'article suivant :
+
+ [3] Wosatko, A.; Szczecina, M.; Winnicki A. Selected Concrete Models Studied Using Willam's Test. Materials 2020, 13, 4756; doi:10.3390/ma13214756.
+
+Enfin, le paramètre **BTRA** du modèle Mazars est issu d'une communication personnelle de L. Jason (CEA/DES/ISAS/DM2S/SEMT), d'après sa contribution au benchmark [2]. Le paramètre **ATRA**, qui pilote la valeur asymptotique vers laquelle tendent les contraintes lorsque l'endommagement est maximal, est choisi pour optimiser la corrélation du calcul avec les résultats numériques de référence.
+
+
+.. admonition:: Test de Willam : Paramètres géométrique et matériau
+
+   .. literalinclude:: dgibi/10_willam.ecr
+      :lines: 96-117
+      :linenos:
+      :lineno-start: 96
+
+Blocages et chargement
+""""""""""""""""""""""
+
+Le test se décompose en deux phases successives. Dans la phase 1, le chargement consiste à piloter la déformation du maillage dans l'une de ses directions principales en l'augmentant progressivement jusqu'à atteindre la déformation seuil d'endommagement, l'une des deux faces dont la normale est colinéaire à cette direction étant bloquée en déplacement et libre de se contracter par effet de Poisson. Plusieurs chargements se superposent dans la phase 2 : tout d'abord, le chargement de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; ensuite, un deuxième chargement de traction orthogonale consiste à piloter la déformation du maillage dans une direction perpendiculaire à la première en l'augmentant progressivement jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin, un troisième chargement de cisaillement consiste à piloter le glissement du maillage dans les directions orthogonales des deux premiers chargements de la phase 2 en l'augmentant progressivement jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
+
+En pratique dans Cast3M, on applique sur tout le maillage les deux phases du chargement de déformation imposée souhaité dans un premier calcul élastique, en tenant compte des conditions aux limites adéquates aux frontières du maillage (une face encastrée et libre en striction). Puis on récupère les champs de déplacements ainsi calculés pour les appliquer comme chargement en déplacement imposé sur tout le maillage d'un second calcul prenant en compte le comportement non linéaire endomageable du matériau. A noter que ce second calcul ne requiert pas de conditions aux limites cinématique, l'ensemble du maillage étant piloté en déplacement imposé.
+
+- En 3D, pour le premier calcul élastique, on pilote les déformations **EPXX**, **EPYY**, **EPZZ** et **GAXY** dans tout le maillage et on bloque le déplacement **UX** de la face "gauche" (dans le plan :math:`x=0`). Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0) ; pour le second calcul non linéaire, on utilise les champs de déplacements résultat du premier calcul pour piloter les déplacements de tout le maillage.
+- En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Test de Willam : blocages et chargement pour le cas 3D
+
+   .. literalinclude:: dgibi/10_willam.dgibi
+      :language: gibiane
+      :lines: 107-153
+      :linenos:
+      :lineno-start: 107
+
+   .. literalinclude:: dgibi/10_willam.dgibi
+      :language: gibiane
+      :lines: 155-183
+      :linenos:
+      :lineno-start: 183
+
+L'état initial (noir) et déformé (rouge) résultant des blocages et du chargement sont représentés sur les figures suivantes.
+
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_will_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_will_char_2dplan.png
+          :width: 50%
+          :align: center
+
+.. figure:: figures/mazars_will_char_2dplan.png
+   :width: 0%
+
+   Test de Willam - Etat initial (noir) et déformé (x500, rouge) résultant des blocages et du chargement imposés sur le parallélépipède (3D) et le carré (2D plan).
+
+La rotation du repère du chargement, c'est-à-dire du repère des contraintes principales, est représenté sur les figures suivantes.
+
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_will_prin_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_will_prin_2dplan.png
+          :width: 50%
+          :align: center
+
+.. figure:: figures/mazars_will_prin_2dplan.png
+   :width: 0%
+
+   Test de Willam - Rotation du repère des contraintes principales sur le parallélépipède (3D) et le carré (2D plan).
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/10_willam.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/10_willam.dgibi>`
+
+
 TODO
 

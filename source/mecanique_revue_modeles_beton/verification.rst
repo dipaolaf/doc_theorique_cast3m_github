@@ -2154,16 +2154,16 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 
 
-Cisaillement monotone
-~~~~~~~~~~~~~~~~~~~~~
+Cisaillement
+~~~~~~~~~~~~
 Le cas-test se dénomme ``07_cisaillement.dgibi``
 
 TODO
 
 
 
-Chargement biaxial proportionnel
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Biaxial
+~~~~~~~
 Le cas-test se dénomme ``08_biaxial.dgibi``
 
 On n'applique le cas de chargement de traction-compression biaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_biax>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
@@ -2284,8 +2284,8 @@ En conséquence de ces deux constats, les résultats du cas-test ``08_biaxial.dg
 
 
 
-Chargement triaxial
-~~~~~~~~~~~~~~~~~~~
+Triaxial
+~~~~~~~~
 Le cas-test se dénomme ``09_triaxial.dgibi``
 
 On n'applique le cas de chargement triaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_triax>`. En effet, la triaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
@@ -2390,10 +2390,86 @@ Courbes d'évolution de la force de réaction en fonction du déplacement impos�
 
 
 
-Chargement ?
-~~~~~~~~~~~~
+Test de Willam
+~~~~~~~~~~~~~~
 Le cas-test se dénomme ``10_willam.dgibi``
 
-TODO
+On n'applique le cas test de Willam que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_willam>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
+Le chargement du test de Willam est consistué de deux phases successives. La phase 1 consiste en un chargement de traction simple en déformation imposée ``EPXX`` dans la direction X, jusqu'à atteindre le seuil d'endommagement en déformation. La phase 2, dans laquelle on vise l'endommagement complet proche de 1, est la combinaison de trois chargements superposés : tout d'abord le chargement de traction en déformation imposée ``EPXX`` de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; puis un deuxième chargement de traction en déformation imposée ``EPYY`` est appliqué dans la direction Y jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin un troisième chargement de cisaillement en glissement imposé ``GAXY`` est appliqué dans le plan XY jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
+
+L'objectif est d'évaluer l'influence de la rotation du repère de chargement (repère des contraintes principales) sur la réponse post-pic du modèle.
+
+L'analyse des résultats porte sur les courbes :
+
+- d'endomagemment en chaque point de Gauss des modèles massifs en fonction du temps ;
+- de la contrainte moyenne en fonction de la déformation moyenne.
+
+Solution de référence
++++++++++++++++++++++
+
+On dispose de résultats numériques de référence obtenus par une équipe participant au benchmark du projet MECA [2] avec un modèle d'endommagement isotrope du même type que le modèle Mazars de Cast3M. Il s'agit de courbes contraintes-déformation, nommées **4a. LGCNSN Iso** dans [2] et notées **Ref_xxxx** dans les figures suivantes, auxquelles les courbes calculées d'évolution de la contrainte en fonction de la déformation peuvent être comparées. 
+
+L'écart entre la courbe calculée et la courbe de référence est évalué via l'aire sous les courbes, jusqu'à l'abscisse maximale de l'une ou l'autre des courbes :
+
+.. math::
+   Ecart_{relatif} = \frac{Surface_{calc.} - Surface_{ref.}} {Surface_{ref.}}
+
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+Courbes d'évolution de l'endommagement
+""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_will_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbes d'évolution de la contrainte en fonction de la déformation
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_will_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+Pour les trois composantes de contrainte, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe de référence est :
+
+- Pour ``SMXX`` : :math:`Ecart_{relatif} = -1.74385.10^{-2}` ;
+- Pour ``SMYY`` : :math:`Ecart_{relatif} = -5.88999.10^{-2}` ;
+- Pour ``SMXY`` : :math:`Ecart_{relatif} = -8.87497.10^{-2}` ;
+
+En conséquence, les résultats du cas-test ``10_willam.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+
+Résultats du cas 2D contraintes planes
+++++++++++++++++++++++++++++++++++++++
+
+Courbes d'évolution de l'endommagement
+""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_will_d_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps.
+
+Courbes d'évolution de la contrainte en fonction de la déformation
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. figure:: figures/mazars_will_s_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne.
+
+Pour les trois composantes de contrainte, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe de référence est :
+
+- Pour ``SMXX`` : :math:`Ecart_{relatif} = -3.84282.10^{-2}` ;
+- Pour ``SMYY`` : :math:`Ecart_{relatif} = -1.42927.10^{-1}` ;
+- Pour ``SMXY`` : :math:`Ecart_{relatif} = -8.87497.10^{-2}` ;
+
+En conséquence, les résultats du cas-test ``10_willam.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 

@@ -21,6 +21,7 @@ cp ../dgibi/05_traction_compression.ps .
 cp ../dgibi/06_traction_compression_traction.ps .
 cp ../dgibi/08_biaxial.ps .
 cp ../dgibi/09_triaxial.ps .
+cp ../dgibi/10_willam.ps .
 
 # Retrait des titres
 echo "  --> Suppression des titres"
@@ -32,6 +33,7 @@ cast-post.sh -o -t 05_traction_compression.ps 05_traction_compression.ps
 cast-post.sh -o -t 06_traction_compression_traction.ps 06_traction_compression_traction.ps
 cast-post.sh -o -t 08_biaxial.ps 08_biaxial.ps
 cast-post.sh -o -t 09_triaxial.ps 09_triaxial.ps
+cast-post.sh -o -t 10_willam.ps 10_willam.ps
 
 # Extraction des pages utilses
 echo "  --> Extraction des pages"
@@ -169,6 +171,14 @@ psselect -q -p15   09_triaxial.ps mazars_triax_char_2daxi.ps
 psselect -q -p16   09_triaxial.ps mazars_triax_d_2daxi.ps
 psselect -q -p17   09_triaxial.ps mazars_triax_s_2daxi.ps
 psselect -q -p18   09_triaxial.ps mazars_triax_f_2daxi.ps
+psselect -q -p2    10_willam.ps  mazars_will_d_3d.ps
+psselect -q -p10   10_willam.ps  mazars_will_s_3d.ps
+psselect -q -p14   10_willam.ps  mazars_will_char_3d.ps
+psselect -q -p15   10_willam.ps  mazars_will_prin_3d.ps
+psselect -q -p17   10_willam.ps  mazars_will_d_2dplan.ps
+psselect -q -p25   10_willam.ps  mazars_will_s_2dplan.ps
+psselect -q -p29   10_willam.ps  mazars_will_char_2dplan.ps
+psselect -q -p30   10_willam.ps  mazars_will_prin_2dplan.ps
 
 # Traitement des images
 rm 01_traction.ps
@@ -179,6 +189,7 @@ rm 05_traction_compression.ps
 rm 06_traction_compression_traction.ps
 rm 08_biaxial.ps
 rm 09_triaxial.ps
+rm 10_willam.ps
 echo "  --> Augmentation de l'épaisseur des lignes"
 cast-post.sh -o -l 5 mazars_trac_mono_char_3d.ps     mazars_trac_mono_char_3d.ps
 cast-post.sh -o -l 5 mazars_trac_mono_char_3dpaf.ps  mazars_trac_mono_char_3dpaf.ps
@@ -214,6 +225,10 @@ cast-post.sh -o -l 5 mazars_biax_char_3d.ps          mazars_biax_char_3d.ps
 cast-post.sh -o -l 5 mazars_biax_char_2dplan.ps      mazars_biax_char_2dplan.ps
 cast-post.sh -o -l 5 mazars_triax_char_3d.ps         mazars_triax_char_3d.ps
 cast-post.sh -o -l 5 mazars_triax_char_2daxi.ps      mazars_triax_char_2daxi.ps
+cast-post.sh -o -l 5 mazars_will_char_3d.ps          mazars_will_char_3d.ps
+cast-post.sh -o -l 5 mazars_will_prin_3d.ps          mazars_will_prin_3d.ps
+cast-post.sh -o -l 5 mazars_will_char_2dplan.ps      mazars_will_char_2dplan.ps
+cast-post.sh -o -l 5 mazars_will_prin_2dplan.ps      mazars_will_prin_2dplan.ps
 echo "  --> Convertion en eps (ajout de la bounding box)"
 for fic in *.ps
 do
