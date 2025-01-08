@@ -15,7 +15,8 @@ On détaille ensuite la procédure **TOPOPTIM** en faisant les liens vers les co
    :maxdepth: 1
    :caption: Sommaire
 
-   bases
+   bases_theoriques
+   application
    topoptim
    dgibi
    references
