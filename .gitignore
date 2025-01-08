@@ -1,3 +1,4 @@
 build/
+source/_custom/__pycache__/
 source/mecanique_revue_modeles_beton/dgibi/*.ps
 source/mecanique_revue_modeles_beton/dgibi/*.trace

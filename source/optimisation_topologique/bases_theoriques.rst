@@ -26,7 +26,7 @@ Explicitons certains termes :
 - Par **pièce donnée** on entend que la recherche de la topologie se fait sur un domaine limité de l'espace :math:`\Omega`.
 - Par **chargements** on entend que cette pièce subit des conditions aux limites, par exemple des déplacements
   imposés et des forces appliquées sur certaines zones.
-- Par **limitations** on entend que l'optimisation se fait *sous contraintes*. C'est l'ensemble des fonctions
+- Par **limitations** on entend que l'optimisation se fait *sous contraintes*, représentées par l'ensemble de fonctions
   :math:`\chi_i(\mathbfcal{k}) = 0`. En effet, afin d'éviter les solutions triviales, il est nécessaire d'imposer des
   contraintes. Par exemple, on peut chercher à minimiser le volume d'une pièce sous contrainte que celle-ci ne se
   déplace par trop (sans quoi la solution à volume nul sera optimale).
@@ -43,14 +43,14 @@ Le problème est illustré ci-dessous dans le cas d'une poutre en flexion 3 poin
 Plusieurs choix de fonctions :math:`\psi` et :math:`\chi_i` sont alors possibles pour optimiser une structure,
 comme par exemple :
 
-- chercher la pièce la plus rigide possible, sans dépasser un certain volume
-- chercher la pièce la plus légère possible, sans dépasser une certaine fréquence de résonnance
-- chercher la pièce avec les contraintes mécaniques les plus faibles, sans dépasser un certain niveau de déplacement
+- chercher la pièce la plus rigide possible, sans dépasser un certain volume ;
+- chercher la pièce la plus légère possible, sans dépasser une certaine fréquence de résonnance ;
+- chercher la pièce avec les contraintes mécaniques les plus faibles, sans dépasser un certain niveau de déplacement.
 
 Un choix très répendu de problème d'optimisation en mécanique des structures est de **minimiser la compliance** (c'est-à-dire
 *l'énergie de déformation* ou encore *le travail des forces extérieures*) **sous contrainte de volume**. En introduisant une
 discrétisation spatiale (maillage) et une **variable de conception** discrète :math:`\textbf{x}`, le problème d'optimisation
-topologique peut être reformulé :
+topologique peut être plus clairement formulé :
 
 .. math::
    :name: eq:opti_topo_2
@@ -68,8 +68,8 @@ Ce problème de *minimiser de la compliance* est équivalent à *maximiser la ra
 - :math:`\mathbfcal{K}=\sum_{e=1}^N \mathbfcal{k}_e` est la matrice de rigidité globale, assemblée sur les :math:`N` éléments du maillage
 - :math:`V(\textbf{x})` est le volume de la topologie :math:`\textbf{x}` et :math:`V_e` le volume de
   l'élément :math:`e`
-- :math:`f` la fraction volumique imposée
-- :math:`V_0` le volume du domaine de conception :math:`\Omega`
+- :math:`f` est la fraction volumique imposée
+- :math:`V_0` est le volume du domaine de conception :math:`\Omega`
 
 
 .. _sec:opti_topo_simp:
@@ -78,19 +78,19 @@ La méthode SIMP
 ---------------
 
 Dans ce document nous illustrerons brièvement la méthode SIMP, pour *Solid Isotropic Material with Penalization*,
-qui est la méthode d'optimisation topologique la plus répendue dans les codes inustriels et celle mise en oeuvre
+qui est la méthode d'optimisation topologique la plus répendue dans les codes industriels et celle mise en oeuvre
 dans Cast3M via la procédure `TOPOPTIM <http://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_.
-Le lecteur intéressé pourra consulter de nombreux ouvrages sur le sujet dont :
+Le lecteur intéressé pourra consulter de nombreux ouvrages sur le sujet, comme par exemple :
 
-- Les livres de référence [BENDSOE-1995]_ et [BENDSOE-SIGMUND-2004]_ qui détaillent rigouresement la théorie derrière l'optimisation
-  topologique
+- Les livres de référence [BENDSOE-1995]_ et [BENDSOE-SIGMUND-2004]_ qui détaillent rigouresement la théorie
+  derrière l'optimisation topologique.
 - L'article pédagogique [SIGMUND-2001]_ qui présente une implémentation sur Matlab en 99 lignes d'un algorithme
-  d'optimisation topologique. La procédure `TOPOPTIM <http://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_ de Cast3M,
-  ainsi que l'exemple utilisé dans ce document en sont grandement inspirés
+  d'optimisation topologique. La procédure `TOPOPTIM <http://www-cast3m.cea.fr/index.php?page=notices&notice=TOPOPTIM>`_
+  de Cast3M, ainsi que l'exemple utilisé dans ce document en sont grandement inspirés.
 
 Les principales idées de la méthode sont les suivantes :
 
-- Introduire des **variables de conception continues** :math:`x_e \in [0;1]`, appelées aussi **densités**
+- Introduire des **variables de conception continues** :math:`x_e \in [0;1]`, appelées aussi **densités**.
 - Pénaliser la rigidité :math:`\mathbfcal{K}` en fonction de :math:`\textbf{x}` par une loi puissance
   afin d'éviter la présence de densités intermédiaires. La matrice de rigidité de l'élément :math:`e`
   vaut ainsi :
@@ -98,7 +98,7 @@ Les principales idées de la méthode sont les suivantes :
 .. math::
    \mathbfcal{k}_e=(x_e)^p\mathbfcal{k}_0
 
-**Le problème d'optimisation de la compliance devient finalement :**
+**Le problème d'optimisation de la compliance :eq:`opti_topo_2` devient finalement :**
 
 .. math::
    :name: eq:opti_topo_3
