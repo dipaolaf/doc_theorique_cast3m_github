@@ -6,13 +6,13 @@ Elle est mise en forme grâce au générateur de documentation [Sphinx](https://
 
 ## Prérecquis :
 Les prérequis sont :
-- le générateur **sphinx** version 6.2.1 (construction non garantie pour des versions supérieures)
-- le thème **renku-sphinx-theme**
+- le générateur **sphinx** (la version utilisée actuellement est la 8.1.3)
+- le thème **sphinx_rtd_theme**
 
 Ceux-ci peuvent être installés avec pip :
 ```bash
-pip install -U sphinx==6.2.1
-pip install -U renku-sphinx-theme
+pip install -U sphinx
+pip install -U sphinx_rtd_theme
 ```
 
 ## Construction de la documentation avec Sphinx :

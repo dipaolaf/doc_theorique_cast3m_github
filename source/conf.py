@@ -6,8 +6,8 @@ sys.path.append(os.path.abspath('./_custom'))
 
 # Configuration générale
 project = 'Cast3M - Théorie'
-version = '2024.1'
-release = '2024.1'
+version = '2025.0'
+release = '2025.0'
 author = ''
 copyright = 'CEA'
 language = 'fr'
@@ -31,7 +31,7 @@ todo_include_todos = True
 smartquotes = False  # pour éviter le remplacement automatique de simple quote en double
 
 # Options for HTML output
-html_theme = 'renku'
+html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
      'logo_only': True,
      'style_nav_header_background': '#006B60',
