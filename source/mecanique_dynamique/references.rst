@@ -7,15 +7,15 @@ Références
 
 .. [ZIENKIEWICZ-2005] Zienkiewicz, Taylor et Zhu, 
   *The Finite Element Method: Its Basis And Fundamentals*, 6th edition,
-  Butterworth-Heinemann, 2005.
+  Butterworth-Heinemann, **2005**.
 
 .. [BATHE-2006] Bathe,
   *Finite Element Procedures*,
-  2006.
+  **2006**.
   
 .. [AXISA-2005] Axisa François et Trompette Philippe,
   *Modelling of mechanical systems: structural elements*, Vol. 2,
-  Elsevier, 2005.
+  Elsevier, **2005**.
 
   
 **Références pour la dynamique des structures :**
