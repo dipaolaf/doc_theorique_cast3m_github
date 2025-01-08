@@ -70,7 +70,7 @@ Le problème est résolu en un pas de calcul. Les conditions initiales
 
 On initialise également le champ de déplacement solution par un champ nul (variable ``U1``, ligne 6).
 
-La valeur de l'effort de référence \ :math:`F^{ref}` est fixée à la première itération de
+La valeur de l'effort de référence \ :math:`F^{\textrm{ref}}` est fixée à la première itération de
 la boucle de résolution (variable ``Fref1``, ligne 20).
 
 La précision \ :math:`\zeta` est définie en tête du jeu de donnée et vaut 10\ :sup:`-4`

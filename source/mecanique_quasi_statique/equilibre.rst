@@ -3,8 +3,8 @@
 Équilibre mécanique
 ===================
 
-Équation de la statique
------------------------
+Équations de la statique
+------------------------
 
 Soit un domaine matériel :math:`\Omega` soumis à une densité volumique
 d'efforts :math:`{f}`, une densité surfacique d'efforts :math:`{t}`
@@ -105,10 +105,10 @@ La formulation *éléments finis* de l'équilibre s'écrit donc :
 .. math::
    :name: eq:meca_stat_statiqueEF2
 
-   \underbrace{F^S + F^R + F^V}_{F^{ext}} \underbrace{- \mathcal{B}.\sigma}_{F^{int}} = 0
+   \underbrace{F^S + F^R + F^V}_{F^{\textrm{ext}}} \; \underbrace{- \mathcal{B}.\sigma}_{F^{\textrm{int}}} = 0
 
-:math:`F^{ext}` représentant les efforts extérieurs appliqués au
-domaine matériel :math:`\Omega` et :math:`F^{int}`, les efforts
+:math:`F^{\textrm{ext}}` représentant les efforts extérieurs appliqués au
+domaine matériel :math:`\Omega` et :math:`F^{\textrm{int}}`, les efforts
 intérieurs.
 
 .. _sec:meca_stat_residu:
@@ -129,17 +129,17 @@ mis en jeu dans le problème considéré :
 
 .. math:: 
 
-  |R| < \zeta\, F^{ref}
+  |R| < \zeta\, F^{\textrm{ref}}
 
 La valeur de :math:`\zeta` est fournie par l'utilisateur : c'est la *précision* du calcul.
 
-La valeur de :math:`F^{ref}` peut être une norme des efforts extérieurs :math:`F^{ext}`.
+La valeur de :math:`F^{\textrm{ref}}` peut être une norme des efforts extérieurs :math:`F^{\textrm{ext}}`.
 Dans certains cas (dilatation libre, décharge...) ces derniers peuvent être nuls à l'équilibre.
-L'utilisateur doit alors également préciser la valeur de :math:`F^{ref}` ou fournir une tolérance sur les
-efforts : :math:`F^{tol} = \zeta\, F^{ref}`.
+L'utilisateur doit alors également préciser la valeur de :math:`F^{\textrm{ref}}` ou fournir une tolérance sur les
+efforts : :math:`F^{\textrm{tol}} = \zeta\, F^{\textrm{ref}}`.
 
 Si le problème fait intervenir des coques, poutres, tuyaux... il peut
-aussi s'avérer nécessaire de fournir une tolérance sur les moments \ :math:`M^{tol}`.
+aussi s'avérer nécessaire de fournir une tolérance sur les moments \ :math:`M^{\textrm{tol}}`.
 
 Opérateurs de Cast3M associés
 -----------------------------
@@ -149,13 +149,13 @@ opérateurs suivants :
 
 -  :math:`F^S`    : `PRES <http://www-cast3m.cea.fr/index.php?page=notices&notice=PRES>`_ (pression),
    `FORC <http://www-cast3m.cea.fr/index.php?page=notices&notice=FORC>`_ (force ponctuelle),
-   `FSUR <http://www-cast3m.cea.fr/index.php?page=notices&notice=FSUR>`_ (force surfacique), ... selon le cas ;
+   `FSUR <http://www-cast3m.cea.fr/index.php?page=notices&notice=FSUR>`_ (force surfacique), ... selon le cas
 
--  :math:`F^R`   : `REAC <http://www-cast3m.cea.fr/index.php?page=notices&notice=REAC>`_ (réaction) ;
+-  :math:`F^R`   : `REAC <http://www-cast3m.cea.fr/index.php?page=notices&notice=REAC>`_ (réaction)
 
--  :math:`F^V`   : `CNEQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=CNEQ>`_ (Charge Nodale EQuivalente) ;
+-  :math:`F^V`   : `CNEQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=CNEQ>`_ (Charge Nodale EQuivalente)
 
--  :math:`\mathcal{B}.\sigma` : `BSIG <http://www-cast3m.cea.fr/index.php?page=notices&notice=BSIG>`_ ;
+-  :math:`\mathcal{B}.\sigma` : `BSIG <http://www-cast3m.cea.fr/index.php?page=notices&notice=BSIG>`_
 
--  :math:`F^{tol}`, :math:`M^{tol}` : voir entrées de la procédure
-   `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_.
+-  :math:`F^{\textrm{tol}}`, :math:`M^{\textrm{tol}}` : voir entrées de la procédure
+   `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_

@@ -39,7 +39,7 @@ Méthode des multiplicateurs de Lagrange
 
 Pour un système linéaire d'inconnue \ :math:`U` à résoudre tel que :
 
-.. math:: \mathcal{K}^{e}.U=F^S + F^V - \mathcal{B}.\sigma^{nl}
+.. math:: \mathcal{K}^{e}.U=F^S + F^V - \mathcal{B}.\sigma^{\textrm{nl}}
 
 l'ajout de :math:`n` conditions sur le champ solution équivaut à
 introduire :math:`n` inconnues supplémentaires :math:`\lambda`,
@@ -48,7 +48,7 @@ appelées *multiplicateurs de Lagrange*, telles que :
 .. math::
    :name: eq:meca_stat_statiqueLagrange1
 
-   \mathcal{K}^{e}.U + \mathcal{A}^T.\lambda = F^S + F^V - \mathcal{B}.\sigma^{nl} \qquad \textrm{avec} \qquad \mathcal{A}.U=d
+   \mathcal{K}^{e}.U + \mathcal{A}^T.\lambda = F^S + F^V - \mathcal{B}.\sigma^{\textrm{nl}} \qquad \textsf{avec} \qquad \mathcal{A}.U=d
 
 La précédente :ref:`relation force-déplacement <eq:meca_stat_statiqueEF4>` permet d'identifier
 que le terme :math:`\mathcal{A}^T.\lambda` est égal, au signe près, aux efforts de réaction
@@ -73,7 +73,7 @@ deux équations sous forme matricielle :
    =
    \left(
      \begin{array}{c}
-     F^S + F^V - \mathcal{B}.\sigma^{nl} \\
+     F^S + F^V - \mathcal{B}.\sigma^{\textrm{nl}} \\
      d
      \end{array}
    \right)
@@ -105,7 +105,7 @@ Dans Cast3M, ce type de conditions est réalisé grâce aux opérateurs suivants
 -  :math:`d`           : `DEPI <http://www-cast3m.cea.fr/index.php?page=notices&notice=DEPI>`_ (DEPlacement Imposé) ;
 
 -  :math:`\hat{\mathcal{K}}` et :math:`\hat{F}` : `ET <http://www-cast3m.cea.fr/index.php?page=notices&notice=ET>`_,
-   pour assembler :math:`\mathcal{K}^{e}` et :math:`\mathcal{A}` ainsi que les second membres (:math:`F^S+F^V-\mathcal{B}.\sigma^{nl}`) et :math:`d` ;
+   pour assembler :math:`\mathcal{K}^{e}` et :math:`\mathcal{A}` ainsi que les second membres (:math:`F^S+F^V-\mathcal{B}.\sigma^{\textrm{nl}}`) et :math:`d` ;
 
 -  :math:`\hat{U}`          : `RESO <http://www-cast3m.cea.fr/index.php?page=notices&notice=RESO>`_ (résoudre)
    avec, comme arguments, :math:`\hat{\mathcal{K}}` et :math:`\hat{F}`.

@@ -31,7 +31,7 @@ On décompose le champ de déplacement de la façon suivante :
 
 .. math::
 
-   U_1^i = U_0 + \Delta U_1^i \quad \textrm{et} \quad \Delta U_1^{i+1} = \Delta U_1^i + \delta \Delta U_1^{i+1}
+   U_1^i = U_0 + \Delta U_1^i \quad \textsf{et} \quad \Delta U_1^{i+1} = \Delta U_1^i + \delta \Delta U_1^{i+1}
 
 avec :
 
@@ -73,18 +73,18 @@ Après :math:`i` itérations, on cherche un champ
 solution (\ :math:`U_1^{i+1},\lambda_1^{i+1},\sigma_1^{i+1}`) qui
 satisfait l':ref:`équation d'équilibre <eq:meca_stat_statiqueLagrange1>` :
 
-.. math:: \mathcal{K}^{e}.U_1^{i+1} + \mathcal{A}^T.\lambda_1^{i+1} = F^S_1 + F^V_1 - \mathcal{B}.\sigma_1^{nl,i}
+.. math:: \mathcal{K}^{e}.U_1^{i+1} + \mathcal{A}^T.\lambda_1^{i+1} = F^S_1 + F^V_1 - \mathcal{B}.\sigma_1^{\textrm{nl},i}
 
-:math:`\sigma_1^{nl,i}` étant *la partie non-linéaire* des contraintes :math:`\sigma_1^{i}`
+:math:`\sigma_1^{\textrm{nl},i}` étant *la partie non-linéaire* des contraintes :math:`\sigma_1^{i}`
 obtenues à l'itération précédente. Injectons l'expression incrémentale :eq:`eq:meca_stat_uddU` de
 :math:`U_1^{i+1}` dans celle-ci :
 
 .. math::
 
    \begin{align*}
-   \mathcal{K}^{e}.(U_1^i + \delta \Delta U_1^{i+1}) & = F^S_1 + F^V_1 - \mathcal{A}^T.\lambda_1^{i+1} - \mathcal{B}.\sigma_1^{nl,i} \\
+   \mathcal{K}^{e}.(U_1^i + \delta \Delta U_1^{i+1}) & = F^S_1 + F^V_1 - \mathcal{A}^T.\lambda_1^{i+1} - \mathcal{B}.\sigma_1^{\textrm{nl},i} \\
    \mathcal{K}^{e}.\delta \Delta U_1^{i+1}           & = F^S_1 + F^V_1 - \underbrace{\mathcal{A}^T.\lambda_1^{i+1}}_{- F_1^R}
-     - \underbrace{(\mathcal{K}^{e}.U_1^i + \mathcal{B}.\sigma_1^{nl,i})}_{\mathcal{B}.\sigma_1^i}
+     - \underbrace{(\mathcal{K}^{e}.U_1^i + \mathcal{B}.\sigma_1^{\textrm{nl},i})}_{\mathcal{B}.\sigma_1^i}
    \end{align*}
 
 Le terme :math:`\mathcal{B}.\sigma_1^i` est identifié d'après :ref:`l'équation précédente <eq:meca_stat_bsigma>`. Au membre de droite, on
@@ -142,11 +142,11 @@ l'équilibre est menée jusqu'à ce que le résidu soit négligeable devant
 une valeur de référence des efforts mis en jeu dans le problème traité
 selon une norme donnée :
 
-.. math:: |R| < \zeta\, F^{ref}
+.. math:: |R| < \zeta\, F^{\textrm{ref}}
 
 Concernant la norme \ :math:`|.|`, il est classique d'utiliser la norme
 infinie, à savoir le maximum en valeur absolue de toutes les composantes
-du résidu. Concernant la valeur de référence \ :math:`F^{ref}`, on peut
+du résidu. Concernant la valeur de référence \ :math:`F^{\textrm{ref}}`, on peut
 utiliser la même norme appliquée aux efforts extérieurs. Enfin,
 :math:`\zeta` est la précision, fixée par l'utilisateur.
 
@@ -165,9 +165,9 @@ Algorithme de minimisation du résidu
 
 **Initialisation de la solution**
 
-:math:`\begin{array}{lcl} (U_1,\lambda_1) & = & (U_0,\lambda_0) \\ (\sigma_1, \varepsilon_1^{in},\upsilon_1) & = & (\sigma_0, \varepsilon_0^{in},\upsilon_0) \\ F_1^R & = & -\mathcal{A}^T.\lambda_1 \\ F^{ref} & = & |F_1^S + F_1^V + F_1^R| \\ \end{array}`
+:math:`\begin{array}{lcl} (U_1,\lambda_1) & = & (U_0,\lambda_0) \\ (\sigma_1, \varepsilon_1^{\textrm{in}},\upsilon_1) & = & (\sigma_0, \varepsilon_0^{\textrm{in}},\upsilon_0) \\ F_1^R & = & -\mathcal{A}^T.\lambda_1 \\ F^{\textrm{ref}} & = & |F_1^S + F_1^V + F_1^R| \\ \end{array}`
 
-**Tant que** \ :math:`|R_1| \geq \zeta F^{ref}` :
+**Tant que** \ :math:`|R_1| \geq \zeta F^{\textrm{ref}}` :
 
 .. raw:: html
 
@@ -175,12 +175,12 @@ Algorithme de minimisation du résidu
 .. math::
 
    \begin{array}{lcl}
-     (\delta\Delta U_1, \lambda_1)             & = & \textbf{resoudre (4)} \\
-     U_1                                       & = & U_1 + \delta\Delta U_1 \\
-     \varepsilon_1                             & = & \mathcal{D}(U_1) \\
-     (\sigma_1,\varepsilon_1^{in}, \upsilon_1) & = & \textbf{integrer } \mathcal{C}\left(\varepsilon_1 , \varepsilon_1^{in}, \upsilon_1, p_1 \right) \\
-     F_1^R                                     & = & -\mathcal{A}^T.\lambda_1 \\
-     R_1                                       & = & F_1^S + F_1^V + F_1^R - \mathcal{B}.\sigma_1\\
+     (\delta\Delta U_1, \lambda_1)                      & = & \textbf{resoudre (4)} \\
+     U_1                                                & = & U_1 + \delta\Delta U_1 \\
+     \varepsilon_1                                      & = & \mathcal{D}(U_1) \\
+     (\sigma_1,\varepsilon_1^{\textrm{in}}, \upsilon_1) & = & \textbf{integrer } \mathcal{C}\left(\varepsilon_1 , \varepsilon_1^{\textrm{in}}, \upsilon_1, p_1 \right) \\
+     F_1^R                                              & = & -\mathcal{A}^T.\lambda_1 \\
+     R_1                                                & = & F_1^S + F_1^V + F_1^R - \mathcal{B}.\sigma_1\\
    \end{array}
 
 .. raw:: html
@@ -199,7 +199,7 @@ raideur \ :math:`\mathcal{K}^{e}` et des opérateurs \ :math:`\mathcal{A}` et :m
 fixés.
 
 L'opération d'intégration du comportement assure que le résultat
-:math:`(\sigma_1,\varepsilon_1^{in}, \upsilon_1)` satisafait les
+:math:`(\sigma_1,\varepsilon_1^{\textrm{in}}, \upsilon_1)` satisafait les
 relations de comportement pour une déformation totale
 \ :math:`\varepsilon_1` mais, généralement, que de manière
 approchée. Dans ce cas, il est souhaitable que la précision adoptée
@@ -211,7 +211,7 @@ Par ailleurs, il faut également remarquer que, même si l'équilibre des
 efforts est atteint, rien ne garantit la stabilisation des
 déformations inélastiques ou des paramètres internes de la loi de
 comportement d'un itéré sur l'autre de l'algorithme, par exemple que :
-:math:`|\varepsilon_1^{in,i+1} - \varepsilon_1^{in,i}| < \zeta`. Dans
+:math:`|\varepsilon_1^{\textrm{in},i+1} - \varepsilon_1^{\textrm{in},i}| < \zeta`. Dans
 le cas de calculs de fluage, où l'écoulement viscoplastique se produit
 à effort constant, l'équilibre des efforts peut être atteint sans que
 le matériau ait terminé de s'écouler. L'ajout d'un critère
