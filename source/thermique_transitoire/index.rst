@@ -14,7 +14,7 @@ mathématiques associés. Pour une présentation rigoureuse et détaillée
 des fondements théoriques du calcul par éléments finis en thermique, on
 renvoie le lecteur aux nombreux ouvrages disponibles dans ce domaine.
 
-Ce document s'appuie principalement sur la note [JEANVOINE-1995]_.
+Ce document s'appuie principalement sur la note de [JEANVOINE-1995]_.
 
 Après un rappel des bases théoriques, nous présenterons les différents schémas de résolution
 mis en oeuvre dans `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_ ainsi

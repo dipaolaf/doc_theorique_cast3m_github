@@ -6,9 +6,8 @@
 Équation de la chaleur
 ----------------------
 
-Nous rappelons ici brievement les équations locales de la thermique.
-
-**L'équation de la chaleur**, dans le cas générique sur un domaine :math:`\Omega`, s'écrit :
+Nous rappelons ici brievement les équations locales de la thermique. **L'équation de la chaleur** locale,
+dans le cas générique sur un domaine :math:`\Omega`, s'écrit :
 
 .. math::
    :name: eq:ther_chaleur_1
@@ -17,9 +16,9 @@ Nous rappelons ici brievement les équations locales de la thermique.
 
 avec :
 
-- :math:`H` l'enthalpie volumique (en J.m\ :sup:`-3`) ;
-- :math:`\vec{\phi}` la densité de flux thermique (en W.m\ :sup:`-2`) ;
-- :math:`q` la puissance volumique, terme source (en W.m\ :sup:`-3`).
+- :math:`H` l'enthalpie volumique (en J.m\ :sup:`-3`)
+- :math:`\vec{\phi}` la densité de flux thermique (en W.m\ :sup:`-2`)
+- :math:`q` la puissance volumique, terme source (en W.m\ :sup:`-3`)
 - :math:`t` le temps (en s)
 
 **L'enthalpie volumique** :math:`H` peut s'écrire :
@@ -31,8 +30,8 @@ avec :
 
 avec :
 
-- :math:`\rho` la masse volumique (en kg.m\ :sup:`-3`) ;
-- :math:`c_p` la capacité thermique massique (en J.kg\ :sup:`-1`.K\ :sup:`-1`).
+- :math:`\rho` la masse volumique (en kg.m\ :sup:`-3`)
+- :math:`c_p` la capacité thermique massique (en J.kg\ :sup:`-1`.K\ :sup:`-1`)
 
 **Le flux thermique** :math:`\vec{\phi}` est relié au gradient de température par la *loi de Fourier* :
 
@@ -41,18 +40,18 @@ avec :
 
    \vec{\phi}=-\lambda \vec{\nabla} T
 
-avec :
+avec :
 
-- :math:`T` la température (en K) ;
-- :math:`\lambda` la conductivité thermique (en W.m\ :sup:`-1`.K\ :sup:`-1`).
+- :math:`T` la température (en K)
+- :math:`\lambda` la conductivité thermique (en W.m\ :sup:`-1`.K\ :sup:`-1`)
 
-Dans le cas où il n'y a pas de changement de phase et où les caractéristiques ne dépendent pas de la température, l'équation de la chaleur devient :
+Dans le cas où il n'y a pas de changement de phase et où les caractéristiques ne dépendent pas de la température,
+l'équation de la chaleur devient :
 
 .. math::
    :name: eq:ther_chaleur_2
 
    \rho c_p \frac{\partial T}{\partial t} - \vec{\nabla}.\left(\lambda \vec{\nabla}T\right) = q
-
 
 Conditions aux limites
 ----------------------
@@ -60,7 +59,7 @@ Conditions aux limites
 Les *conditions aux limites* peuvent porter soit sur la température :math:`T` :
 
 .. math::
-   :name: eq:ther_cl_timp
+   :name: eq:ther_cl_timp_1
 
    T=T_{\textrm{imp}} \quad \textsf{sur } \Gamma_T
 
@@ -77,14 +76,17 @@ soit sur le flux :math:`\vec{\phi}` à travers un bord de normale :math:`\vec{n}
 
 avec :
 
-- :math:`h` le coefficient d'échange (en W.m\ :sup:`-2`.K\ :sup:`-1`) ;
-- :math:`T_f` la température du fluide en paroi (en K) ;
-- :math:`T_{\infty}` la température à l'infini (en K) ;
-- :math:`\varepsilon` l'émissivité de la surface ;
-- :math:`\sigma` la constante de Stefan-Boltzmann (égale à en 5,67 10\ :sup:`-8` W.m\ :sup:`-2`.K\ :sup:`-4`).
+- :math:`h` le coefficient d'échange (en W.m\ :sup:`-2`.K\ :sup:`-1`)
+- :math:`T_f` la température du fluide en paroi (en K)
+- :math:`T_{\infty}` la température à l'infini (en K)
+- :math:`\varepsilon` l'émissivité de la surface
+- :math:`\sigma` la constante de Stefan-Boltzmann (égale à en 5,67 10\ :sup:`-8` W.m\ :sup:`-2`.K\ :sup:`-4`)
+
+Formulation éléments finis
+--------------------------
 
 Formulation faible
-------------------
+^^^^^^^^^^^^^^^^^^
 
 En multipliant chaque terme de l'équation :eq:`eq:ther_chaleur_1` par un champ de température virtuel :math:`\tau`
 non nul, puis en intégrant par partie sur :math:`\Omega`, on obtient une formulation faible de l'équation de la chaleur :
@@ -94,7 +96,7 @@ non nul, puis en intégrant par partie sur :math:`\Omega`, on obtient une formul
 
    \int_{\Omega} \left(\frac{\partial H}{\partial T}\frac{\partial T}{\partial t}\right)\tau d\Omega - \int_{\Omega} \lambda \vec{\nabla}T.\vec{\nabla}\tau d\Omega + \int_{\Gamma} \left(\lambda \vec{\nabla}T\right).\vec{n}\tau d\Gamma
 
-L'intégrale sur le bord :math:`\Gamma` peut se réduire aux bords portant les conditions aux limites de flux imposé :
+L'intégrale sur le bord :math:`\Gamma` peut se réduire aux bords portant les conditions aux limites :eq:`eq:ther_cl_fimp` de flux imposé :
 
 .. math::
    :name: eq:ther_form_faib_2
@@ -107,8 +109,8 @@ Le terme du rayonnement peut être ramené à un terme de convection en faisant 
 
    T_{\infty}^4-T^4 = (T_{\infty}-T)(\tilde{T}^3 + \tilde{T}^2 T_{\infty} + \tilde{T} T_{\infty}^2 + T_{\infty}^3)
 
-Formulation éléments finis de l'équation de la chaleur
-------------------------------------------------------
+Discrétisation par éléments finis
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 La température est discrétisée sur la base des fonctions d'interpolation :math:`\mathcal{N}` du maillage :
 
@@ -122,7 +124,7 @@ formulation faible :eq:`eq:ther_form_faib_1`, nous obtenons le système matricie
 .. math::
    :name: eq:ther_ef_1
 
-   \mathcal{C}(T)\dot{T} + \mathcal{K}(T)T = Q
+   \mathcal{C}(T).\dot{T} + \mathcal{K}(T).T = Q
 
 :math:`\mathcal{C}` est la **matrice de capacité** :
 
@@ -145,16 +147,31 @@ formulation faible :eq:`eq:ther_form_faib_1`, nous obtenons le système matricie
 
    Q_i = \int_{\Omega} q \mathcal{N}_i d\Omega + \int_{\Gamma_{\phi}} \phi_{\textrm{imp}} \mathcal{N}_i d\Gamma + \int_{\Gamma_c} hT_f \mathcal{N}_i d\Gamma_c + \int_{\Gamma_r} \varepsilon\sigma T_{\infty}^4 \mathcal{N}_i d\Gamma_r
 
+Prise en compte des blocages/relations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+La prise en compte des blocages ou des relations en température est faite de manière similaire à la
+:ref:`mécanique  <sec:meca_stat_cl_depi>` avec des multiplicateurs de Lagrange. Les conditions de températures
+imposées :eq:`eq:ther_cl_timp_1` s'écrivent à l'aide d'une matrice de blocage :math:`\mathcal{A}` :
+
+.. math::
+   :name: eq:ther_cl_timp_2
+
+   \mathcal{A}.T = T_{\textrm{imp}}
+
 Opérateurs de Cast3M associés
 -----------------------------
 
-Les termes de l'équation :eq:`eq:ther_ef_1` sont calculés à l'aide des opérateurs suivants :
+Les termes des équations :eq:`eq:ther_ef_1` et :eq:`eq:ther_cl_timp_2` sont calculés à l'aide des opérateurs suivants :
 
--  :math:`\mathcal{C}` : `CAPA <http://www-cast3m.cea.fr/index.php?page=notices&notice=CAPA>`_
--  :math:`\mathcal{K}` : `COND <http://www-cast3m.cea.fr/index.php?page=notices&notice=COND>`_
--  :math:`Q` : `FLUX <http://www-cast3m.cea.fr/index.php?page=notices&notice=FLUX>`_ (flux imposé) et
-   `CONV <http://www-cast3m.cea.fr/index.php?page=notices&notice=CONV>`_ (convection)
--  La résolution du problème :eq:`eq:ther_ef_1` nécessite la mise en oeuvre d'un schéma numérique d'intégration temporelle.
-   Plusieurs méthodes sont proposées dans la procédure `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_
--  Les termes de rayonnement présents au premier membre :eq:`eq:ther_cond` et second membre :eq:`eq:ther_second_membre` de l'équation
-   sont calculés par la procédure `PAS_RAYO <http://www-cast3m.cea.fr/index.php?page=notices&notice=PAS_RAYO>`_
+- :math:`\mathcal{C}` : `CAPA <http://www-cast3m.cea.fr/index.php?page=notices&notice=CAPA>`_
+- :math:`\mathcal{K}` : `COND <http://www-cast3m.cea.fr/index.php?page=notices&notice=COND>`_
+- :math:`Q` : `FLUX <http://www-cast3m.cea.fr/index.php?page=notices&notice=FLUX>`_ (flux imposé) et
+  `CONV <http://www-cast3m.cea.fr/index.php?page=notices&notice=CONV>`_ (convection)
+- :math:`\mathcal{A}` : `BLOQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=BLOQ>`_ (blocages et relations)
+- :math:`T_{\textrm{imp}}` : `DEPI <http://www-cast3m.cea.fr/index.php?page=notices&notice=DEPI>`_
+- La résolution du problème :eq:`eq:ther_ef_1` nécessite la mise en oeuvre d'un schéma numérique d'intégration temporelle.
+  Plusieurs méthodes sont proposées dans la procédure `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_ et
+  décrites ci-après.
+- Les termes de rayonnement présents au premier membre :eq:`eq:ther_cond` et second membre :eq:`eq:ther_second_membre` de l'équation
+  sont calculés par la procédure `PAS_RAYO <http://www-cast3m.cea.fr/index.php?page=notices&notice=PAS_RAYO>`_
