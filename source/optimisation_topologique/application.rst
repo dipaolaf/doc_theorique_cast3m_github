@@ -4,7 +4,7 @@ Illustration sur un cas mécanique
 =================================
 
 Une mise en donnée de :ref:`l'algorithme d'optimisation précédent <sec:opti_topo_oc>` est fournie en :ref:`annexe <ann:opti_topo_oc_dgibi>`
-et disponible sur le `site Cast3M <http://www-cast3m.cea.fr/index.php?page=exemples&exemple=opti_topo_oc>`_. On propose
+et disponible sur le site Cast3M dans `opti_topo_oc.dgibi <http://www-cast3m.cea.fr/index.php?page=exemples&exemple=opti_topo_oc>`_. On propose
 ci-dessous une analyse détaillée des variables calculées et leur lien avec les éléments théoriques précedemment énoncés.
 
 Définition du problème d'optimisation
