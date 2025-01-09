@@ -39,54 +39,47 @@ on obtient une formulation faible de l'équilibre :
 .. math::
    :name: eq:meca_stat_statiquefaible
 
-   \int_{\partial\Omega_t} t v dS + \int_{\partial\Omega_d} \sigma n v dS  
-    - \int_{\Omega} \sigma \nabla v dV + \int_{\Omega} f v dV = 0
+   \int_{\partial\Omega_t} v^T.t dS + \int_{\partial\Omega_d} v^T.(\sigma . n) dS -
+   \int_{\Omega} \nabla v.\sigma dV + \int_{\Omega} v^T.f dV = 0
 
-où l'on a remplacé le produit :math:`\sigma.n` par la densité surfacique
-d'efforts \ :math:`t` sur :math:`\partial\Omega_t` et avec
-:math:`\nabla v`, le gradient de :math:`v`.
+où l'on a remplacé le vecteur contrainte :math:`\sigma.n` par la densité surfacique
+d'efforts \ :math:`t` sur :math:`\partial\Omega_t` et avec :math:`\nabla v`, le gradient de :math:`v`.
 
 Discrétisation par éléments finis
 ---------------------------------
 
-On réalise un maillage :math:`\Omega^h` du domaine :math:`\Omega`. Sur
-ce maillage, le champ de déplacement :math:`v` est discrétisé sur la
-base des fonctions d'interpolation :math:`\mathcal{N}_i` associées aux éléments
-du maillage :
+On réalise un maillage :math:`\Omega^h` du domaine :math:`\Omega`. Sur ce maillage, le champ
+de déplacement :math:`v` est discrétisé sur la base des fonctions d'interpolation :math:`\mathbfcal{N}` :
 
 .. math::
    
-   v^h(x) = \sum_i v_i \mathcal{N}_i(x)
+   v^h(x) = \mathbfcal{N}(x).v = \sum_i \mathcal{N}_i(x) v_i
 
-:math:`v_i` ayant la valeur du déplacement :math:`v` au point :math:`i`
-du maillage.
+:math:`v_i` ayant la valeur du déplacement :math:`v` au point :math:`i` du maillage.
 
 Formulation élément finis de l'équilibre
 ----------------------------------------
 
-En injectant cette discrétisation dans la formulation faible de
-l'équilibre :eq:`eq:meca_stat_statiquefaible`, nous obtenons :
+En injectant cette discrétisation dans la formulation faible de l'équilibre :eq:`eq:meca_stat_statiquefaible`, nous obtenons
+en tout noeud :math:`i` :
 
 .. math::
    :name: eq:meca_stat_statiqueEF1
 
-   \int_{\partial\Omega^h_t} t v_i \mathcal{N}_i dS + \int_{\partial \Omega^h_d} \sigma.n v_i \mathcal{N}_i dS  
-     - \int_{\Omega^h} \sigma v_i \nabla \mathcal{N}_i dV + \int_{\Omega^h} f v_i \mathcal{N}_i dV = 0
+   \int_{\partial\Omega^h_t} \mathcal{N}_i v_i \,t dS + \int_{\partial \Omega^h_d} \mathcal{N}_i v_i (\sigma.n) dS -
+   \int_{\Omega^h} \nabla \mathcal{N}_i v_i \,\sigma dV + \int_{\Omega^h} \mathcal{N}_i v_i \,f dV = 0
 
-Ceci devant être vérifié pout tout :math:`v`, nous vérifions, à chaque
-nœud :math:`i` du maillage, l'égalité suivante 
+Ceci devant être vérifié pout tout champ :math:`v`, nous vérifions alors l'égalité suivante :
 
 .. math::
+   :name: eq:meca_stat_statiqueEF2
 
-   \underbrace{\int_{\partial\Omega^h_t} t \mathcal{N} dS}_{F^S}
-     + \underbrace{\int_{\partial \Omega^h_d} \sigma.n \mathcal{N} dS}_{F^R}
-     + \underbrace{\int_{\Omega^h} f \mathcal{N} dV}_{F^V}
-     - \underbrace{\int_{\Omega^h} \sigma \nabla \mathcal{N} dV}_{\mathcal{B}.\sigma}
-     = 0
+   \underbrace{\int_{\partial\Omega^h_t} \mathbfcal{N}^T.t \,dS}_{F^S} +
+   \underbrace{\int_{\partial \Omega^h_d} \mathbfcal{N}^T.(\sigma.n) dS}_{F^R} -
+   \underbrace{\int_{\Omega^h} \nabla\mathbfcal{N}^T.\sigma dV}_{\mathbfcal{B}.\sigma} +
+   \underbrace{\int_{\Omega^h} \mathbfcal{N}^T.f dV}_{F^V} = 0
 
-où l'on a négligé l'indice :math:`i`.
-Cette dernière équation fait apparaitre les forces nodales
-équivalentes :
+où l'on est passé en notation matricielle. Cette dernière équation fait apparaitre les forces nodales équivalentes :
 
 -  :math:`F^S` : à la densité surfacique d'efforts \ :math:`t` ;
 
@@ -95,7 +88,7 @@ Cette dernière équation fait apparaitre les forces nodales
 
 -  :math:`F^V` : à la densité volumique d'efforts \ :math:`f` ;
 
--  :math:`\mathcal{B}.\sigma` : à la densité volumique d'efforts intérieurs.
+-  :math:`\mathbfcal{B}.\sigma` : à la densité volumique d'efforts intérieurs.
 
 On note que ces forces nodales équivalentes sont des quantités
 intégrées sur le maillage.
@@ -103,9 +96,9 @@ intégrées sur le maillage.
 La formulation *éléments finis* de l'équilibre s'écrit donc :
 
 .. math::
-   :name: eq:meca_stat_statiqueEF2
+   :name: eq:meca_stat_statiqueEF3
 
-   \underbrace{F^S + F^R + F^V}_{F^{\textrm{ext}}} \; \underbrace{- \mathcal{B}.\sigma}_{F^{\textrm{int}}} = 0
+   \underbrace{F^S + F^R + F^V}_{F^{\textrm{ext}}} \; \underbrace{- \mathbfcal{B}.\sigma}_{F^{\textrm{int}}} = 0
 
 :math:`F^{\textrm{ext}}` représentant les efforts extérieurs appliqués au
 domaine matériel :math:`\Omega` et :math:`F^{\textrm{int}}`, les efforts
@@ -116,11 +109,11 @@ intérieurs.
 Résidu
 ------
 
-Les termes de l'équation d'équilibre :eq:`eq:meca_stat_statiqueEF2` forment le résidu :math:`R` :
+Les termes de l'équation d'équilibre :eq:`eq:meca_stat_statiqueEF3` forment le résidu :math:`R` :
 
 .. math::
 
-   R = F^S + F^R + F^V - \mathcal{B}.\sigma
+   R = F^S + F^R + F^V - \mathbfcal{B}.\sigma
 
 Numériquement, l'équilibre n'est satisfait que de façon approchée.
 Ainsi, on peut considérer qu'il est atteint lorsqu'une norme de ce
@@ -153,9 +146,9 @@ opérateurs suivants :
 
 -  :math:`F^R`   : `REAC <http://www-cast3m.cea.fr/index.php?page=notices&notice=REAC>`_ (réaction)
 
--  :math:`F^V`   : `CNEQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=CNEQ>`_ (Charge Nodale EQuivalente)
+-  :math:`F^V`   : `CNEQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=CNEQ>`_ (forces de volume)
 
--  :math:`\mathcal{B}.\sigma` : `BSIG <http://www-cast3m.cea.fr/index.php?page=notices&notice=BSIG>`_
+-  :math:`\mathbfcal{B}.\sigma` : `BSIG <http://www-cast3m.cea.fr/index.php?page=notices&notice=BSIG>`_ (forces intérieurs)
 
 -  :math:`F^{\textrm{tol}}`, :math:`M^{\textrm{tol}}` : voir entrées de la procédure
    `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_

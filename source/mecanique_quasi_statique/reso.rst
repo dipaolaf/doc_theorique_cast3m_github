@@ -55,14 +55,14 @@ Formulation incrémentale des conditions sur les déplacements
 
 La formulation de conditions sur les déplacements :
 
-.. math:: \mathcal{A}.U_1^{i+1} = d_1
+.. math:: \mathbfcal{A}.U_1^{i+1} = d_1
 
 s'écrit aussi de façon incrémentale :
 
 .. math::
    :name: eq:meca_stat_residud
 
-   \mathcal{A}. \delta \Delta U_1^{i+1} = d_1 - \mathcal{A}.U_1^i
+   \mathbfcal{A}. \delta \Delta U_1^{i+1} = d_1 - \mathbfcal{A}.U_1^i
 
 le membre de droite représentant un résidu sur le déplacement imposé.
 
@@ -73,7 +73,7 @@ Après :math:`i` itérations, on cherche un champ
 solution (\ :math:`U_1^{i+1},\lambda_1^{i+1},\sigma_1^{i+1}`) qui
 satisfait l':ref:`équation d'équilibre <eq:meca_stat_statiqueLagrange1>` :
 
-.. math:: \mathcal{K}^{e}.U_1^{i+1} + \mathcal{A}^T.\lambda_1^{i+1} = F^S_1 + F^V_1 - \mathcal{B}.\sigma_1^{\textrm{nl},i}
+.. math:: \mathbfcal{K}^{e}.U_1^{i+1} + \mathbfcal{A}^T.\lambda_1^{i+1} = F^S_1 + F^V_1 - \mathbfcal{B}.\sigma_1^{\textrm{nl},i}
 
 :math:`\sigma_1^{\textrm{nl},i}` étant *la partie non-linéaire* des contraintes :math:`\sigma_1^{i}`
 obtenues à l'itération précédente. Injectons l'expression incrémentale :eq:`eq:meca_stat_uddU` de
@@ -82,21 +82,21 @@ obtenues à l'itération précédente. Injectons l'expression incrémentale :eq:
 .. math::
 
    \begin{align*}
-   \mathcal{K}^{e}.(U_1^i + \delta \Delta U_1^{i+1}) & = F^S_1 + F^V_1 - \mathcal{A}^T.\lambda_1^{i+1} - \mathcal{B}.\sigma_1^{\textrm{nl},i} \\
-   \mathcal{K}^{e}.\delta \Delta U_1^{i+1}           & = F^S_1 + F^V_1 - \underbrace{\mathcal{A}^T.\lambda_1^{i+1}}_{- F_1^R}
-     - \underbrace{(\mathcal{K}^{e}.U_1^i + \mathcal{B}.\sigma_1^{\textrm{nl},i})}_{\mathcal{B}.\sigma_1^i}
+   \mathbfcal{K}^{e}.(U_1^i + \delta \Delta U_1^{i+1}) & = F^S_1 + F^V_1 - \mathbfcal{A}^T.\lambda_1^{i+1} - \mathbfcal{B}.\sigma_1^{\textrm{nl},i} \\
+   \mathbfcal{K}^{e}.\delta \Delta U_1^{i+1}           & = F^S_1 + F^V_1 - \underbrace{\mathbfcal{A}^T.\lambda_1^{i+1}}_{- F_1^R}
+     - \underbrace{(\mathbfcal{K}^{e}.U_1^i + \mathbfcal{B}.\sigma_1^{\textrm{nl},i})}_{\mathbfcal{B}.\sigma_1^i}
    \end{align*}
 
-Le terme :math:`\mathcal{B}.\sigma_1^i` est identifié d'après :ref:`l'équation précédente <eq:meca_stat_bsigma>`. Au membre de droite, on
+Le terme :math:`\mathbfcal{B}.\sigma_1^i` est identifié d'après :ref:`l'équation précédente <eq:meca_stat_bsigma>`. Au membre de droite, on
 reconnait l'expression du résidu, d'où, finalement :
 
 .. math::
    :name: eq:meca_stat_minires1
 
-   \mathcal{K}^{e}.\delta \Delta U_1^{i+1} = R^i_1
+   \mathbfcal{K}^{e}.\delta \Delta U_1^{i+1} = R^i_1
 
 Dans ces développements, nous n'avons pas précisé la dépendance des
-opérateurs :math:`\mathcal{K}^{e}`, :math:`\mathcal{B}` ou :math:`\mathcal{A}` à la solution, ni
+opérateurs :math:`\mathbfcal{K}^{e}`, :math:`\mathbfcal{B}` ou :math:`\mathbfcal{A}` à la solution, ni
 détaillé ou commenté celle du chargement :math:`F^S_1`, :math:`F^V_1`
 ou :math:`F^R_1`.
 
@@ -107,8 +107,8 @@ On peut assembler les équations :eq:`eq:meca_stat_residud` et :eq:`eq:meca_stat
 
    \left(
      \begin{array}{cc}
-     \mathcal{K}^{e} & \mathcal{A}^T \\
-     \mathcal{A}      & 0
+     \mathbfcal{K}^{e} & \mathbfcal{A}^T \\
+     \mathbfcal{A}      & 0
      \end{array}
    \right)
    \left(
@@ -120,8 +120,8 @@ On peut assembler les équations :eq:`eq:meca_stat_residud` et :eq:`eq:meca_stat
    =
    \left(
      \begin{array}{c}
-     F_1^S + F_1^V - \mathcal{B}.\sigma_1^i \\
-     d_1 - \mathcal{A}.U_1^i
+     F_1^S + F_1^V - \mathbfcal{B}.\sigma_1^i \\
+     d_1 - \mathbfcal{A}.U_1^i
      \end{array}
    \right)
 
@@ -132,7 +132,7 @@ incréments permettrait de préserver l'expression du résidu au second
 membre mais ce sont les forces de réaction qui devraient alors faire
 l'objet d'un post-traitement :
 
-.. math:: F_1^{R,i+1}=F_1^{R,i}-\mathcal{A}^T.\delta\lambda^{i+1}
+.. math:: F_1^{R,i+1}=F_1^{R,i}-\mathbfcal{A}^T.\delta\lambda^{i+1}
 
 Convergence
 -----------
@@ -165,7 +165,7 @@ Algorithme de minimisation du résidu
 
 **Initialisation de la solution**
 
-:math:`\begin{array}{lcl} (U_1,\lambda_1) & = & (U_0,\lambda_0) \\ (\sigma_1, \varepsilon_1^{\textrm{in}},\upsilon_1) & = & (\sigma_0, \varepsilon_0^{\textrm{in}},\upsilon_0) \\ F_1^R & = & -\mathcal{A}^T.\lambda_1 \\ F^{\textrm{ref}} & = & |F_1^S + F_1^V + F_1^R| \\ \end{array}`
+:math:`\begin{array}{lcl} (U_1,\lambda_1) & = & (U_0,\lambda_0) \\ (\sigma_1, \varepsilon_1^{\textrm{in}},\upsilon_1) & = & (\sigma_0, \varepsilon_0^{\textrm{in}},\upsilon_0) \\ F_1^R & = & -\mathbfcal{A}^T.\lambda_1 \\ F^{\textrm{ref}} & = & |F_1^S + F_1^V + F_1^R| \\ \end{array}`
 
 **Tant que** \ :math:`|R_1| \geq \zeta F^{\textrm{ref}}` :
 
@@ -179,8 +179,8 @@ Algorithme de minimisation du résidu
      U_1                                                & = & U_1 + \delta\Delta U_1 \\
      \varepsilon_1                                      & = & \mathcal{D}(U_1) \\
      (\sigma_1,\varepsilon_1^{\textrm{in}}, \upsilon_1) & = & \textbf{integrer } \mathcal{C}\left(\varepsilon_1 , \varepsilon_1^{\textrm{in}}, \upsilon_1, p_1 \right) \\
-     F_1^R                                              & = & -\mathcal{A}^T.\lambda_1 \\
-     R_1                                                & = & F_1^S + F_1^V + F_1^R - \mathcal{B}.\sigma_1\\
+     F_1^R                                              & = & -\mathbfcal{A}^T.\lambda_1 \\
+     R_1                                                & = & F_1^S + F_1^V + F_1^R - \mathbfcal{B}.\sigma_1\\
    \end{array}
 
 .. raw:: html
@@ -195,7 +195,7 @@ solution \ :math:`(U_1,\lambda_1,\sigma_1)` obtenue satisfait
 l'équilibre des efforts sur le maillage :math:`\Omega^h` à
 :math:`\zeta` près, pour un chargement :math:`F_1^S`, :math:`F_1^V` et
 :math:`d_1`, des paramètres externes :math:`p_1`, une
-raideur \ :math:`\mathcal{K}^{e}` et des opérateurs \ :math:`\mathcal{A}` et :math:`\mathcal{B}`
+raideur \ :math:`\mathbfcal{K}^{e}` et des opérateurs \ :math:`\mathbfcal{A}` et :math:`\mathbfcal{B}`
 fixés.
 
 L'opération d'intégration du comportement assure que le résultat
@@ -223,7 +223,7 @@ Enfin, lorsqu'on adopte un point vue Lagrangien, on identifie les
 points du maillage à ceux du milieu matériel que l'on modélise. Ainsi,
 la géométrie du maillage évolue au cours du déplacement, de même que
 les grandeurs intégrées sur ce dernier, notamment :math:`F_1^S`,
-:math:`F_1^V`, :math:`\mathcal{K}^{e}`, :math:`\mathcal{A}` et :math:`\mathcal{B}`.
+:math:`F_1^V`, :math:`\mathbfcal{K}^{e}`, :math:`\mathbfcal{A}` et :math:`\mathbfcal{B}`.
 
 L'équilibre statique devant être vérifié dans la configuration du
 déplacement solution, il conviendrait donc de modifier cet algorithme
