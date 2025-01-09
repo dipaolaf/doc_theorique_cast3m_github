@@ -3,11 +3,10 @@
 Équations de la thermique
 =========================
 
-Équation de la chaleur
-----------------------
+Équation locale de la chaleur
+-----------------------------
 
-Nous rappelons ici brievement les équations locales de la thermique. **L'équation de la chaleur** locale,
-dans le cas générique sur un domaine :math:`\Omega`, s'écrit :
+**L'équation de la chaleur**, en tout point :math:`x` d'un domaine matériel :math:`\Omega`, s'écrit :
 
 .. math::
    :name: eq:ther_chaleur_1
@@ -16,12 +15,13 @@ dans le cas générique sur un domaine :math:`\Omega`, s'écrit :
 
 avec :
 
-- :math:`H` l'enthalpie volumique (en J.m\ :sup:`-3`)
-- :math:`\vec{\phi}` la densité de flux thermique (en W.m\ :sup:`-2`)
-- :math:`q` la puissance volumique, terme source (en W.m\ :sup:`-3`)
+- :math:`H(T)` l'enthalpie volumique (en J.m\ :sup:`-3`)
+- :math:`\vec{\phi}(T,t)` la densité de flux thermique (en W.m\ :sup:`-2`)
+- :math:`q(T,t)` la puissance volumique, terme source (en W.m\ :sup:`-3`)
 - :math:`t` le temps (en s)
+- :math:`T(x,t)` la température (en K), principale inconnue du problème
 
-**L'enthalpie volumique** :math:`H` peut s'écrire :
+**L'enthalpie volumique** :math:`H` ne dépend que de la température, on peut donc écrire :
 
 .. math::
    :name: eq:ther_enthalpie_1
@@ -36,14 +36,10 @@ avec :
 **Le flux thermique** :math:`\vec{\phi}` est relié au gradient de température par la *loi de Fourier* :
 
 .. math::
-   :name: eq:ther_fourier_1
 
    \vec{\phi}=-\lambda \vec{\nabla} T
 
-avec :
-
-- :math:`T` la température (en K)
-- :math:`\lambda` la conductivité thermique (en W.m\ :sup:`-1`.K\ :sup:`-1`)
+où :math:`\lambda` est la conductivité thermique (en W.m\ :sup:`-1`.K\ :sup:`-1`)
 
 Dans le cas où il n'y a pas de changement de phase et où les caractéristiques ne dépendent pas de la température,
 l'équation de la chaleur devient :
@@ -106,69 +102,78 @@ L'intégrale sur le bord :math:`\Gamma` peut se réduire aux bords portant les c
 Le terme du rayonnement peut être ramené à un terme de convection en faisant l'approximation suivante :
 
 .. math::
+   :name: eq:ther_approx_rayo
 
    T_{\infty}^4-T^4 = (T_{\infty}-T)(\tilde{T}^3 + \tilde{T}^2 T_{\infty} + \tilde{T} T_{\infty}^2 + T_{\infty}^3)
+
+Cette approximation, permettant de linéariser le flux en fonction de :math:`T`, n'est valable qu'au voisinage de la
+température :math:`\tilde{T}`.
 
 Discrétisation par éléments finis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-La température est discrétisée sur la base des fonctions d'interpolation :math:`\mathcal{N}` du maillage :
+En discrétisant l'espace :math:`\Omega` par un maillage, les températures :math:`T` et :math:`\tau` sont discrétisées sur la
+base des fonctions d'interpolation :math:`\mathbfcal{N}` :
 
 .. math::
 
-   T(x,t) = \sum_i T_i(t) \mathcal{N}_i(x)
+   T(x,t) = \mathbfcal{N}(x).T(t) = \sum_i \mathcal{N}_i(x) T_i(t)
 
-:math:`T_i` étant la valeur de la température au point :math:`i` du maillage. En injectant cette discrétisation dans la
-formulation faible :eq:`eq:ther_form_faib_1`, nous obtenons le système matriciel :
+:math:`T` désignant maintenant le **vecteur des températures aux noeuds** et :math:`T_i` la valeur de la température au noeud :math:`i` du maillage.
+En injectant cette discrétisation dans la formulation faible :eq:`eq:ther_form_faib_1`, nous obtenons le système matriciel pour tout instant :math:`t` :
 
 .. math::
    :name: eq:ther_ef_1
 
-   \mathcal{C}(T).\dot{T} + \mathcal{K}(T).T = Q
+   \mathbfcal{C}(T).\dot{T} + \mathbfcal{K}(T).T = Q
 
-:math:`\mathcal{C}` est la **matrice de capacité** :
+:math:`\mathbfcal{C}` est la **matrice de capacité** :
 
 .. math::
    :name: eq:ther_capa
 
-   \mathcal{C}_{ij}(T) = \int_{\Omega} \left(\frac{\partial H}{\partial T}\frac{\partial T}{\partial t}\right) \mathcal{N}_i\mathcal{N}_j d\Omega
+   \mathbfcal{C}(T) = \int_{\Omega} \mathbfcal{N}^T.\left(\frac{\partial H}{\partial T}\frac{\partial T}{\partial t}\right).\mathbfcal{N} d\Omega
 
-:math:`\mathcal{K}` est la **matrice de conductivité** :
+:math:`\mathbfcal{K}` est la **matrice de conductivité** :
 
 .. math::
    :name: eq:ther_cond
 
-   \mathcal{K}_{ij}(T) = \int_{\Omega} \nabla\mathcal{N}_i . \left( \lambda(T) \nabla\mathcal{N}_j \right) d\Omega + \int_{\Gamma_c} h(T) \mathcal{N}_i \mathcal{N}_j d\Gamma_c + \int_{\Gamma_r} \varepsilon\sigma \tilde{T}^3 \mathcal{N}_i \mathcal{N}_j d\Gamma_r
+   \mathbfcal{K}(T) = \int_{\Omega} \nabla\mathbfcal{N}^T.\lambda(T).\nabla\mathbfcal{N} d\Omega + \int_{\Gamma_c} \mathbfcal{N}^T h(T) \mathbfcal{N} d\Gamma_c + \int_{\Gamma_r} \mathbfcal{N}^T \varepsilon\sigma \tilde{T}^3 \mathbfcal{N} d\Gamma_r
 
 :math:`Q` est le **vecteur des puissances thermiques** :
 
 .. math::
    :name: eq:ther_second_membre
 
-   Q_i = \int_{\Omega} q \mathcal{N}_i d\Omega + \int_{\Gamma_{\phi}} \phi_{\textrm{imp}} \mathcal{N}_i d\Gamma + \int_{\Gamma_c} hT_f \mathcal{N}_i d\Gamma_c + \int_{\Gamma_r} \varepsilon\sigma T_{\infty}^4 \mathcal{N}_i d\Gamma_r
+   Q = \int_{\Omega} \mathbfcal{N}^T q d\Omega + \int_{\Gamma_{\phi}} \mathbfcal{N}^T \phi_{\textrm{imp}} \mathbfcal{N} d\Gamma + \int_{\Gamma_c} \mathbfcal{N}^T hT_f d\Gamma_c + \int_{\Gamma_r} \mathbfcal{N}^T \varepsilon\sigma T_{\infty}^4 d\Gamma_r
 
 Prise en compte des blocages/relations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 La prise en compte des blocages ou des relations en température est faite de manière similaire à la
-:ref:`mécanique  <sec:meca_stat_cl_depi>` avec des multiplicateurs de Lagrange. Les conditions de températures
-imposées :eq:`eq:ther_cl_timp_1` s'écrivent à l'aide d'une matrice de blocage :math:`\mathcal{A}` :
+:ref:`mécanique  <sec:meca_stat_cl_depi>`. Les conditions de températures imposées :eq:`eq:ther_cl_timp_1`
+s'écrivent à l'aide d'une matrice de blocage :math:`\mathbfcal{A}` :
 
 .. math::
    :name: eq:ther_cl_timp_2
 
-   \mathcal{A}.T = T_{\textrm{imp}}
+   \mathbfcal{A}.T = T_{\textrm{imp}}
+
+Cette égalité sera adjointe au système :eq:`eq:ther_ef_1` et résolue à l'aide de multiplicateurs de Lagrange.
 
 Opérateurs de Cast3M associés
 -----------------------------
 
 Les termes des équations :eq:`eq:ther_ef_1` et :eq:`eq:ther_cl_timp_2` sont calculés à l'aide des opérateurs suivants :
 
-- :math:`\mathcal{C}` : `CAPA <http://www-cast3m.cea.fr/index.php?page=notices&notice=CAPA>`_
-- :math:`\mathcal{K}` : `COND <http://www-cast3m.cea.fr/index.php?page=notices&notice=COND>`_
-- :math:`Q` : `FLUX <http://www-cast3m.cea.fr/index.php?page=notices&notice=FLUX>`_ (flux imposé) et
+- :math:`\mathbfcal{C}`      : `CAPA <http://www-cast3m.cea.fr/index.php?page=notices&notice=CAPA>`_
+- :math:`\mathbfcal{K}`     : `COND <http://www-cast3m.cea.fr/index.php?page=notices&notice=COND>`_
+- :math:`Q`     : `SOUR <http://www-cast3m.cea.fr/index.php?page=notices&notice=SOUR>`_ (puissance volumique :math:`q`),
+  `FLUX <http://www-cast3m.cea.fr/index.php?page=notices&notice=FLUX>`_ (flux imposé :math:`\phi_{\textrm{imp}}`),
   `CONV <http://www-cast3m.cea.fr/index.php?page=notices&notice=CONV>`_ (convection)
-- :math:`\mathcal{A}` : `BLOQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=BLOQ>`_ (blocages et relations)
+- :math:`\mathbfcal{A}`     : `BLOQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=BLOQ>`_ (blocages),
+  `RELA <http://www-cast3m.cea.fr/index.php?page=notices&notice=RELA>`_ (relations)
 - :math:`T_{\textrm{imp}}` : `DEPI <http://www-cast3m.cea.fr/index.php?page=notices&notice=DEPI>`_
 - La résolution du problème :eq:`eq:ther_ef_1` nécessite la mise en oeuvre d'un schéma numérique d'intégration temporelle.
   Plusieurs méthodes sont proposées dans la procédure `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_ et
