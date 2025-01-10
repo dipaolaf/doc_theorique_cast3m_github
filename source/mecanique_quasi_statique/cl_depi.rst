@@ -99,13 +99,14 @@ Opérateurs de Cast3M associés
 
 Dans Cast3M, ce type de conditions est réalisé grâce aux opérateurs suivants :
 
--  :math:`\mathbfcal{A}`          : `BLOQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=BLOQ>`_ (bloquer)
-   et `RELAtion <http://www-cast3m.cea.fr/index.php?page=notices&notice=RELA>`_ (relation) ;
+-  :math:`\mathbfcal{A}`          : `BLOQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=BLOQ>`_ (pour les blocages)
+   et `RELAtion <http://www-cast3m.cea.fr/index.php?page=notices&notice=RELA>`_ (pour les relations) ;
 
--  :math:`d`           : `DEPI <http://www-cast3m.cea.fr/index.php?page=notices&notice=DEPI>`_ (DEPlacement Imposé) ;
+-  :math:`d`           : `DEPI <http://www-cast3m.cea.fr/index.php?page=notices&notice=DEPI>`_ (valeurs des blocages ou relations) ;
 
--  :math:`\hat{\mathbfcal{K}}` et :math:`\hat{F}` : `ET <http://www-cast3m.cea.fr/index.php?page=notices&notice=ET>`_,
-   pour assembler :math:`\mathbfcal{K}^{e}` et :math:`\mathbfcal{A}` ainsi que les second membres (:math:`F^S+F^V-\mathbfcal{B}.\sigma^{\textrm{nl}}`) et :math:`d` ;
+-  :math:`\hat{\mathbfcal{K}}` et :math:`\hat{F}` : `ET <http://www-cast3m.cea.fr/index.php?page=notices&notice=ET>`_
+   pour assembler :math:`\mathbfcal{K}^{e}` et :math:`\mathbfcal{A}` ainsi que les second membres
+   (:math:`F^S+F^V-\mathbfcal{B}.\sigma^{\textrm{nl}}`) et :math:`d` ;
 
 -  :math:`\hat{U}`          : `RESO <http://www-cast3m.cea.fr/index.php?page=notices&notice=RESO>`_ (résoudre)
-   avec, comme arguments, :math:`\hat{\mathbfcal{K}}` et :math:`\hat{F}`.
+   avec comme arguments :math:`\hat{\mathbfcal{K}}` et :math:`\hat{F}`.
