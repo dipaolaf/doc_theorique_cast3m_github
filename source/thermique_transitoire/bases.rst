@@ -139,7 +139,9 @@ En injectant cette discrétisation dans la formulation faible :eq:`eq:ther_form_
 .. math::
    :name: eq:ther_cond
 
-   \mathbfcal{K}(T) = \int_{\Omega} \nabla\mathbfcal{N}^T.\lambda(T).\nabla\mathbfcal{N} d\Omega + \int_{\Gamma_c} \mathbfcal{N}^T h(T) \mathbfcal{N} d\Gamma_c + \int_{\Gamma_r} \mathbfcal{N}^T \varepsilon\sigma \tilde{T}^3 \mathbfcal{N} d\Gamma_r
+   \mathbfcal{K}(T) = \int_{\Omega} \nabla\mathbfcal{N}^T.\lambda(T).\nabla\mathbfcal{N} d\Omega +
+                      \int_{\Gamma_c} \mathbfcal{N}^T h(T) \mathbfcal{N} d\Gamma_c +
+                      \int_{\Gamma_r} \mathbfcal{N}^T \varepsilon\sigma \tilde{T}^3 \mathbfcal{N} d\Gamma_r
 
 :math:`Q` est le **vecteur des puissances thermiques** :
 
@@ -167,16 +169,17 @@ Opérateurs de Cast3M associés
 
 Les termes des équations :eq:`eq:ther_ef_1` et :eq:`eq:ther_cl_timp_2` sont calculés à l'aide des opérateurs suivants :
 
-- :math:`\mathbfcal{C}`      : `CAPA <http://www-cast3m.cea.fr/index.php?page=notices&notice=CAPA>`_
-- :math:`\mathbfcal{K}`     : `COND <http://www-cast3m.cea.fr/index.php?page=notices&notice=COND>`_
+- :math:`\mathbfcal{C}`      : `CAPA <http://www-cast3m.cea.fr/index.php?page=notices&notice=CAPA>`_ pour la matrice de capacité
+- :math:`\mathbfcal{K}`     : `COND <http://www-cast3m.cea.fr/index.php?page=notices&notice=COND>`_ pour les 2 premiers termes de conductivité
+  et de convection
 - :math:`Q`     : `SOUR <http://www-cast3m.cea.fr/index.php?page=notices&notice=SOUR>`_ (puissance volumique :math:`q`),
   `FLUX <http://www-cast3m.cea.fr/index.php?page=notices&notice=FLUX>`_ (flux imposé :math:`\phi_{\textrm{imp}}`),
   `CONV <http://www-cast3m.cea.fr/index.php?page=notices&notice=CONV>`_ (convection)
 - :math:`\mathbfcal{A}`     : `BLOQ <http://www-cast3m.cea.fr/index.php?page=notices&notice=BLOQ>`_ (blocages),
   `RELA <http://www-cast3m.cea.fr/index.php?page=notices&notice=RELA>`_ (relations)
-- :math:`T_{\textrm{imp}}` : `DEPI <http://www-cast3m.cea.fr/index.php?page=notices&notice=DEPI>`_
+- :math:`T_{\textrm{imp}}` : `DEPI <http://www-cast3m.cea.fr/index.php?page=notices&notice=DEPI>`_ (valeur des blocages ou relations)
 - La résolution du problème :eq:`eq:ther_ef_1` nécessite la mise en oeuvre d'un schéma numérique d'intégration temporelle.
   Plusieurs méthodes sont proposées dans la procédure `PASAPAS <http://www-cast3m.cea.fr/index.php?page=notices&notice=PASAPAS>`_ et
-  décrites ci-après.
-- Les termes de rayonnement présents au premier membre :eq:`eq:ther_cond` et second membre :eq:`eq:ther_second_membre` de l'équation
-  sont calculés par la procédure `PAS_RAYO <http://www-cast3m.cea.fr/index.php?page=notices&notice=PAS_RAYO>`_
+  décrites :ref:`ci-après <sec:ther_trans_schemas>`.
+- Les termes de rayonnement présents au premier membre :math:`\mathbfcal{K}` :eq:`eq:ther_cond` et second membre :math:`Q`
+  :eq:`eq:ther_second_membre` sont calculés par la procédure `PAS_RAYO <http://www-cast3m.cea.fr/index.php?page=notices&notice=PAS_RAYO>`_
