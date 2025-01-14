@@ -139,10 +139,8 @@ courantes :math:`\textbf{x}` vers une nouvelle valeur :math:`\textbf{x}^{\textrm
 
 avec :
 
-- :math:`x_e^- = \max (x_{\textrm{min}},x_e-m)` une borne inférieure pour respecter
-  l'inégalité :math:`x_{\textrm{min}} \le x_e^{\textrm{new}}`
-- :math:`x_e^+ = \min (1,x_e+m)` la borne supérieure sur :math:`x_e` pour respecter
-  l'inégalité :math:`x_e^{\textrm{new}} \le 1`
+- :math:`x_e^- = \max (x_{\textrm{min}},x_e-m)` une borne inférieure pour respecter l'inégalité :math:`x_{\textrm{min}} \le x_e^{\textrm{new}}`
+- :math:`x_e^+ = \min (1,x_e+m)` une borne supérieure pour respecter l'inégalité :math:`x_e^{\textrm{new}} \le 1`
 - :math:`\eta` est un coefficient d'amortissement (généralement :math:`\eta=0,5`)
 - :math:`m` est une limite d'incrément de densité sur l'itération pour stabiliser la
   convergence
@@ -237,8 +235,8 @@ et n'est définit que pour les :math:`N_e` éléments :math:`f` tels que :math:`
 
 - :math:`\textrm{dist}(e,f)` la distance entre les centres des éléments :math:`e` et :math:`f`
 - :math:`V_f` le volume de l'élément `f` (ou bien une autre quantitié pour pondérer)
-- :math:`r_{\textrm{min}}` le rayon du filtre, au dela duquel l'opérateur de convolution :math:`\hat{H}_f`
-  est nul
+- :math:`r_{\textrm{min}}` le rayon du filtre, au dela duquel l'opérateur de convolution :math:`\hat{H}_f` est nul
+- :math:`q` un coefficient
 
 Dans Cast3M, ce filtrage est réalisé grâce à l'opérateur `MFIL <http://www-cast3m.cea.fr/index.php?page=notices&notice=MFIL>`_.
 

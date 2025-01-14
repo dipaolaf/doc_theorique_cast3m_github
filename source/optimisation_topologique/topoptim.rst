@@ -181,45 +181,85 @@ la table, le lecteur intéressé peut consulter le code de la procédure
    :align: center
 
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | Variable / Paramètre                                | Indice dans la table             | Valeur par défaut |
+   | Variable / Paramètre + Rôle                         | Indice dans la table             | Valeur par défaut |
    +=====================================================+==================================+===================+
-   | :math:`x_e`                                         | **WTABLE . TOPOLOGIE**           |                   |
+   | :math:`x_e`                                         |   WTABLE . TOPOLOGIE             |                   |
+   +                                                     +                                  |                   |
+   | Variable de conception                              |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\tilde{x}_e^{\textrm{méca}}`                 | **WTABLE . MECANIQUE . DENSITE** |                   |
+   | :math:`\tilde{x}_e^{\textrm{méca}}`                 |   WTABLE . MECANIQUE . DENSITE   |                   |
+   +                                                     +                                  |                   |
+   | Densité (pour la mécanique)                         |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\tilde{x}_e^{\textrm{ther}}`                 | **WTABLE . THERMIQUE . DENSITE** |                   |
+   | :math:`\tilde{x}_e^{\textrm{ther}}`                 |   WTABLE . THERMIQUE . DENSITE   |                   |
+   +                                                     +                                  |                   |
+   | Densité (pour la thermique)                         |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`f`                                           | **FRACTION_VOLUME**              | 0,4               |
+   | :math:`f`                                           |   FRACTION_VOLUME                | 0,4               |
+   +                                                     +                                  |                   |
+   | Fraction volumique cible                            |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`p`                                           | **WTABLE . FACTEUR_P**           | 3                 |
+   | :math:`p`                                           |   WTABLE . FACTEUR_P             | 3                 |
+   +                                                     +                                  |                   |
+   | Coefficient de pénalisation                         |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\eta`                                        | **WTABLE . FACTEUR_D**           | 0,5               |
+   | :math:`\eta`                                        |   WTABLE . FACTEUR_D             | 0,5               |
+   +                                                     +                                  |                   |
+   | Coefficient d'amortissement                         |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`x_\textrm{min}`                              | **TOPOLOGIE_MIN**                | 0                 |
+   | :math:`x_\textrm{min}`                              |   TOPOLOGIE_MIN                  | 0                 |
+   +                                                     +                                  |                   |
+   | Densité minimale                                    |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`m`                                           | **TOPOLOGIE_MAX_INC**            | 0,2               |
+   | :math:`m`                                           |   TOPOLOGIE_MAX_INC              | 0,2               |
+   +                                                     +                                  |                   |
+   | Limite d'incrément de densité                       |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\frac{E_{\textrm{min}}}{E_0}`                | **RAPPORT_RAIDEURS_MECANIQUES**  | 10\ :sup:`-8`     |
+   | :math:`\frac{E_{\textrm{min}}}{E_0}`                |   RAPPORT_RAIDEURS_MECANIQUES    | 10\ :sup:`-8`     |
+   +                                                     +                                  |                   |
+   | Ratio de raideur mécanique                          |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\frac{\lambda_{\textrm{min}}}{\lambda_0}`    | **RAPPORT_RAIDEURS_THERMIQUES**  | 10\ :sup:`-3`     |
+   | :math:`\frac{\lambda_{\textrm{min}}}{\lambda_0}`    |   RAPPORT_RAIDEURS_THERMIQUES    | 10\ :sup:`-3`     |
+   +                                                     +                                  |                   |
+   | Ratio de raideur thermique                          |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\omega^{\textrm{méca}}`                      | **POIDS_ENERGIE_DEFO**           | 1                 |
+   | :math:`\omega^{\textrm{méca}}`                      |   POIDS_ENERGIE_DEFO             | 1                 |
+   +                                                     +                                  |                   |
+   | Poids de mécanique                                  |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\omega^{\textrm{ther}}`                      | **POIDS_TEMPERATURE**            | 1                 |
+   | :math:`\omega^{\textrm{ther}}`                      |   POIDS_TEMPERATURE              | 1                 |
+   +                                                     +                                  |                   |
+   | Poids de la thermique                               |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`N_c`                                         | **WTABLE . NB_CAS**              | 1                 |
+   | :math:`N_c`                                         |   WTABLE . NB_CAS                | 1                 |
+   +                                                     +                                  |                   |
+   | Nombre de cas de chargement                         |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`x_a`                                         | **SEUIL**                        | 10\ :sup:`-9`     |
+   | :math:`x_a`                                         |   SEUIL                          | 10\ :sup:`-9`     |
+   +                                                     +                                  |                   |
+   | Seuil d'activation des éléments                     |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`r_\textrm{min}`                              | **FILTRE_RAYON**                 |                   |
+   | :math:`r_\textrm{min}`                              |   FILTRE_RAYON                   |                   |
+   +                                                     +                                  |                   |
+   | Rayon de filtrage                                   |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`q`                                           | **FILTRE_EXPOSANT**              | 1                 |
+   | :math:`q`                                           |   FILTRE_EXPOSANT                | 1                 |
+   +                                                     +                                  |                   |
+   | Exposant pour le filtrage                           |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\psi`                                        | **WTABLE . OBJECTIF**            |                   |
+   | :math:`\psi`                                        |   WTABLE . OBJECTIF              |                   |
+   +                                                     +                                  |                   |
+   | Fonction objectif                                   |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`\dfrac{\partial\psi}{\partial \tilde{x}_e}`  | **WTABLE . SENSIBILITE**         |                   |
+   | :math:`\dfrac{\partial\psi}{\partial \tilde{x}_e}`  |   WTABLE . SENSIBILITE           |                   |
+   +                                                     +                                  |                   |
+   | Sensibilité de la fonction objectif                 |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`Z_{\textrm{stop}}`                           | **CRITERE**                      | 0,01              |
+   | :math:`Z_{\textrm{stop}}`                           |   CRITERE                        | 0,01              |
+   +                                                     +                                  |                   |
+   | Critère de convergence                              |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
-   | :math:`N_{\textrm{it}}`                             | **MAX_CYCLES**                   | 100               |
+   | :math:`N_{\textrm{it}}`                             |   MAX_CYCLES                     | 100               |
+   +                                                     +                                  |                   |
+   | Nombre max. d'itérations                            |                                  |                   |
    +-----------------------------------------------------+----------------------------------+-------------------+
