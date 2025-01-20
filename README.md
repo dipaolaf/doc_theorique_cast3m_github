@@ -29,4 +29,5 @@ firefox build/index.html &
 
 ## Visualisation de la documentation sur Read the Docs :
 Une version compilée de la branche "main" est consultable sur le site Read the Docs :
+
 https://doc-cast3m.readthedocs.io/fr/latest/
