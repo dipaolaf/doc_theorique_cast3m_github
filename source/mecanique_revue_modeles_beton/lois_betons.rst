@@ -125,6 +125,8 @@ Pour prendre en compte la nature fortement dissymétrique du comportement en tra
 
 avec :math:`A_{t(c)}` et :math:`B_{t(c)}` les quatre paramètres additionnels permettant de définir, avec le seuil de première fissuration en traction :math:`e_0`, les lois d'évolution de l'endommagement  en traction (t) et en compression (c). Le paramètre :math:`A_{t(c)}` permet de controler la contrainte résiduelle en traction (respectivement compression) uniaxiale tandis que le paramètre :math:`B_{t(c)}` contrôle la forme de la loi d'evolution de l'endommagement dans la phase post pic de contrainte. 
 
+.. _sec:beta:
+
 La variable d'endommagement :math:`D` est finalement obtenue par combinaison linéaire des variables :math:`D_{t}` et :math:`D_{c}` 
 comme suit :
 
@@ -138,7 +140,7 @@ avec :math:`\alpha_{t(c)} \in [0,1]` des facteurs de combinaison qui s'expriment
 
    \alpha_t = \sum_{i=1}^{n} \frac{\varepsilon_i^t \langle \varepsilon_i \rangle_+}{e} \qquad \alpha_c = 1 - \alpha_t
 
-avec :math:`\varepsilon_i^t` les déformations associées aux contraintes principales positives. Le paramètre :math:`\beta` a été introduit historiquement plus tatd dans le modèle pour éviter une évolution trop rapide de l'endommagement en cisaillement [PIJAUDIER-1991]_.
+avec :math:`\varepsilon_i^t` les déformations associées aux contraintes principales positives. Le paramètre :math:`\beta` a été introduit historiquement plus tard dans le modèle pour éviter une évolution trop rapide de l'endommagement en cisaillement [PIJAUDIER-1991]_.
 
 Réponses typiques
 +++++++++++++++++

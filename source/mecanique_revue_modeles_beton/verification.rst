@@ -41,7 +41,7 @@ L’objectif est d’évaluer la limite en traction puis le comportement post-pi
 L'analyse des résultats porte sur les courbes :
 
 - d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
-- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
 Solution de référence
@@ -144,7 +144,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -231,7 +231,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -494,7 +494,7 @@ L’objectif est d’évaluer la limite en compression puis le comportement post
 L'analyse des résultats porte sur les courbes :
 
 - d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
-- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
 Solution de référence
@@ -597,7 +597,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -684,7 +684,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -948,7 +948,7 @@ L’objectif est de vérifier la dégradation progressive des propriétés méca
 L'analyse des résultats porte sur les courbes :
 
 - d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
-- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
 Pour chaque configuration géométrique, la solution de référence est identique à celle décrite dans le chapitre :ref:`Traction monotone <sec:mazars_ana_trac>`.
@@ -972,7 +972,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 On observe que :
 
@@ -1012,7 +1012,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 On observe que :
 
@@ -1170,7 +1170,7 @@ L’objectif est de vérifier la dégradation progressive des propriétés méca
 L'analyse des résultats porte sur les courbes :
 
 - d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
-- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
 Pour chaque configuration géométrique, la solution de référence est identique à celle décrite dans le chapitre :ref:`Compression monotone <sec:mazars_ana_comp>`.
@@ -1194,7 +1194,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 On observe que :
 
@@ -1234,7 +1234,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 On observe que :
 
@@ -1391,7 +1391,7 @@ L’objectif est de vérifier, lorsque le chargement passe de la traction à la 
 L'analyse des résultats porte sur les courbes :
 
 - d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
-- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
 Solution de référence
@@ -1455,7 +1455,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -1527,7 +1527,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -1777,7 +1777,7 @@ L’objectif est de vérifier, lorsque le chargement passe pendant le calcul de 
 L'analyse des résultats porte sur les courbes :
 
 - d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
-- de la contrainte soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyenne pour les modèles massifs, en fonction de la déformation moyenne ;
+- de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
 Solution de référence
@@ -1841,7 +1841,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -1914,7 +1914,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    :width: 15cm
    :align: center
    
-   Contrainte aux points de Gauss en fonction de la déformation moyenne.
+   Contrainte en fonction de la déformation aux points de Gauss.
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
@@ -2158,7 +2158,225 @@ Cisaillement
 ~~~~~~~~~~~~
 Le cas-test se dénomme ``07_cisaillement.dgibi``
 
-TODO
+On applique le cas de chargement de cisaillement simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_cisa_mono>`
+et :ref:`massif <sec:modeles_beton_test_mass_cisa_mono>` en déformation imposée de cisaillement (glissement) croissante jusqu’à atteindre l’endommagement proche de 1.
+
+Pour tous les modes de calcul, la déformation imposée vaut :math:`\gamma_{xy_{max}}=1,2.10^{-2}`.
+
+L'objectif est d'évaluer l'impact du paramètre :math:`\beta>1` introduit dans le modèle de Mazars pour éviter une évolution trop rapide de l'endommagement en cisaillement (cf. chapitre :ref:`Formulation du modèle <sec:beta>`, [PIJAUDIER-1991]_). On compare les réponses obtenues avec amélioration (:math:`\beta=1,06`) et sans amélioration (:math:`\beta=1`) de la réponse en cisaillament.
+
+L'analyse des résultats porte sur les courbes :
+
+- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs.
+
+On ne dispose pas de solution de référence pour ce cas-test.
+
+Résultats du cas 3D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_d_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_d_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps - :math:`\beta=1`.
+
+On observe que :
+
+- L'évolution temporelle du dommage calculé avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) tend moins rapidement vers la valeur maximale :math:`D=1` que celle calculée avec :math:`\beta=1` (sans amélioration), ce qui correspond au bénéfice attendu de cette correction (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_s_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte en fonction de la déformation aux points de Gauss - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_s_3dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte en fonction de la déformation aux points de Gauss - :math:`\beta=1`.
+
+On observe que :
+
+- En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
+
+Résultats du cas 2D poutre à fibres
++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_d_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_d_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement aux points de Gauss en fonction du temps - :math:`\beta=1`.
+
+On observe que :
+
+- L'évolution temporelle du dommage calculé avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) tend moins rapidement vers la valeur maximale :math:`D=1` que celle calculée avec :math:`\beta=1` (sans amélioration), ce qui correspond au bénéfice attendu de cette correction (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_s_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte en fonction de la déformation aux points de Gauss - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_s_2dpaf.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte en fonction de la déformation aux points de Gauss - :math:`\beta=1`.
+
+On observe que :
+
+- En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
+
+Résultats du cas 3D volumique
++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_d_3d.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps - :math:`\beta=1`.
+
+On observe que :
+
+- L'évolution temporelle du dommage calculé avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) tend moins rapidement vers la valeur maximale :math:`D=1` que celle calculée avec :math:`\beta=1` (sans amélioration), ce qui correspond au bénéfice attendu de cette correction (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_s_3d.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne - :math:`\beta=1`.
+
+On observe que :
+
+- En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+
+Résultats du cas 2D contraintes planes
+++++++++++++++++++++++++++++++++++++++
+
+Courbe d'évolution de l'endommagement
+"""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_d_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_d_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Endommagement moyen en fonction du temps - :math:`\beta=1`.
+
+On observe que :
+
+- L'évolution temporelle du dommage calculé avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) tend moins rapidement vers la valeur maximale :math:`D=1` que celle calculée avec :math:`\beta=1` (sans amélioration), ce qui correspond au bénéfice attendu de cette correction (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Courbe d'évolution de la contrainte en fonction de la déformation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Résultat avec amélioration de la réponse en cisaillement : :math:`\beta=1,06`.
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_s_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne - :math:`\beta=1,06`.
+
+Résultat sans amélioration de la réponse en cisaillement : :math:`\beta=1`.
+
+.. figure:: figures/mazars_cisa_mono_beta1_s_2dplan.png
+   :width: 15cm
+   :align: center
+   
+   Contrainte moyenne en fonction de la déformation moyenne - :math:`\beta=1`.
+
+On observe que :
+
+- En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
+
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+
+Enfin, on constate que les résultats sont identiques d'un mode de représentation géométrique à l'autre. La cohérence des résultats entre eux confirme qu'ils sont satisfaisants dans chaque mode de représentation.
 
 
 

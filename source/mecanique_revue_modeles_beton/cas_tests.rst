@@ -241,6 +241,42 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/06_traction_compression_traction.dgibi>`
 
 
+.. _sec:modeles_beton_test_pout_cisa_mono:
+
+Cisaillement
+~~~~~~~~~~~~
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_char_3dpaf.png
+   :width: 15cm
+   :align: center
+
+   Cisaillement simple sur un modèle d'éléments finis poutre.
+
+Description
+"""""""""""
+
+Il s'agit d'un test de cisaillement simple. On considère une poutre de longueur :math:`L` et section transversale :math:`S` soumise à un chargement de cisaillement dans le plan de sa section d'extrémité.
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement **UY** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant progressivement jusqu'à une valeur de déplacement maximal correspondant à une déformation de cisaillement :math:`\gamma_{xy_{max}}` (glissement) fixée arbitrairement. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément ainsi que les rotations de l'extrémité pilotée en déplacement.
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Cisaillement : blocages et chargement
+
+   .. literalinclude:: dgibi/07_cisaillement.dgibi
+      :language: gibiane
+      :lines: 236-248
+      :linenos:
+      :lineno-start: 236
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/07_cisaillement.dgibi>`
+
 
 
 
@@ -640,9 +676,53 @@ Les jeux de données Gibiane correspondants à ce cas de chargement sont téléc
 - :download:`Test pour la loi de RICBET <./dgibi/06_traction_compression_traction.dgibi>`
 
 
+.. _sec:modeles_beton_test_mass_cisa_mono:
+
 Cisaillement
 ~~~~~~~~~~~~
-TODO
+
+Description
+"""""""""""
+
+Il s'agit d'un test de cisaillement simple. Les dimensions dépendent de l'hypothèse de calcul retenue :
+
+- en 3D, on considère un cube d'arête :math:`L` ;
+- en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
+
+Blocages et chargement
+""""""""""""""""""""""
+Le chargement consiste à piloter le déplacement d'une des faces en l'augmentant progressivement jusqu'à une valeur de déplacement maximal correspondant à une déformation de cisaillement :math:`\gamma_{xy_{max}}` (glissement) fixée arbitrairement. On bloque les déplacements de l'autre face en laissant libre la contraction par effet de Poisson tout en s'assurant que les deux faces restent des sections droites.
+
+- En 3D, on pilote le déplacement **UY** de la face "droite" (située dans le plan :math:`x=L`) tout en conservant le déplacement **UX** uniforme sur cette face (la section reste droite) et on bloque les déplacements **UY** et **UX** de la face opposée "gauche" (dans le plan :math:`x=0`). La contraction par effet de Poisson est possible dans la direction **Z**. Le mouvement de corps rigide est empêché en bloquant, dans la face "gauche", les déplacements **UZ** de l'arête du bas de direction **Y** en :math:`(x=0, z=0)` ainsi que les déplacements **UX** et **UY** de l'arête de devant de direction **Z** en :math:`(x=0, y=0)`.
+- En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
+
+Les instructions Gibiane correspondantes sont :
+
+.. admonition:: Cisaillement : blocages et chargement pour le cas 3D
+
+   .. literalinclude:: dgibi/07_cisaillement.dgibi
+      :language: gibiane
+      :lines: 95-108
+      :linenos:
+      :lineno-start: 95
+
+Les blocages et le chargement sont représentés sur les figures suivantes.
+
+.. image:: figures/mazars_cisa_mono_beta1.06_char_3d.png
+   :width: 45%
+.. image:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
+   :width: 35%
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
+   :width: 0%
+
+   Cisaillement - Blocages et chargement de déplacement imposé sur le cube (3D) et le carré (2D plan).
+
+Liste des exemples dgibi
+""""""""""""""""""""""""
+Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+
+- :download:`Test pour la loi de Mazars <./dgibi/07_cisaillement.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_biax:

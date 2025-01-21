@@ -1222,8 +1222,8 @@ SI (EXIS lcas 4) ;
   an12 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2  'SMXX' lsig2 ;
   sigc_t = IPOL tpsc_t ltps_c lsig2 ;
   epsc_t = IPOL tpsc_t ltps_c lepu2 ;
-  DESS (ev0 ET an01 ET an02) 'TITR' '[[2D Axi.] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
-  DESS (ev1 ET an11 ET an12) 'TITR' '[[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NO' tdess ;
+  DESS (ev0 ET an01 ET an02) 'TITR' '[2D Axi.] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
+  DESS (ev1 ET an11 ET an12) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NO' tdess ;
   DESS ev2 'TITR' '[[2D Axi.] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
 * evolutions temporelles a tous les points de Gauss
   ng = 4 ;
