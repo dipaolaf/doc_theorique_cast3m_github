@@ -267,9 +267,28 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/07_cisaillement.dgibi
       :language: gibiane
-      :lines: 236-248
+      :lines: 254-266
       :linenos:
-      :lineno-start: 236
+      :lineno-start: 254
+
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. figure:: dgibi/film_defo_HPP_3D_PaF.gif
+   :width: 15cm
+   :align: center
+
+   Cisaillement - Maillage initial et déformé (x91) du modèle poutre à fibre 3D.
+
+Remarque
+""""""""
+A noter que pour décrire finement la déformée au cours du chargement, en particulier le retrait de la section chargée vers la section encastrée (UX<0), il est nécessaire de se placer dans l'hypothèse des grands déplacements (indice de la table de PASAPAS ``'GRANDS_DEPLACEMENT'= VRAI``) qui active par défaut la prise en compte des contraintes dans le calcul de la rigidité ``'K_SIGMA'= VRAI``. Il se trouve que cette prise en compte n'est pas opérationnelle dans les modèles poutre à fibres, ce qui nécessite de renseigner l'indice de la table de PASAPAS ``'K_SIGMA'= FAUX``. 
+
+Néanmoins une étude comparative des résultats du présent cas-test obtenus avec ces hypothèses ainsi que dans l'hypothèse des petites perturbations (HPP, par défaut dans PASAPAS) montre que :
+
+- Le retrait de la section chargée (UX = -1.2E-05 m) est, d'une part, négligeable devant le déplacement qui lui est imposé (UY = 1.20E-02 m) et, d'autre part, comparable au déplacement nul (UX = 0) obtenu en HPP ;
+- L'écart maximal observé sur la contrainte de cisaillement calculée au cours du chargement dans les deux cas est négligeable.
+
+En conséquence, on choisit comme pour les autres cas-tests d'appliquer l'hypothèse des petites perturbations (HPP) pour le cas-test de cisaillement.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -717,6 +736,29 @@ Les blocages et le chargement sont représentés sur les figures suivantes.
    :width: 0%
 
    Cisaillement - Blocages et chargement de déplacement imposé sur le cube (3D) et le carré (2D plan).
+
+La déformée au cours du chargement est représentée sur les figures suivantes.
+
+.. image:: dgibi/film_defo_HPP_3D_V.gif
+   :width: 49%
+.. image:: dgibi/film_defo_HPP_2D_CP.gif
+   :width: 49%
+
+.. figure:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
+   :width: 0%
+
+   Cisaillement - Maillage initial et déformé (x91) des modèles volumiques 3D et 2D plan.
+
+Remarque
+""""""""
+A noter que pour décrire finement la déformée au cours du chargement, en particulier le retrait de la section chargée vers la section encastrée (UX<0), il est nécessaire de se placer dans l'hypothèse des grands déplacements (indice de la table de PASAPAS ``'GRANDS_DEPLACEMENT'= VRAI``) qui active par défaut la prise en compte des contraintes dans le calcul de la rigidité ``'K_SIGMA'= VRAI``. Il se trouve que cette prise en compte n'est pas opérationnelle dans les modèles poutre à fibres, ce qui nécessite de renseigner l'indice de la table de PASAPAS ``'K_SIGMA'= FAUX`` pour se placer dans les même conditions de calcul avec les modèles massifs qu'avec les modèles poutre à fibres. 
+
+Néanmoins une étude comparative des résultats du présent cas-test obtenus avec ces hypothèses ainsi que dans l'hypothèse des petites perturbations (HPP, par défaut dans PASAPAS) montre que :
+
+- Le retrait de la section chargée (UX = -7.2E-05 m) est, d'une part, négligeable devant le déplacement qui lui est imposé (UY = 1.20E-02 m) et, d'autre part, comparable au déplacement nul (UX = 0) obtenu en HPP ;
+- L'écart maximal observé sur la contrainte de cisaillement calculée au cours du chargement dans les deux cas est négligeable.
+
+En conséquence, on choisit comme pour les autres cas-tests d'appliquer l'hypothèse des petites perturbations (HPP) pour le cas-test de cisaillement.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""

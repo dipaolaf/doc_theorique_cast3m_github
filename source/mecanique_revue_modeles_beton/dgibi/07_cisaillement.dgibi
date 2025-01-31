@@ -86,7 +86,7 @@ SI (EXIS lcas 1) ;
 *nh145313
 cadr1 = COUL ((0. 2.1 1.) ET (1. 2.1 1.)) 'BLAN' ;
 rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (l14 COUL 'ORAN') ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (l14 COUL 'ORAN') ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG') ET ((p3 et p3) COUL 'BLEU')) 'TITR' '[3D V] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -125,6 +125,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (l14 COUL 'ORAN') ET (sgauche COUL 'VERT')
   t . 'MOVA'                      = MOT 'D' ;
   t . 'MES_SAUVEGARDES'           = TABL ;
   t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+*  t . 'GRANDS_DEPLACEMENTS'       = VRAI ;
+*  t . 'K_SIGMA'                   = FAUX ;
   PASAPAS t ;
 
 ** Post traitement
@@ -153,6 +155,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (l14 COUL 'ORAN') ET (sgauche COUL 'VERT')
   FIN b1 ;
   ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
   ev1 = EVOL 'ROUG' 'MANU' 'GAXY'  leps 'SMXY' lsig ;
+*opti sauv '07_courb_SMXY-GAXY_3D_V_GDnoKSIG.sauv'; sauv ev1;
+*opti sauv '07_courb_SMXY-GAXY_3D_V_HPP.sauv'; sauv ev1;
   DESS ev0 'TITR' '[3D V] Endommagement vs Temps' ;
 *  DESS ev1 'TITR' '[3D V] Contrainte vs Deformation' ;
   DESS ev1 'TITR' '[3D V] Contrainte vs Deformation' 'YBOR' 0. 4.E6 ;
@@ -199,6 +203,19 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (l14 COUL 'ORAN') ET (sgauche COUL 'VERT')
     tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
 *    TRAC (def0 ET def1) 'TITR' tit1 ;
   FIN b1 ;
+opti echo 0;
+saut 1 lign;
+mess 'Deplacemement du point p3 a l extremite au pas' ' ' (&b1 - 2);
+mess '==============================================';
+mess '- UX' ' ' (EXTR (tu . (&b1 - 2)) 'UX' p3);
+mess '- UY' ' ' (EXTR (tu . (&b1 - 2)) 'UY' p3);
+mess '- UZ' ' ' (EXTR (tu . (&b1 - 2)) 'UZ' p3);
+saut 1 lign;
+mess 'Contrainte au pas' ' ' (&b1 - 2);
+mess '=================';
+mess '- SMXY' ' ' ((INTG mo (tc . (&b1 - 2)) 'SMXY') / mes1);
+saut 1 lign;
+opti echo 1;
   TRAC (def0 ET def1) 'TITR' tit1 ;
 FINSI ;
 
@@ -223,7 +240,7 @@ SI (EXIS lcas 2) ;
   mes1    = MESU mails ;
 *nh145313
 cadr1 = COUL ((0. 1.1 0.) ET (1. 1.1 0.)) 'BLAN' ;
-rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+rep1 = @REPERE (-0.2 -0.2 0.) (PROG 0.2 0.2 0.2) 'TURQ' ;
 TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[3D PaF] Maillages de la Poutre et de sa Section' ;
 
 ** Modele et caracteristiques materiau
@@ -236,7 +253,7 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
 ** Blocages
   blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
   bldroitr = BLOQ 'ROTA' p2 ;
-  bldroitu = BLOQ 'DEPL' p2 ;
+  bldroitu = BLOQ 'UY' p2 ;
   bl       = blgauche ET bldroitr ET bldroitu ;
 
 ** Chargement (deformation homogene)
@@ -252,7 +269,6 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
   mor = MODE re0 'MECANIQUE' 'BARR' ;
   mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
   rir = RIGI mor mar ;
-*  vf  = VECT dim 'FLX' ' ' ' ' 'ROUG' 0.1 ;
   vf  = VECT dim ' ' 'FLX' ' ' 'ROUG' 1.E1 ;
   TRAC ((RIGI mo ma) ET bl ET rir) vf 'NOLE' 'TITR' '[3D PaF] Blocages et chargement' ;
 
@@ -265,6 +281,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
   t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.002 0.2 'PAS' 0.01 1. ;
   t . 'MES_SAUVEGARDES'           = TABL ;
   t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+*  t . 'GRANDS_DEPLACEMENTS'       = VRAI ;
+*  t . 'K_SIGMA'                   = FAUX ;
   PASAPAS t ;
 
 ** Post traitement
@@ -333,6 +351,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
         (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend3) ET (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend4) ;
   ev1 = (EVOL 'ROUG' 'MANU' 'GAXY'  leps1 'SMXY' lsig1) ET (EVOL 'ROUG' 'MANU' 'GAXY'  leps2 'SMXY' lsig2) ET
         (EVOL 'ROUG' 'MANU' 'GAXY'  leps3 'SMXY' lsig3) ET (EVOL 'ROUG' 'MANU' 'GAXY'  leps4 'SMXY' lsig4) ;
+*opti sauv '07_courb_SMXY-GAXY_3D_PaF_GDnoKSIG.sauv'; sauv ev1;
+*opti sauv '07_courb_SMXY-GAXY_3D_PaF_HPP.sauv'; sauv ev1;
   DESS ev0 'LEGE' 'SE' tleg 'TITR' '[3D PaF] Endommagement vs Temps' ;
 *  DESS ev1 'LEGE' 'SE' tleg 'TITR' '[3D PaF] Contrainte vs Deformation' ;
   DESS ev1 'LEGE' 'SE' tleg 'TITR' '[3D PaF] Contrainte vs Deformation' 'YBOR' 0. 4.E6 ;
@@ -345,6 +365,25 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
     tit1 = CHAI '[3D PaF] Deformee au temps' ' ' tps1 ;
 *    TRAC (def0 ET def1) 'TITR' tit1 ;
   FIN b1 ;
+opti echo 0;
+saut 1 lign;
+mess 'Depl/Rota du point p2 a l extremite au pas' ' ' (&b1 - 2);
+mess '==========================================';
+mess '- UX' ' ' (EXTR (tu . (&b1 - 2)) 'UX' p2);
+mess '- UY' ' ' (EXTR (tu . (&b1 - 2)) 'UY' p2);
+mess '- UZ' ' ' (EXTR (tu . (&b1 - 2)) 'UZ' p2);
+mess '- RX' ' ' (EXTR (tu . (&b1 - 2)) 'RX' p2);
+mess '- RY' ' ' (EXTR (tu . (&b1 - 2)) 'RY' p2);
+mess '- RZ' ' ' (EXTR (tu . (&b1 - 2)) 'RZ' p2);
+saut 1 lign;
+mess 'Contrainte au pas' ' ' (&b1 - 2);
+mess '=================';
+mess '- SMXY Pt Gauss 1' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 1) ;
+mess '- SMXY Pt Gauss 2' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 2) ;
+mess '- SMXY Pt Gauss 3' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 3) ;
+mess '- SMXY Pt Gauss 4' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 4) ;
+saut 1 lign;
+opti echo 1;
   TRAC (def0 ET def1) 'TITR' tit1 ;
 FINSI ;
 
@@ -364,11 +403,12 @@ SI (EXIS lcas 3) ;
   sgauche = DROI 1 p1 p2 ;
   mail    = sgauche TRAN 1 (long 0.) ;
   sdroite = mail COTE 3 ;
+  p3      = sdroite POIN 'PROC' (long 0.) ;
   mes1    = MESU mail ;
 *nh145313
 cadr1 = COUL ((0. 2.1) ET (1. 2.1)) 'BLAN' ;
 rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG') ET ((p3 et p3) COUL 'BLEU')) 'TITR' '[2D Plan cont.] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -407,6 +447,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'RO
   t . 'MOVA'                      = MOT 'D' ;
   t . 'MES_SAUVEGARDES'           = TABL ;
   t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+*  t . 'GRANDS_DEPLACEMENTS'       = VRAI ;
+*  t . 'K_SIGMA'                   = FAUX ;
   PASAPAS t ;
 
 ** Post traitement
@@ -435,6 +477,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'RO
   FIN b1 ;
   ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
   ev1 = EVOL 'ROUG' 'MANU' 'GAXY'  leps 'SMXY' lsig ;
+*opti sauv '07_courb_SMXY-GAXY_2D_CP_GDnoKSIG.sauv'; sauv ev1;
+*opti sauv '07_courb_SMXY-GAXY_2D_CP_HPP.sauv'; sauv ev1;
   DESS ev0 'TITR' '[2D Plan cont.] Endommagement vs Temps' ;
 *  DESS ev1 'TITR' '[2D Plan cont.] Contrainte vs Deformation' ;
   DESS ev1 'TITR' '[2D Plan cont.] Contrainte vs Deformation' 'YBOR' 0. 4.E6 ;
@@ -445,10 +489,6 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'RO
   tleg . 2 = MOT 'MARQ LOSA NOLI' ;
   tleg . 3 = MOT 'MARQ ROND NOLI' ;
   tleg . 4 = MOT 'MARQ ETOI NOLI' ;
-  tleg . 5 = MOT 'MARQ TRID NOLI' ;
-  tleg . 6 = MOT 'MARQ TRIU NOLI' ;
-  tleg . 7 = MOT 'MARQ TRIL NOLI' ;
-  tleg . 8 = MOT 'MARQ TRIR NOLI' ;
   tleg . 'TITRE' = TABL ;
   REPE b ng ;
     tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
@@ -481,6 +521,18 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'RO
     tit1 = CHAI '[2D Plan cont.] Deformee au temps' ' ' tps1 ;
 *    TRAC (def0 ET def1) 'TITR' tit1 ;
   FIN b1 ;
+opti echo 0;
+saut 1 lign;
+mess 'Deplacemement du point p3 a l extremite au pas' ' ' (&b1 - 2);
+mess '==============================================';
+mess '- UX' ' ' (EXTR (tu . (&b1 - 2)) 'UX' p3);
+mess '- UY' ' ' (EXTR (tu . (&b1 - 2)) 'UY' p3);
+saut 1 lign;
+mess 'Contrainte au pas' ' ' (&b1 - 2);
+mess '=================';
+mess '- SMXY' ' ' ((INTG mo (tc . (&b1 - 2)) 'SMXY') / mes1);
+saut 1 lign;
+opti echo 1;
   TRAC (def0 ET def1) 'TITR' tit1 ;
 FINSI ;
 
@@ -505,7 +557,7 @@ SI (EXIS lcas 4) ;
   mes1    = MESU mails ;
 *nh145313
 cadr1 = COUL ((0. 1.1) ET (1. 1.1)) 'BLAN' ;
-rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.2 0.2) 'TURQ' ;
 TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[2D PaF] Maillages de la Poutre et de sa Section' ;
 
 ** Modele et caracteristiques materiau
@@ -518,7 +570,7 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
 ** Blocages
   blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
   bldroitr = BLOQ 'ROTA' p2 ;
-  bldroitu = BLOQ 'DEPL' p2 ;
+  bldroitu = BLOQ 'UY' p2 ;
   bl       = blgauche ET bldroitr ET bldroitu ;
 
 ** Chargement (deformation homogene)
@@ -546,6 +598,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
   t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.002 0.2 'PAS' 0.01 1. ;
   t . 'MES_SAUVEGARDES'           = TABL ;
   t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+*  t . 'GRANDS_DEPLACEMENTS'       = VRAI ;
+*  t . 'K_SIGMA'                   = FAUX ;
   PASAPAS t ;
 
 ** Post traitement
@@ -614,6 +668,8 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
         (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend3) ET (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend4) ;
   ev1 = (EVOL 'ROUG' 'MANU' 'GAXY'  leps1 'SMXY' lsig1) ET (EVOL 'ROUG' 'MANU' 'GAXY'  leps2 'SMXY' lsig2) ET
         (EVOL 'ROUG' 'MANU' 'GAXY'  leps3 'SMXY' lsig3) ET (EVOL 'ROUG' 'MANU' 'GAXY'  leps4 'SMXY' lsig4) ;
+*opti sauv '07_courb_SMXY-GAXY_2D_PaF_GDnoKSIG.sauv'; sauv ev1;
+*opti sauv '07_courb_SMXY-GAXY_2D_PaF_HPP.sauv'; sauv ev1;
   DESS ev0 'LEGE' 'SE' tleg 'TITR' '[2D PaF] Endommagement vs Temps' ;
 *  DESS ev1 'LEGE' 'SE' tleg 'TITR' '[2D PaF] Contrainte vs Deformation' ;
   DESS ev1 'LEGE' 'SE' tleg 'TITR' '[2D PaF] Contrainte vs Deformation' 'YBOR' 0. 4.E6 ;
@@ -626,6 +682,22 @@ TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' 
     tit1 = CHAI '[2D PaF] Deformee au temps' ' ' tps1 ;
 *    TRAC (def0 ET def1) 'TITR' tit1 ;
   FIN b1 ;
+opti echo 0;
+saut 1 lign;
+mess 'Depl/Rota du point p2 a l extremite au pas' ' ' (&b1 - 2);
+mess '==========================================';
+mess '- UX' ' ' (EXTR (tu . (&b1 - 2)) 'UX' p2);
+mess '- UY' ' ' (EXTR (tu . (&b1 - 2)) 'UY' p2);
+mess '- RZ' ' ' (EXTR (tu . (&b1 - 2)) 'RZ' p2);
+saut 1 lign;
+mess 'Contrainte au pas' ' ' (&b1 - 2);
+mess '=================';
+mess '- SMXY Pt Gauss 1' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 1) ;
+mess '- SMXY Pt Gauss 2' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 2) ;
+mess '- SMXY Pt Gauss 3' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 3) ;
+mess '- SMXY Pt Gauss 4' ' ' (EXTR (EXTR (tv . (&b0 - 2)) 'VONS' 1 1 1) 'SMXY' 1 1 4) ;
+saut 1 lign;
+opti echo 1;
   TRAC (def0 ET def1) 'TITR' tit1 ;
 FINSI ;
 

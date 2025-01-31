@@ -1,0 +1,123 @@
+* Comparaison des courbes Contrainte vs Deformation selon les hypotheses de calcul
+* ================================================================================
+
+    tdess = TABL;
+    tdess . 'TITRE' = TABL;
+    tdess . 1 = MOT 'MARQ CARR REGU' ;
+    tdess . 2 = MOT 'MARQ LOSA REGU' ;
+    tdess . 3 = MOT 'MARQ ROND REGU' ;
+    tdess . 4 = MOT 'MARQ ETOI REGU' ;
+    tdess . 'TITRE' . 1 = MOT 'PaF_PtGauss1';
+    tdess . 'TITRE' . 2 = MOT 'PaF_PtGauss2';
+    tdess . 'TITRE' . 3 = MOT 'PaF_PtGauss3';
+    tdess . 'TITRE' . 4 = MOT 'PaF_PtGauss4';
+    tdess . 5 = MOT 'MARQ CROI REGU';
+    tdess . 'TITRE' . 5 = MOT 'Volumique';
+
+* Courbes Contrainte vs Deformation
+* - Hyp. Grands Déplacements KSIGMA = FAUX (GDnoKSIG)
+
+*   Restitution
+*   3D_V
+    OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+    opti rest '07_courb_SMXY-GAXY_3D_V_GDnoKSIG.sauv'; rest;
+    ev1_GDnoKSIG_3D_V = ev1 ;
+*   3D_PaF
+    opti rest '07_courb_SMXY-GAXY_3D_PaF_GDnoKSIG.sauv'; rest;
+    ev1_GDnoKSIG_3D_PaF = ev1 COUL 'ROSE' ;
+*   2D_CP
+    OPTI 'DIME' 2 'MODE' 'PLAN' 'CONT' 'ELEM' 'QUA4' ;
+    opti rest '07_courb_SMXY-GAXY_2D_CP_GDnoKSIG.sauv'; rest;
+    ev1_GDnoKSIG_2D_CP = ev1 COUL 'BLEU' ;
+*   2D_PaF
+    OPTI 'DIME' 2 'MODE' 'PLAN' 'ELEM' 'QUA4' ;
+    opti rest '07_courb_SMXY-GAXY_2D_PaF_GDnoKSIG.sauv'; rest;
+    ev1_GDnoKSIG_2D_PaF = ev1 COUL 'VERT' ;
+
+*   Courbes 3D
+    titr_z = MOT 'Courbes Contrainte vs Deformation - 3D - GD - K_SIGMA = FAUX';
+    DESS (ev1_GDnoKSIG_3D_PaF ET ev1_GDnoKSIG_3D_V) 'LEGE' tdess 'TITR' titr_z;
+
+    leps1 = ENLE (EXTR ev1_GDnoKSIG_3D_V 'ABSC') 1;
+    lsig1 = ENLE (EXTR ev1_GDnoKSIG_3D_V 'ORDO') 1;
+    lsig2 = ENLE (EXTR (EXTR ev1_GDnoKSIG_3D_PaF 'COUR' 1) 'ORDO') 1;
+    ler1  = (lsig2 - lsig1) / lsig1;
+    mer1 = MAXI (ABS ler1) ;
+    er1_GDnoKSIG_3D = EVOL 'ORAN' 'MANU' 'GAXY' leps1 'ECAR.REL.SMXY' ler1;
+    titr_z = CHAI 'Ec.rel. PaF-Vol/Vol en Contrainte vs Deformation - 3D - GD - K_SIGMA = FAUX, |max|' ' ' mer1;
+    opti echo 0;
+    saut 1 lign;
+    mess titr_z ;
+    opti echo 1;
+    DESS er1_GDnoKSIG_3D 'TITR' titr_z;
+
+*   Courbes 2D
+    titr_z = MOT 'Courbes Contrainte vs Deformation - 2D - GD - K_SIGMA = FAUX';
+    DESS (ev1_GDnoKSIG_2D_PaF ET ev1_GDnoKSIG_2D_CP) 'LEGE' tdess 'TITR' titr_z;
+
+    leps1 = ENLE (EXTR ev1_GDnoKSIG_2D_CP 'ABSC') 1;
+    lsig1 = ENLE (EXTR ev1_GDnoKSIG_2D_CP 'ORDO') 1;
+    lsig2 = ENLE (EXTR (EXTR ev1_GDnoKSIG_2D_PaF 'COUR' 1) 'ORDO') 1;
+    ler1  = (lsig2 - lsig1) / lsig1;
+    mer1 = MAXI (ABS ler1) ;
+    er1_GDnoKSIG_2D = EVOL 'TURQ' 'MANU' 'GAXY' leps1 'ECAR.REL.SMXY' ler1;
+    titr_z = CHAI 'Ec.rel. PaF-Vol/Volen Contrainte vs Deformation - 2D - GD - K_SIGMA = FAUX, |max|' ' ' mer1;
+    opti echo 0;
+    saut 1 lign;
+    mess titr_z ;
+    opti echo 1;
+    DESS er1_GDnoKSIG_2D 'TITR' titr_z;
+    
+* - Hyp. Petites Perturbations (HPP)
+
+*   Restitution
+*   3D_V
+    OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+    opti rest '07_courb_SMXY-GAXY_3D_V_HPP.sauv'; rest;
+    ev1_HPP_3D_V = ev1 ;
+*   3D_PaF
+    opti rest '07_courb_SMXY-GAXY_3D_PaF_HPP.sauv'; rest;
+    ev1_HPP_3D_PaF = ev1 COUL 'ROSE' ;
+*   2D_CP
+    OPTI 'DIME' 2 'MODE' 'PLAN' 'CONT' 'ELEM' 'QUA4' ;
+    opti rest '07_courb_SMXY-GAXY_2D_CP_HPP.sauv'; rest;
+    ev1_HPP_2D_CP = ev1 COUL 'BLEU' ;
+*   2D_PaF
+    OPTI 'DIME' 2 'MODE' 'PLAN' 'ELEM' 'QUA4' ;
+    opti rest '07_courb_SMXY-GAXY_2D_PaF_HPP.sauv'; rest;
+    ev1_HPP_2D_PaF = ev1 COUL 'VERT' ;
+
+*   Courbes 3D
+    titr_z = MOT 'Courbes Contrainte vs Deformation - 3D - HPP';
+    DESS (ev1_HPP_3D_PaF ET ev1_HPP_3D_V) 'LEGE' tdess 'TITR' titr_z;
+
+    leps1 = ENLE (EXTR ev1_HPP_3D_V 'ABSC') 1;
+    lsig1 = ENLE (EXTR ev1_HPP_3D_V 'ORDO') 1;
+    lsig2 = ENLE (EXTR (EXTR ev1_HPP_3D_PaF 'COUR' 1) 'ORDO') 1;
+    ler1  = (lsig2 - lsig1) / lsig1;
+    mer1 = MAXI (ABS ler1) ;
+    er1_HPP_3D = EVOL 'ORAN' 'MANU' 'GAXY' leps1 'ECAR.REL.SMXY' ler1;
+    titr_z = CHAI 'Ec.rel. PaF-Vol/Vol en Contrainte vs Deformation - 3D - HPP, |max|' ' ' mer1;
+    opti echo 0;
+    saut 1 lign;
+    mess titr_z ;
+    opti echo 1;
+    DESS er1_HPP_3D 'TITR' titr_z;
+
+*   Courbes 2D
+    titr_z = MOT 'Courbes Contrainte vs Deformation - 2D - HPP';
+    DESS (ev1_HPP_2D_PaF ET ev1_HPP_2D_CP) 'LEGE' tdess 'TITR' titr_z;
+
+    leps1 = ENLE (EXTR ev1_HPP_2D_CP 'ABSC') 1;
+    lsig1 = ENLE (EXTR ev1_HPP_2D_CP 'ORDO') 1;
+    lsig2 = ENLE (EXTR (EXTR ev1_HPP_2D_PaF 'COUR' 1) 'ORDO') 1;
+    ler1  = (lsig2 - lsig1) / lsig1;
+    mer1 = MAXI (ABS ler1) ;
+    er1_HPP_2D = EVOL 'TURQ' 'MANU' 'GAXY' leps1 'ECAR.REL.SMXY' ler1;
+    titr_z = CHAI 'Ec.rel. PaF-Vol/Volen Contrainte vs Deformation - 2D - HPP, |max|' ' ' mer1;
+    opti echo 0;
+    saut 1 lign;
+    mess titr_z ;
+    opti echo 1;
+    DESS er1_HPP_2D 'TITR' titr_z;
+
