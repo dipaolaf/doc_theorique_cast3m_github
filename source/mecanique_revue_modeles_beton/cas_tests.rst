@@ -31,7 +31,7 @@ Il s'agit d'un test de traction simple monotone. On considère une poutre de lon
 
 Blocages et chargement
 """"""""""""""""""""""
-Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant progressivement jusqu'à une valeur :math:`u_{max}`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément ainsi que les rotations de l'extrémité pilotée en déplacement.
 
 Les instructions Gibiane correspondantes sont :
 
@@ -39,16 +39,24 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 255-266
+      :lines: 266-277
       :linenos:
-      :lineno-start: 255
+      :lineno-start: 266
+
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. figure:: figures/01_traction_film_defo_3D_PaF_5.gif
+   :width: 15cm
+   :align: center
+
+   Traction - Maillage initial et déformé (x333) du modèle poutre à fibre 3D.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/01_traction.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/01_traction.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/01_traction_ricbet.dgibi>`
 
 
 .. _sec:modeles_beton_test_pout_comp_mono:
@@ -69,7 +77,7 @@ Il s'agit d'un test de compression simple monotone. On considère une poutre de 
 
 Blocages et chargement
 """"""""""""""""""""""
-Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max} (<0)`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en l'augmentant (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max} (<0)`. On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément ainsi que les rotations de l'extrémité pilotée en déplacement.
 
 Les instructions Gibiane correspondantes sont :
 
@@ -77,16 +85,23 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/02_compression.dgibi
       :language: gibiane
-      :lines: 283-294
+      :lines: 294-305
       :linenos:
-      :lineno-start: 283
+      :lineno-start: 294
+
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. figure:: figures/02_compression_film_defo_3D_PaF_5.gif
+   :width: 15cm
+   :align: center
+
+   Compression - Maillage initial et déformé (x33) du modèle poutre à fibre 3D.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/02_compression.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/02_compression.dgibi>`
 
 
 .. _sec:modeles_beton_test_pout_trac_cycl:
@@ -115,16 +130,23 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/03_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 300-312
+      :lines: 311-323
       :linenos:
-      :lineno-start: 300
+      :lineno-start: 311
+
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. figure:: figures/03_traction_cyclique_film_defo_3D_PaF_5.gif
+   :width: 15cm
+   :align: center
+
+   Traction cyclique - Maillage initial et déformé (x333) du modèle poutre à fibre 3D.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/03_traction_cyclique.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/03_traction_cyclique.dgibi>`
 
 
 .. _sec:modeles_beton_test_pout_comp_cycl:
@@ -153,16 +175,23 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/04_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 329-341
+      :lines: 339-351
       :linenos:
-      :lineno-start: 329
+      :lineno-start: 339
+
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. figure:: figures/04_compression_cyclique_film_defo_3D_PaF_5.gif
+   :width: 15cm
+   :align: center
+
+   Compression cyclique - Maillage initial et déformé (x33) du modèle poutre à fibre 3D.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/04_compression_cyclique.trace>`
-- :download:`Test pour la loi de RICBET <./dgibi/04_compression_cyclique.trace>`
 
 
 .. _sec:modeles_beton_test_pout_trac_comp:
@@ -183,7 +212,7 @@ Il s'agit d'un test de traction compression alternées. On considère une poutre
 
 Blocages et chargement
 """"""""""""""""""""""
-Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en deux phases successives de sens opposés : tout  d'abord en augmentant progressivement le déplacement jusqu'à la valeur :math:`u_{t max} > 0` (traction), puis après changement de sens en l'augmentant (en valeur absolue) progressivement jusqu'à la valeur :math:`u_{c max} < 0` (compression). On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément *[nh145313 : ainsi que les rotations de l'extrémité pilotée en déplacement]*.
+Le chargement consiste à piloter le déplacement **UX** de l'extrémité (:math:`L` 0 0) de l'élément **TIMO** en deux phases successives de sens opposés : tout  d'abord en augmentant progressivement le déplacement jusqu'à la valeur :math:`u_{t max} > 0` (traction), puis après changement de sens en l'augmentant (en valeur absolue) progressivement jusqu'à la valeur :math:`u_{c max} < 0` (compression). On bloque les déplacements et les rotations de l'autre extrémité (0 0 0) de l'élément ainsi que les rotations de l'extrémité pilotée en déplacement.
 
 Les instructions Gibiane correspondantes sont :
 
@@ -191,16 +220,23 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/05_traction_compression.dgibi
       :language: gibiane
-      :lines: 414-426
+      :lines: 425-437
       :linenos:
-      :lineno-start: 414
+      :lineno-start: 425
+
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. figure:: figures/05_traction_compression_film_defo_3D_PaF_5.gif
+   :width: 15cm
+   :align: center
+
+   Traction compression - Maillage initial et déformé (x33) du modèle poutre à fibre 3D.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/05_traction_compression.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/05_traction_compression.dgibi>`
 
 
 .. _sec:modeles_beton_test_pout_trac_comp_trac:
@@ -229,16 +265,23 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/06_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 590-602
+      :lines: 612-624
       :linenos:
-      :lineno-start: 590
+      :lineno-start: 612
+
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. figure:: figures/06_traction_compression_traction_film_defo_3D_PaF_5.gif
+   :width: 15cm
+   :align: center
+
+   Traction compression traction - Maillage initial et déformé (x33) du modèle poutre à fibre 3D.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/06_traction_compression_traction.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/06_traction_compression_traction.dgibi>`
 
 
 .. _sec:modeles_beton_test_pout_cisa_mono:
@@ -267,13 +310,13 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/07_cisaillement.dgibi
       :language: gibiane
-      :lines: 254-266
+      :lines: 253-265
       :linenos:
-      :lineno-start: 254
+      :lineno-start: 253
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
-.. figure:: dgibi/film_defo_HPP_3D_PaF.gif
+.. figure:: figures/07_cisaillement_film_defo_HPP_3D_PaF_5.gif
    :width: 15cm
    :align: center
 
@@ -336,38 +379,62 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 78-87
+      :lines: 79-88
       :linenos:
-      :lineno-start: 78
+      :lineno-start: 79
 
 .. admonition:: Traction monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/01_traction.dgibi
       :language: gibiane
-      :lines: 601-609
+      :lines: 633-641
       :linenos:
-      :lineno-start: 601
+      :lineno-start: 633
 
-Les blocages et le chargement sont représentés sur les figures suivantes.
+Les blocages et le chargement sont représentés sur la figure suivante.
 
-.. image:: figures/mazars_trac_mono_char_3d.png
-   :width: 30%
-.. image:: figures/mazars_trac_mono_char_2dplan.png
-   :width: 30%
-.. image:: figures/mazars_trac_mono_char_2daxi.png
-   :width: 30%
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_trac_mono_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_mono_char_2dplan.png
+          :width: 70%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_mono_char_2daxi.png
+          :width: 70%
+          :align: center
 
 .. figure:: figures/mazars_trac_mono_char_2daxi.png
    :width: 0%
 
    Traction - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
 
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. image:: figures/01_traction_film_defo_3D_V_5.gif
+   :width: 51%
+   :align: center
+.. image:: figures/01_traction_film_defo_2D_CP_5.gif
+   :width: 49%
+.. image:: figures/01_traction_film_defo_2D_axi_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_trac_mono_char_2daxi.png
+   :width: 0%
+
+   Traction - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
+
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/01_traction.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/01_traction.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/01_traction_ricbet.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_comp_mono:
@@ -401,38 +468,61 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/02_compression.dgibi
       :language: gibiane
-      :lines: 78-87
+      :lines: 79-88
       :linenos:
-      :lineno-start: 78
+      :lineno-start: 79
 
 .. admonition:: Compression monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/02_compression.dgibi
       :language: gibiane
-      :lines: 665-673
+      :lines: 697-705
       :linenos:
-      :lineno-start: 665
+      :lineno-start: 697
 
-Les blocages et le chargement sont représentés sur les figures suivantes.
+Les blocages et le chargement sont représentés sur la figure suivante.
 
-.. image:: figures/mazars_comp_mono_char_3d.png
-   :width: 30%
-.. image:: figures/mazars_comp_mono_char_2dplan.png
-   :width: 30%
-.. image:: figures/mazars_comp_mono_char_2daxi.png
-   :width: 30%
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_comp_mono_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_comp_mono_char_2dplan.png
+          :width: 70%
+          :align: center
+          
+     - .. image:: figures/mazars_comp_mono_char_2daxi.png
+          :width: 70%
+          :align: center
 
 .. figure:: figures/mazars_comp_mono_char_2daxi.png
    :width: 0%
 
    Compression - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
 
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. image:: figures/02_compression_film_defo_3D_V_5.gif
+   :width: 51%
+   :align: center
+.. image:: figures/02_compression_film_defo_2D_CP_5.gif
+   :width: 49%
+.. image:: figures/02_compression_film_defo_2D_axi_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_comp_mono_char_2daxi.png
+   :width: 0%
+
+   Compression - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
+
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/02_compression.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/02_compression.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_trac_cycl:
@@ -466,38 +556,61 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/03_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 78-88
+      :lines: 79-89
       :linenos:
-      :lineno-start: 78
+      :lineno-start: 79
 
 .. admonition:: Traction cyclique : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/03_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 737-746
+      :lines: 769-778
       :linenos:
-      :lineno-start: 737
+      :lineno-start: 769
 
-Les blocages et le chargement sont représentés sur les figures suivantes.
+Les blocages et le chargement sont représentés sur la figure suivante.
 
-.. image:: figures/mazars_trac_cycl_char_3d.png
-   :width: 30%
-.. image:: figures/mazars_trac_cycl_char_2dplan.png
-   :width: 30%
-.. image:: figures/mazars_trac_cycl_char_2daxi.png
-   :width: 30%
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_trac_cycl_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_cycl_char_2dplan.png
+          :width: 70%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_cycl_char_2daxi.png
+          :width: 70%
+          :align: center
 
 .. figure:: figures/mazars_trac_cycl_char_2daxi.png
    :width: 0%
 
    Traction cyclique - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
 
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. image:: figures/03_traction_cyclique_film_defo_3D_V_5.gif
+   :width: 51%
+   :align: center
+.. image:: figures/03_traction_cyclique_film_defo_2D_CP_5.gif
+   :width: 49%
+.. image:: figures/03_traction_cyclique_film_defo_2D_axi_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_trac_cycl_char_2daxi.png
+   :width: 0%
+
+   Traction cyclique - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
+
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/03_traction_cyclique.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/03_traction_cyclique.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_comp_cycl:
@@ -531,38 +644,61 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/04_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 78-88
+      :lines: 79-89
       :linenos:
-      :lineno-start: 78
+      :lineno-start: 79
 
 .. admonition:: Compression cyclique : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/04_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 789-798
+      :lines: 818-827
       :linenos:
-      :lineno-start: 789
+      :lineno-start: 818
 
-Les blocages et le chargement sont représentés sur les figures suivantes.
-
-.. image:: figures/mazars_comp_cycl_char_3d.png
-   :width: 30%
-.. image:: figures/mazars_comp_cycl_char_2dplan.png
-   :width: 30%
-.. image:: figures/mazars_comp_cycl_char_2daxi.png
-   :width: 30%
+Les blocages et le chargement sont représentés sur la figure suivante.
+   
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_comp_cycl_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_comp_cycl_char_2dplan.png
+          :width: 70%
+          :align: center
+          
+     - .. image:: figures/mazars_comp_cycl_char_2daxi.png
+          :width: 70%
+          :align: center
 
 .. figure:: figures/mazars_comp_cycl_char_2daxi.png
    :width: 0%
 
    Compression cyclique - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
 
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. image:: figures/04_compression_cyclique_film_defo_3D_V_5.gif
+   :width: 51%
+   :align: center
+.. image:: figures/04_compression_cyclique_film_defo_2D_CP_5.gif
+   :width: 49%
+.. image:: figures/04_compression_cyclique_film_defo_2D_axi_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_comp_cycl_char_2daxi.png
+   :width: 0%
+
+   Compression cyclique - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
+
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/04_compression_cyclique.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/04_compression_cyclique.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_trac_comp:
@@ -596,38 +732,61 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/05_traction_compression.dgibi
       :language: gibiane
-      :lines: 83-93
+      :lines: 84-94
       :linenos:
-      :lineno-start: 83
+      :lineno-start: 84
 
 .. admonition:: Traction compression : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/05_traction_compression.dgibi
       :language: gibiane
-      :lines: 1067-1076
+      :lines: 1099-1108
       :linenos:
-      :lineno-start: 1067
+      :lineno-start: 1099
 
-Les blocages et le chargement sont représentés sur les figures suivantes.
+Les blocages et le chargement sont représentés sur la figure suivante.
 
-.. image:: figures/mazars_trac_comp_char_3d.png
-   :width: 30%
-.. image:: figures/mazars_trac_comp_char_2dplan.png
-   :width: 30%
-.. image:: figures/mazars_trac_comp_char_2daxi.png
-   :width: 30%
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_trac_comp_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_comp_char_2dplan.png
+          :width: 70%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_comp_char_2daxi.png
+          :width: 70%
+          :align: center
 
 .. figure:: figures/mazars_trac_comp_char_2daxi.png
    :width: 0%
 
    Traction compression - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
 
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. image:: figures/05_traction_compression_film_defo_3D_V_5.gif
+   :width: 51%
+   :align: center
+.. image:: figures/05_traction_compression_film_defo_2D_CP_5.gif
+   :width: 49%
+.. image:: figures/05_traction_compression_film_defo_2D_axi_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_trac_comp_char_2daxi.png
+   :width: 0%
+
+   Traction compression - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
+
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/05_traction_compression.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/05_traction_compression.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_trac_comp_trac:
@@ -661,38 +820,61 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/06_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 90-100
+      :lines: 91-101
       :linenos:
-      :lineno-start: 90
+      :lineno-start: 91
 
 .. admonition:: Traction compression traction : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/06_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 1586-1595
+      :lines: 1650-1659
       :linenos:
-      :lineno-start: 1586
+      :lineno-start: 1650
 
-Les blocages et le chargement sont représentés sur les figures suivantes.
+Les blocages et le chargement sont représentés sur la figure suivante.
 
-.. image:: figures/mazars_trac_comp_trac_char_3d.png
-   :width: 30%
-.. image:: figures/mazars_trac_comp_trac_char_2dplan.png
-   :width: 30%
-.. image:: figures/mazars_trac_comp_trac_char_2daxi.png
-   :width: 30%
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_trac_comp_trac_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_comp_trac_char_2dplan.png
+          :width: 70%
+          :align: center
+          
+     - .. image:: figures/mazars_trac_comp_trac_char_2daxi.png
+          :width: 70%
+          :align: center
 
 .. figure:: figures/mazars_trac_comp_trac_char_2daxi.png
    :width: 0%
 
    Traction compression traction - Blocages et chargement de déplacement imposé sur le cube (3D), le carré (2D plan) et le cylindre (2D axisymétrique).
 
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. image:: figures/06_traction_compression_traction_film_defo_3D_V_5.gif
+   :width: 51%
+   :align: center
+.. image:: figures/06_traction_compression_traction_film_defo_2D_CP_5.gif
+   :width: 49%
+.. image:: figures/06_traction_compression_traction_film_defo_2D_axi_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_trac_comp_trac_char_2daxi.png
+   :width: 0%
+
+   Traction compression - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
+
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/06_traction_compression_traction.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/06_traction_compression_traction.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_cisa_mono:
@@ -725,24 +907,31 @@ Les instructions Gibiane correspondantes sont :
       :linenos:
       :lineno-start: 95
 
-Les blocages et le chargement sont représentés sur les figures suivantes.
+Les blocages et le chargement sont représentés sur la figure suivante.
 
-.. image:: figures/mazars_cisa_mono_beta1.06_char_3d.png
-   :width: 45%
-.. image:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
-   :width: 35%
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_cisa_mono_beta1.06_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
+          :width: 65%
+          :align: center
 
 .. figure:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
    :width: 0%
 
    Cisaillement - Blocages et chargement de déplacement imposé sur le cube (3D) et le carré (2D plan).
 
-La déformée au cours du chargement est représentée sur les figures suivantes.
+La déformée au cours du chargement est représentée sur la figure suivante.
 
-.. image:: dgibi/film_defo_HPP_3D_V.gif
+.. image:: figures/07_cisaillement_film_defo_HPP_3D_V_5.gif
    :width: 49%
-.. image:: dgibi/film_defo_HPP_2D_CP.gif
-   :width: 49%
+.. image:: figures/07_cisaillement_film_defo_HPP_2D_CP_5.gif
+   :width: 50%
 
 .. figure:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
    :width: 0%
@@ -802,10 +991,8 @@ Les critères de détection de la ruine pour arrêter le calcul sont définis da
 L’objectif est de caractériser la courbe de biaxialité qui représente la surface de charge du modèle dans le plan :math:`(\sigma_{xx} ; \sigma_{yy})`.
 On peut ainsi évaluer la contrainte maximale en traction / compression / cisaillement du modèle.
 
-Les déplacements des faces opposées :math:`x=0` et :math:`y=0` sont bloqués en laissant libre la
-contraction ou l'expansion par effet de Poisson (de manière à être en état de contraintes planes). 
-En 3D, le mouvement de corps rigide est empêché en bloquant [les déplacements **UY** et **UZ** du coin (0 0 0)
-et **UZ** du coin (0 :math:`L` 0) -> nh145313 : le déplacement **UZ** du coin (0 0 0)].
+Les déplacements des faces opposées :math:`x=0` et :math:`y=0` sont bloqués dans leur direction normale respective en laissant libre la contraction ou l'expansion par effet de Poisson (de manière à être en état de contraintes planes). 
+En 3D, le mouvement de corps rigide est empêché en bloquant le déplacement **UZ** du coin (0 0 0).
 
 Les instructions Gibiane correspondantes sont :
 
@@ -813,56 +1000,80 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 86
+      :lines: 87
       :linenos:
-      :lineno-start: 86
+      :lineno-start: 87
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 90-91
+      :lines: 91-91
       :linenos:
-      :lineno-start: 90
+      :lineno-start: 91
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 97-102
+      :lines: 93-93
       :linenos:
-      :lineno-start: 97
+      :lineno-start: 93
+
+   .. literalinclude:: dgibi/08_biaxial.dgibi
+      :language: gibiane
+      :lines: 99-104
+      :linenos:
+      :lineno-start: 99
 
 .. admonition:: Biaxial : blocages pour le cas 3D
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 82-83
+      :lines: 83-84
       :linenos:
-      :lineno-start: 82
+      :lineno-start: 83
 
 .. admonition:: Biaxial : blocages pour le cas 2D plan
 
    .. literalinclude:: dgibi/08_biaxial.dgibi
       :language: gibiane
-      :lines: 361-362
+      :lines: 378-379
       :linenos:
-      :lineno-start: 361
+      :lineno-start: 378
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
-.. image:: figures/mazars_biax_char_3d.png
-   :width: 45%
-.. image:: figures/mazars_biax_char_2dplan.png
-   :width: 35%
+.. list-table::
+   :width: 100%
+   :class: borderless
+   
+   * - .. image:: figures/mazars_biax_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_biax_char_2dplan.png
+          :width: 65%
+          :align: center
 
 .. figure:: figures/mazars_biax_char_2dplan.png
    :width: 0%
 
    Biaxial - Blocages et chargement biaxial de contraintes imposées sur le cube (3D) et le carré (2D plan).
 
+La déformée au cours du chargement est représentée sur la figure suivante.
+
+.. image:: figures/08_biaxial_film_defo_3D_V_5.gif
+   :width: 50%
+.. image:: figures/08_biaxial_film_defo_2D_CP_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_biax_char_2dplan.png
+   :width: 0%
+
+   Biaxial - Maillage initial et déformé (x516) des modèles volumiques 3D et 2D plan.
+
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/08_biaxial.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/08_biaxial.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_triax:
@@ -894,7 +1105,7 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 40-41
+      :lines: 40-42
       :linenos:
       :lineno-start: 40
 
@@ -902,116 +1113,142 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 85-91
+      :lines: 86-92
       :linenos:
-      :lineno-start: 85
+      :lineno-start: 86
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 96-99
+      :lines: 97-100
       :linenos:
-      :lineno-start: 96
+      :lineno-start: 97
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 102-107
+      :lines: 103-107
       :linenos:
-      :lineno-start: 102
+      :lineno-start: 103
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 109-110
+      :lines: 108-108
       :linenos:
-      :lineno-start: 109
+      :lineno-start: 108
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 118-122
+      :lines: 112-113
       :linenos:
-      :lineno-start: 118
+      :lineno-start: 112
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 137-138
+      :lines: 119-123
       :linenos:
-      :lineno-start: 137
+      :lineno-start: 119
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 136-137
+      :linenos:
+      :lineno-start: 136
 
 .. admonition:: Triaxial : blocages et chargements pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 243-249
+      :lines: 299-305
       :linenos:
-      :lineno-start: 243
+      :lineno-start: 299
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 254-257
+      :lines: 310-313
       :linenos:
-      :lineno-start: 254
+      :lineno-start: 310
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 260-264
+      :lines: 316-319
       :linenos:
-      :lineno-start: 260
+      :lineno-start: 316
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 268-269
+      :lines: 320-320
       :linenos:
-      :lineno-start: 268
+      :lineno-start: 320
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 275-279
+      :lines: 324-325
       :linenos:
-      :lineno-start: 275
+      :lineno-start: 324
    .. literalinclude:: dgibi/09_triaxial.dgibi
       :language: gibiane
-      :lines: 294-295
+      :lines: 331-335
       :linenos:
-      :lineno-start: 294
+      :lineno-start: 331
+   .. literalinclude:: dgibi/09_triaxial.dgibi
+      :language: gibiane
+      :lines: 348-349
+      :linenos:
+      :lineno-start: 348
 
-Les blocages et les chargements (pour la pression hydrostatique maximale de 9 MPa) sont représentés sur les figures suivantes.
+Les blocages et les chargements, pour la pression hydrostatique nulle (0MPa) et maximale (9 MPa), sont représentés sur les figures suivantes.
 
 .. list-table::
    :width: 100%
    :class: borderless
    
-   * - .. image:: figures/mazars_triax_char_3d.png
+   * - .. image:: figures/mazars_triax_0MPa_char_3d.png
           :width: 100%
           :align: center
           
-     - .. image:: figures/mazars_triax_char_2daxi.png
+     - .. image:: figures/mazars_triax_0MPa_char_2daxi.png
           :width: 50%
           :align: center
 
-.. figure:: figures/mazars_triax_char_2daxi.png
+.. figure:: figures/mazars_triax_0MPa_char_2daxi.png
    :width: 0%
 
-   Triaxial - Blocages et chargement triaxial de pression hydrostatique (9 MPa, en vert) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
+   Triaxial - Blocages et chargement triaxial de pression hydrostatique nulle (0 MPa) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
 
-.. image:: figures/mazars_triax_char_2daxi.png
-   :width: 22%
-   :align: right
-.. image:: figures/mazars_triax_char_3d.png
-   :width: 45%
+.. list-table::
+   :width: 100%
+   :class: borderless
    
-.. figure:: figures/mazars_triax_char_2daxi.png
+   * - .. image:: figures/mazars_triax_9MPa_char_3d.png
+          :width: 100%
+          :align: center
+          
+     - .. image:: figures/mazars_triax_9MPa_char_2daxi.png
+          :width: 50%
+          :align: center
+
+.. figure:: figures/mazars_triax_9MPa_char_2daxi.png
    :width: 0%
 
    Triaxial - Blocages et chargement triaxial de pression hydrostatique (9 MPa, en vert) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
 
-|pic1| .............................. |pic2|
+La déformée au cours du chargement, pour la pression hydrostatique nulle (0MPa) et maximale (9 MPa), est représentée sur les figures suivantes.
 
-.. |pic1| image:: figures/mazars_triax_char_3d.png
-   :width: 45%
-.. |pic2| image:: figures/mazars_triax_char_2daxi.png
-   :width: 22%
+.. image:: figures/09_triaxial_0MPa_film_defo_3D_V_5.gif
+   :width: 50%
+.. image:: figures/09_triaxial_0MPa_film_defo_2D_axi_5.gif
+   :width: 49%
 
-.. figure:: figures/mazars_triax_char_2daxi.png
+.. figure:: figures/mazars_triax_9MPa_char_2daxi.png
    :width: 0%
 
-   Triaxial - Blocages et chargement triaxial de pression hydrostatique (9 MPa, en vert) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
+   Biaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique nulle (0 MPa).
+
+.. image:: figures/09_triaxial_9MPa_film_defo_3D_V_5.gif
+   :width: 50%
+.. image:: figures/09_triaxial_9MPa_film_defo_2D_axi_5.gif
+   :width: 49%
+
+.. figure:: figures/mazars_triax_9MPa_char_2daxi.png
+   :width: 0%
+
+   Biaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique maximale (9 MPa).
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/09_triaxial.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/09_triaxial.dgibi>`
+- :download:`Test pour la loi de RICBET <./dgibi/09_triaxial_ricbet.dgibi>`
 
 
 .. _sec:modeles_beton_test_mass_willam:
@@ -1080,38 +1317,24 @@ Les instructions Gibiane correspondantes sont :
       :linenos:
       :lineno-start: 183
 
-L'état initial (noir) et déformé (rouge) résultant des blocages et du chargement sont représentés sur les figures suivantes.
+La représentation des blocages et des chargements n'étant pas suffisament explicite, on représente sur la figure suivante l'évolution de la déformée qui en résulte au cours du chargement. 
 
-.. list-table::
-   :width: 100%
-   :class: borderless
-   
-   * - .. image:: figures/mazars_will_char_3d.png
-          :width: 100%
-          :align: center
-          
-     - .. image:: figures/mazars_will_char_2dplan.png
-          :width: 50%
-          :align: center
+.. image:: figures/10_willam_film_defo_3D_V_5.gif
+   :width: 53%
+.. image:: figures/10_willam_film_defo_2D_CP_5.gif
+   :width: 46%
 
 .. figure:: figures/mazars_will_char_2dplan.png
    :width: 0%
 
-   Test de Willam - Etat initial (noir) et déformé (x500, rouge) résultant des blocages et du chargement imposés sur le parallélépipède (3D) et le carré (2D plan).
+   Test de Willam - Maillage initial et déformé (x500) résultant des blocages et du chargement imposés sur le parallélépipède (3D) et le carré (2D plan).
 
-La rotation du repère du chargement, c'est-à-dire du repère des contraintes principales, est représenté sur les figures suivantes.
+L'évolution au cours du chargement de la rotation du repère du chargement, c'est-à-dire du repère des contraintes principales, est représenté sur la figure suivante.
 
-.. list-table::
-   :width: 100%
-   :class: borderless
-   
-   * - .. image:: figures/mazars_will_prin_3d.png
-          :width: 100%
-          :align: center
-          
-     - .. image:: figures/mazars_will_prin_2dplan.png
-          :width: 50%
-          :align: center
+.. image:: figures/10_willam_film_prin_3D_V_5.gif
+   :width: 55%
+.. image:: figures/10_willam_film_prin_2D_CP_5.gif
+   :width: 44%
 
 .. figure:: figures/mazars_will_prin_2dplan.png
    :width: 0%
@@ -1123,8 +1346,4 @@ Liste des exemples dgibi
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
 - :download:`Test pour la loi de Mazars <./dgibi/10_willam.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/10_willam.dgibi>`
-
-
-TODO
 

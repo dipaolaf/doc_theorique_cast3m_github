@@ -27,11 +27,11 @@ Anomalies observées
 
 Anomalie 1
 ++++++++++
-Une anomalie a été identifiée dans les sources fibmaz.eso (modèles poutres à fibres) et cmazars.eso (modèle massifs) concernant le mauvais calibrage du test de bicompression dans le modèle Mazars. Dans fibmaz.eso, le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple ; tandis que, dans cmazar.eso, il conduisait à mal calculer les contraintes en situation de bicompression. 
+Une anomalie a été identifiée dans les sources fibmaz.eso (modèles poutres à fibres) et cmazar.eso (modèles massifs) concernant le mauvais calibrage du test de bicompression dans le modèle Mazars. Dans fibmaz.eso, le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple ; tandis que, dans cmazar.eso, il conduisait à mal calculer les contraintes en situation de bicompression. 
 
 En ce qui concerne la source cmazar.eso pour les modèles massif, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). 
 
-En ce qui concerne la source fibmaz.eso pour les modèles poutres à fibres, la correction :math:`\gamma` a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. 
+En ce qui concerne la source fibmaz.eso pour les modèles poutres à fibres, la correction :math:`\gamma` a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. 
 
 Cette anomalie est corrigée dans la version du jour actuelle et dans la version 2024.1 de Cast3M.
 
@@ -39,15 +39,47 @@ Anomalie 2
 ++++++++++
 [valable au 19/09/2024]
 
-Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazars.eso. Cette anomalie ne rend pas le modèle Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M. Elle est corrigée dans la version du jour ainsi que dans la version 2024.1.
+Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazar.eso. Cette anomalie ne rend pas le modèle Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M. Elle est corrigée dans la version du jour ainsi que dans la version 2024.1.
 
 Anomalie 3
 ++++++++++
-**Compte tenu des résultats des cas tests de vérification @, l'utilisation de cette loi dans le cadre d'une modèlisation de type poutre à fibres est proscrite !**. *[nh145313 : L'anomalie est corrigée en bloquant les rotation de l'extrémité libre de la poutre à fibre.]*
+[valable au 04/02/2025]
+
+Une anomalie de fonctionnement des modélisations poutre à fibres a été identifiée dans différents cas de chargement élémentaire (traction, compression, flexion, ...) et avec différents modèles de comportement (Mazars, ACIER_UNI, ...). Il s'agit d'une instabilité numérique de type "flambement" qui conduit soit à un arrêt du calcul par non convergence de PASAPAS, soit à des résultats erronés produits après l'instabilité, comme ici un champ de dommage devenant hétérogène dans la section du modèle poutre à fibres, avec une bifurcation entre les résultats de deux paires de points de Gauss conduisant à des valeurs anormales (cf. figure ci-dessous).
+
+.. image:: figures/Figure_anomalie3_1.png
+   :width: 51%
+.. image:: figures/Figure_anomalie3_2.png
+   :width: 47%
+.. image:: figures/Figure_anomalie3_3.png
+   :width: 47%
+.. image:: figures/Figure_anomalie3_4.png
+   :width: 51%
+
+.. figure:: figures/Figure_anomalie3_4.png
+   :width: 0%
+   
+   Anomalie constatée dans le cas d'une modélisation poutre à fibres soumise à un chargement uniaxial de compression en déplacement imposé à l'extrémité libre d'une poutre encastrée à son autre extrémité - Maillage et conditions aux limites, champ de dommage hétérogène dans la section en fin de calcul, évolutions anormales au cours du chargement de la contrainte moyenne en fonction de la déformation moyenne et du dommage en chaque point de Gauss de la section en fonction du temps.
+
+Cette anomalie, qui concerne donc le modèle poutre à fibres et pas le modèle Mazars, est contournée dans tous les cas rencontrés jusqu'ici en bloquant les rotations du point correspondant à l'extrémité libre soumise au chargement de la poutre à fibres (cf. figure ci-dessous).
+
+.. image:: figures/Figure_solution3_1.png
+   :width: 51%
+.. image:: figures/Figure_solution3_2.png
+   :width: 47%
+.. image:: figures/Figure_solution3_3.png
+   :width: 47%
+.. image:: figures/Figure_solution3_4.png
+   :width: 51%
+
+.. figure:: figures/Figure_solution3_4.png
+   :width: 0%
+   
+   Anomalie contournée en bloquant les rotations du point d'extrémité libre de la poutre - Maillage et conditions aux limites, champ de dommage homogène en fin de calcul, évolutions normales au cours du chargement de la contrainte moyenne en fonction de la déformation moyenne et du dommage en chaque point de Gauss de la section en fonction du temps.
 
 Limitation numérique
 ++++++++++++++++++++
-Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazars.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
+Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazar.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
 
 .. math::
    D_{max}=(1 - \epsilon)
@@ -60,7 +92,7 @@ Le choix de la valeur du paramètre :math:`\epsilon` résulte donc d'un compromi
 
 L'historique des valeurs attribuées au paramètre :math:`\epsilon` est le suivant :
 
-- dans la configuration éléments volumiques (source cmazars.eso) :
+- dans la configuration éléments volumiques (source cmazar.eso) :
 
   - :math:`\epsilon=10^{-20}` : valeur d'origine ;
 
@@ -173,42 +205,45 @@ Grâce à sa simplicité et sa robustesse, ce modèle a été et est encore larg
 Implémentation Cast3M (esope)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-@Détailler les sources de l'implémentation pour la poutre à fibres@ *[nh145313 à placer après le paragraphe suivant à mon avis]*
+Dans la suite, nous détaillons les étapes du calcul pour les éléments volumiques (sources cmazar.eso) d'une part et pour les éléments poutres à fibres (sources fibmaz.eso) d'autre part, en mettant l'accent sur les parties de code correspondantes aux aspects théoriques mentionnés précédemment. Pour une analyse détaillée de l'implémentation et des aspects plus strictement techniques concernant la signification des variables, veuillez vous référer aux commentaires présents dans les fichiers sources.	  
 
-Dans la suite, nous détaillons les étapes du calcul pour les éléments volumiques en mettant l'accent sur les parties de code correspondantes aux aspects théoriques mentionnés précédemment. Pour une analyse détaillée de l'implémentation et des aspects plus strictement techniques concernant la signification des variables, veuillez vous référer aux commentaires présents dans le fichier source cmazar.eso *[nh145313 : ce n'est pas la source cmazar.eso mais mazars.eso qui est affichée ci-dessous]*.	  
+Implémentation pour les éléments volumiques 
++++++++++++++++++++++++++++++++++++++++++++
 
-	.. literalinclude:: sources/mazars.eso
+L'implémentation est réalisée dans le fichier source cmazar.eso
+
+	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
 		:lines: 1-3
 		:linenos:
 		:lineno-start: 1
 
 Entrées
-+++++++
+"""""""
 	
-	.. literalinclude:: sources/mazars.eso
+	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
-		:lines: 9-30
+		:lines: 10-31
 		:linenos:
-		:lineno-start: 9
+		:lineno-start: 10
 		
-	.. literalinclude:: sources/mazars.eso
+	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
-		:lines: 34-38
+		:lines: 35-39
 		:linenos:
-		:lineno-start: 34
+		:lineno-start: 35
 
 Sorties
-+++++++
+"""""""
 
-	.. literalinclude:: sources/mazars.eso
+	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
-		:lines: 42-44
+		:lines: 43-45
 		:linenos:
-		:lineno-start: 42
+		:lineno-start: 43
 
 Algorithme
-++++++++++
+""""""""""
 
 Le calul de l'endommagement est réalisé par une procédure purement explicite.
 
@@ -229,65 +264,185 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 
 - On vérifie le dépassement du seuil de déformation. Si le seuil n'est pas dépassé, l'endommagement n'est pas mis à jour. Sinon, on procède comme suit.
 				
-- On calcule les coéfficients :math:`\alpha_{t(c)} \in [0,1]`. Pour cela faire :
+- On calcule les coefficients :math:`\alpha_{t(c)} \in [0,1]`. Pour cela :
 		
-	* On calcule le signe des contraines elastiques :
+	* On calcule le signe des contraines elastiques de compression **SIGPC(i)** (négative) et de traction **SIGPT(i)** (positive) et les traces associées :
 	
-		.. literalinclude:: sources/mazars.eso
+		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 198-208
+			:lines: 185-195
 			:linenos:
-			:lineno-start: 198		
+			:lineno-start: 185		
 			
 	* On calcule les déformations associées aux contraintes positives :math:`\varepsilon_i^t` :
 
-		.. literalinclude:: sources/mazars.eso
+		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 212-214
+			:lines: 199-201
 			:linenos:
-			:lineno-start: 212		
+			:lineno-start: 199		
 
-		
-	* On calcule :math:`\alpha_{t(c)}` :
+	* On calcule :math:`\alpha_{t}` puis on en déduit :math:`\alpha_{c}` :
 	
-		.. literalinclude:: sources/mazars.eso
+		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 218-222
+			:lines: 205-209
 			:linenos:
-			:lineno-start: 218		
-
+			:lineno-start: 205		
 
 	* On corrige les paramètres de combinaison linéaire via le coefficient :math:`\beta > 1` pour amémiorer la réponse en cisaillement :
 		
-		.. literalinclude:: sources/mazars.eso
+		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 235-242
+			:lines: 223-230
 			:linenos:
-			:lineno-start: 235		
+			:lineno-start: 223		
 
-
-- On corrige la déformation equivalente pour améliorer la réponse en bi- ou tri-compression. Pour cela faire, on modifie :math:`e` comme suit :
+- On corrige la déformation equivalente de Mazars :math:`e` par le coefficient :math:`\gamma` pour améliorer la réponse en bi ou tri-compression :
 
 	.. math::
-		e = e \gamma \qquad \gamma = \frac{\sum_{i=1}^n \langle \sigma_i \rangle_{-}^2}{\sum_{i=1}^n \langle \sigma_i \rangle_{-}}
+		e = e \gamma
 		 
+  le coefficient :math:`\gamma` est calculé de la façon suivante :
+
+	.. math::
+		\gamma = \frac{\sum_{i=1}^n \langle \sigma_i \rangle_{-}^2}{\sum_{i=1}^n \langle \sigma_i \rangle_{-}}
+  
   avec :math:`\langle \cdot \rangle_{-}` l'opérateur partie négative.
 	
-	.. literalinclude:: sources/mazars.eso
+	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
-		:lines: 226-231
+		:lines: 213-219
 		:linenos:
-		:lineno-start: 226		
+		:lineno-start: 213		
 
+- Le calcul de la variable d'endommagement **D** est effectué après avoir vérifié si le seuil de dommage initial a été dépassé. Cette vérification est nécessaire car il est possible que la valeur de la déformation equivalente de Mazars ait été multipliée par :math:`\gamma`. Tandis que l'évolution du dommage en compression **DC** suit la loi de Mazars classique, trois lois d'évolution différentes du dommage en traction **DT** sont proposées selon la valeur du paramètre **ATRA** :
 
-- Le calcul de la variable d'endommagement est effectué après avoir vérifié si le seuil initial a été dépassé. Cette vérification est nécessaire car il est possible que la valeur ait été multipliée par :math:`\gamma` :
+	* **ATRA > 0** : loi de mazars classique ;
+	* **-10 < ATRA < 0** : loi d'évolution exponentielle modifiée pour prendre en compte l'énergie de fissuration :math:`G_{f}` via le paramètre **BTRA** ;
+	* **ATRA < -10** : loi d'évolution linéaire. Le paramètre **BTRA** représente alors la déformation pour laquelle la contrainte s'annule.
 
-	.. literalinclude:: sources/mazars.eso
+	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
-		:lines: 250-259
+		:lines: 254-274
 		:linenos:
-		:lineno-start: 250		
+		:lineno-start: 254		
 
+			
+  La variable d'endommagement est ensuite bornée supérieurement à 0.99999999 afin d'éviter un trop mauvais conditionnement de la matrice de rigidité ;
+
+- On calcule la nouvelle contrainte et on sort de la loi de comportement ;
+
+- Les données de sortie sont la contrainte et les variables internes mises à jour.
+
+Implémentation pour les éléments poutres à fibres
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+L'implémentation est réalisée dans le fichier source fibmaz.eso.
+
+	.. literalinclude:: sources/fibmaz.eso
+		:language: fortran
+		:lines: 1-2
+		:linenos:
+		:lineno-start: 1
+
+Entrées
+"""""""
+	
+	.. literalinclude:: sources/fibmaz.eso
+		:language: fortran
+		:lines: 14-22
+		:linenos:
+		:lineno-start: 14
+
+Sorties
+"""""""
+
+	.. literalinclude:: sources/fibmaz.eso
+		:language: fortran
+		:lines: 27-29
+		:linenos:
+		:lineno-start: 27
+
+Algorithme
+""""""""""
+
+Le calul de l'endommagement est réalisé selon la même méthode que celle décrite précédemment dans le fichier source cmazar.eso pour les éléments volumiques, dans la mesure où il s'appuie sur la formulation 3D complète du modèle de Mazars.
+
+- On calcule la déformation totale au niveau du point d'intégration ;
+
+- On calcule les terme de la matrice 3x3 de déformation à partir de la théorie des poutres de Timoshenko ;
+
+	.. literalinclude:: sources/fibmaz.eso
+		:language: fortran
+		:lines: 65-73
+		:linenos:
+		:lineno-start: 65
+	
+- On calcule le tenseur des déformations principales ;
+	
+- On calcule les contraintes principales à partir des déformations principales de de la matrice de Hook 3D (cas général) ;
+
+	.. literalinclude:: sources/fibmaz.eso
+		:language: fortran
+		:lines: 86-97
+		:linenos:
+		:lineno-start: 86
+	
+- On calcule la déformation équivalente de Mazars en se plaçant toujours dans le cas où le calcul est local (**ISTEP = 0**). En conséquence, elle est évaluée directement sur la base des déformations principales ;
+
+	.. literalinclude:: sources/fibmaz.eso
+		:language: fortran
+		:lines: 102-110
+		:linenos:
+		:lineno-start: 102
+				
+- On calcule les coefficients :math:`\alpha_{c(t)} \in [0,1]`. Pour cela :
+		
+	* On calcule le signe des contraines elastiques de compression **SIGPC(i)** (négative) et la trace associée :
+	
+		.. literalinclude:: sources/fibmaz.eso
+			:language: fortran
+			:lines: 120-123
+			:linenos:
+			:lineno-start: 120		
+		
+	* On vérifie le dépassement du seuil de déformation. Si le seuil n'est pas dépassé, l'endommagement n'est pas mis à jour. Sinon, on procède comme suit ;
+			
+	* On calcule les déformations associées aux contraintes négatives :math:`\varepsilon_i^c` :
+
+		.. literalinclude:: sources/fibmaz.eso
+			:language: fortran
+			:lines: 142-144
+			:linenos:
+			:lineno-start: 142		
+
+		
+	* On calcule :math:`\alpha_{c}` puis on en déduit :math:`\alpha_{t}` :
+	
+		.. literalinclude:: sources/fibmaz.eso
+			:language: fortran
+			:lines: 148-152
+			:linenos:
+			:lineno-start: 148		
+
+	* On corrige les paramètres de combinaison linéaire via le coefficient :math:`\beta > 1` pour amémiorer la réponse en cisaillement :
+		
+		.. literalinclude:: sources/fibmaz.eso
+			:language: fortran
+			:lines: 156-163
+			:linenos:
+			:lineno-start: 156		
+
+- A noter que la correction :math:`\gamma` en cas de bi ou tri-compression n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. 
+
+- Le calcul de la variable d'endommagement **D** est effectué en ayant vérifié au préalable si le seuil de dommage initial a été dépassé. L'évolution du dommage en compression **DC** comme celle du dommage en traction **DT** suivent la loi de Mazars classique :
+
+	.. literalinclude:: sources/fibmaz.eso
+		:language: fortran
+		:lines: 169-173
+		:linenos:
+		:lineno-start: 169		
 			
   La variable d'endommagement est ensuite bornée supérieurement à 0.99999 afin d'éviter un trop mauvais conditionnement de la matrice de rigidité ;
 
@@ -298,7 +453,7 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 Implémentation MFront
 ~~~~~~~~~~~~~~~~~~~~~
 
-Une implémentation de la loi de Mazars a été réalisée sous MFront. Le code suivant détaille l'implémentation pour une utilisation avec des elements volumiques/surfaciques. La formulation implémentée est une version simplifiée de celle disponible dans Cast3M. En particulier, aucun correctif n'est introduit pour améliorer la réponse du modèle en cisaillement et compression bi-/tri-axiale. 
+Une implémentation de la loi de Mazars a été réalisée sous MFront pour une utilisation avec des elements volumiques/surfaciques. La formulation implémentée est une version simplifiée de celle disponible dans Cast3M. En particulier, aucun correctif n'est introduit pour améliorer la réponse du modèle en cisaillement et en situation de bi ou tri-compression. 
 
 	.. literalinclude:: sources/mazars_mfront.mfront
 		:linenos:
@@ -312,19 +467,33 @@ Hypothèses de calcul et éléments finis disponibles
 
 - Elle peut être utilisée avec des éléments de type coque sous l'hypothèse de contraintes planes. 
 
-Mots clefs dans l'opérateur MODE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Exemple d'utilisation de la loi Mazars pour des éléments finis de section **CUB8** :
+Mots clefs dans les opérateurs MODE et MATE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Exemple d'utilisation de la loi Mazars pour des éléments finis massifs 3D **CUB8** :
 
 .. code-block:: gibiane
 
    MODE maillage 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' 'CUB8' ;
+   MATE modele 'YOUN' val_youn 'NU' val_nu ('RHO' val_rho)
+               'KTR0' val_e0 'ACOM' val_ac 'BCOM' val_bc 'ATRA' val_at 'BTRA' val_bt 'BETA' val_beta ;
 
-Exemple d'utilisation de la loi Mazars pour des éléments finis de section **QUAS** :
+Exemple d'utilisation de la loi Mazars pour des éléments finis poutres à fibres constituée d'éléments finis **TIMO** dont la section est constituée d'éléments finis **QUAS** :
+
+- pour la section :
 
 .. code-block:: gibiane
 
    MODE mail_section 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
+   MATE mode_section 'YOUN' val_youn 'NU' val_nu
+                     'KTR0' val_e0 'ACOM' val_ac 'BCOM' val_bc 'ATRA' val_at 'BTRA' val_bt 'BETA' val_beta
+                     'ALPY' 1. 'ALPZ' 1. ;
+
+- pour la poutre :
+
+.. code-block:: gibiane
+
+   MODE mail_poutre 'ELASTIQUE' 'SECTION' 'PLASTIQUE' 'SECTION' 'TIMO' ;
+   MATE mode_poutre 'MODS' mode_section 'MATS' mate_section 'VECT' (0. 1. 0.) ;
 
 Paramètres de la loi non linéaire
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

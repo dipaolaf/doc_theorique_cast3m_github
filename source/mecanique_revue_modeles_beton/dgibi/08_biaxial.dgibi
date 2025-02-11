@@ -72,8 +72,9 @@ SI (EXIS lcas 1) ;
 *nh145313
   p33 = mail POIN 'PROC' (long long long) ;
 *nh145313
-*rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+cadr1 = COUL ((0. 1.05 1.05) ET (1. 1.05 1.05)) 'BLAN' ;
+rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -88,6 +89,7 @@ SI (EXIS lcas 1) ;
   lsigyy = PROG ;
   lok    = LECT ;
   REPE b0 (DIME langl) ;
+*    angl1 = 330. ;
     angl1 = EXTR langl &b0 ;
     MESS '=== THETA' ' ' angl1 ' ===';
 *nh145313
@@ -139,6 +141,8 @@ SI (EXIS lcas 1) ;
 *   Recuperation des contraintes SMXX et SMYY obtenues a l'avant dernier instant de calcul (dernier instant = dommage total)
     evsmxx = EVOL 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 1 ;
     evsmyy = EVOL 'TEMP' t 'CONTRAINTES' 'SMYY' 1 1 1 ;
+    tu = t . 'DEPLACEMENTS' ;
+    def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
     tc = t . 'CONTRAINTES' ;
     nc = DIME tc ;
     vsmxx = (INTG mo (tc . (nc - 2)) 'SMXX') / mes1 ;
@@ -279,6 +283,18 @@ SI (EXIS lcas 1) ;
       SAUT 1 'LIGN' ;
       MESS '|THETA[deg]' ' ' angl1 ' |SMXX[Pa]' ' ' val_smxx_ad ' |EPXX[adim]' ' ' val_epxx_ad
                                    ' |SMYY[Pa]' ' ' val_smyy_ad ' |EPYY[adim]' ' ' val_epyy_ad ;
+*     deformee
+      REPE b2 (DIME t . 'TEMPS') ;
+        tps1 = t . 'TEMPS' . (&b2 - 1) ;
+*       trace de la deformee (pour controle visuel)
+        def1 = DEFO mail (tu . (&b2 - 1)) 516. 'ROUG' ;
+        tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
+*        TRAC (def0 ET def1) 'TITR' tit1 ;
+        SI (&b2 EGA ((DIME t . 'TEMPS') - 1)) ;
+          TRAC (def0 ET def1) 'TITR' tit1 ;
+        FINSI ;
+      FIN b2 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
     FINSI ;
   FIN b0 ;
 * test que pour toutes les valeurs d'angle, on a atteint la ruine
@@ -351,8 +367,9 @@ SI (EXIS lcas 2) ;
 *nh145313
   p33 = mail POIN 'PROC' (long long) ;
 *nh145313
-*rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
+cadr1 = COUL ((0. 1.11) ET (1. 1.11)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -367,6 +384,7 @@ SI (EXIS lcas 2) ;
   lsigyy = PROG ;
   lok    = LECT ;
   REPE b0 (DIME langl) ;
+*    angl1 = 330. ;
     angl1 = EXTR langl &b0 ;
     MESS '=== THETA' ' ' angl1 ' ===';
 *nh145313
@@ -382,7 +400,7 @@ SI (EXIS lcas 2) ;
 
 ** Tracé des blocages et du chargement pour une valeur d'angle
     SI (EGA angl1 330.) ;
-      re0 = @REPERE (-0.55 -0.55) ;
+      re0 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) ;
       mor = MODE re0 'MECANIQUE' 'BARR' ;
       mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
       rir = RIGI mor mar ;
@@ -418,6 +436,8 @@ SI (EXIS lcas 2) ;
 *   Recuperation des contraintes SMXX et SMYY obtenues a l'avant dernier instant de calcul (dernier instant = dommage total)
     evsmxx = EVOL 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 1 ;
     evsmyy = EVOL 'TEMP' t 'CONTRAINTES' 'SMYY' 1 1 1 ;
+    tu = t . 'DEPLACEMENTS' ;
+    def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
     tc = t . 'CONTRAINTES' ;
     nc = DIME tc ;
     vsmxx = (INTG mo (tc . (nc - 2)) 'SMXX') / mes1 ;
@@ -558,6 +578,18 @@ SI (EXIS lcas 2) ;
       SAUT 1 'LIGN' ;
       MESS '|THETA[deg]' ' ' angl1 ' |SMXX[Pa]' ' ' val_smxx_ad ' |EPXX[adim]' ' ' val_epxx_ad
                                    ' |SMYY[Pa]' ' ' val_smyy_ad ' |EPYY[adim]' ' ' val_epyy_ad ;
+*     deformee
+      REPE b2 (DIME t . 'TEMPS') ;
+        tps1 = t . 'TEMPS' . (&b2 - 1) ;
+*       trace de la deformee (pour controle visuel)
+        def1 = DEFO mail (tu . (&b2 - 1)) 516. 'ROUG' ;
+        tit1 = CHAI '[2D Plan cont.] Deformee au temps' ' ' tps1 ;
+*        TRAC (def0 ET def1) 'TITR' tit1 ;
+        SI (&b2 EGA ((DIME t . 'TEMPS') - 1)) ;
+          TRAC (def0 ET def1) 'TITR' tit1 ;
+        FINSI ;
+      FIN b2 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
     FINSI ;
   FIN b0 ;
 * test que pour toutes les valeurs d'angle, on a atteint la ruine

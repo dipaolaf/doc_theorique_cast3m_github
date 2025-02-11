@@ -68,8 +68,9 @@ SI (EXIS lcas 1) ;
   p3      = sdroite POIN 'PROC' (long 0. 0.) ;
   mes1    = MESU mail ;
 *nh145313
-*rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+cadr1 = COUL ((0. 1.05 1.) ET (1.15 1.05 1.)) 'BLAN' ;
+rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -116,6 +117,7 @@ SI (EXIS lcas 1) ;
   tv = t . 'VARIABLES_INTERNES' ;
   tu = t . 'DEPLACEMENTS' ;
   tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
   ltps = PROG ;
   lend = PROG ;
   lsig = PROG ;
@@ -196,7 +198,15 @@ SI (EXIS lcas 1) ;
     evepxx = evepxx ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
   FIN b ;
   DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[3D V] EPXX vs Temps' ;
-*nh145313
+* deformee
+  REPE b2 (DIME tt) ;
+    tps1 = tt . (&b2 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b2 - 1)) 333. 'ROUG' ;
+    tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
+*    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FIN b2 ;
+  TRAC (def0 ET def1) 'TITR' tit1 ;
 * comparaison Calcul / Reference sur la contrainte moyenne
   ler1 = ABS ((ENLE lsig 1) - lsig1) / lsig1 ;
   mer1 = MAXI ler1 ;
@@ -241,8 +251,9 @@ SI (EXIS lcas 2) ;
   mail    = DROI 1 p1 p2 ;
   mes1    = MESU mails ;
 *nh145313
-*rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[3D PaF] Maillages de la Poutre et de sa Section' ;
+cadr1 = COUL ((-0.1 0. 0.) ET (1.2 0. 0.)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2 0.) (PROG 0.2 0.2 0.2) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[3D PaF] Maillages de la Poutre et de sa Section' ;
 
 
 ** Modele et caracteristiques materiau
@@ -306,6 +317,7 @@ SI (EXIS lcas 2) ;
   tv = t . 'VARIABLES_INTERNES' ;
   tu = t . 'DEPLACEMENTS' ;
   tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
   ltps = PROG ;
   lend1 = PROG ;
   lend2 = PROG ;
@@ -377,6 +389,15 @@ SI (EXIS lcas 2) ;
   DESS (ev0 ET an0) 'LEGE' 'SE' tleg 'TITR' '[3D PaF] Endommagement vs Temps' ;
   DESS (ev1 ET an1) 'LEGE' 'NE' tleg 'TITR' '[3D PaF] Contrainte vs Deformation' ;
   DESS ev2 'TITR' '[3D PaF] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+* deformee
+  REPE b2 (DIME tt) ;
+    tps1 = tt . (&b2 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b2 - 1)) 333. 'ROUG' ;
+    tit1 = CHAI '[3D PaF] Deformee au temps' ' ' tps1 ;
+*    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FIN b2 ;
+  TRAC (def0 ET def1) 'TITR' tit1 ;
 * comparaison Calcul / Reference sur la contrainte moyenne
   lsig = (lsig1 + lsig2 + lsig3 + lsig4) / 4. ;
   ler1 = ABS ((ENLE lsig 1) - lsan1) / lsan1 ;
@@ -421,8 +442,9 @@ SI (EXIS lcas 3) ;
   p3      = sdroite POIN 'PROC' (long 0.) ;
   mes1    = MESU mail ;
 *nh145313
-*rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
+cadr1 = COUL ((0. 1.05) ET (1.2 1.05)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -469,6 +491,7 @@ SI (EXIS lcas 3) ;
   tv = t . 'VARIABLES_INTERNES' ;
   tu = t . 'DEPLACEMENTS' ;
   tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
   ltps = PROG ;
   lend = PROG ;
   lsig = PROG ;
@@ -545,7 +568,15 @@ SI (EXIS lcas 3) ;
     evepxx = evepxx ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
   FIN b ;
   DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] EPXX vs Temps' ;
-*nh145313
+* deformee
+  REPE b2 (DIME tt) ;
+    tps1 = tt . (&b2 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b2 - 1)) 333. 'ROUG' ;
+    tit1 = CHAI '[2D Plan cont.] Deformee au temps' ' ' tps1 ;
+*    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FIN b2 ;
+  TRAC (def0 ET def1) 'TITR' tit1 ;
 * comparaison Calcul / Reference sur la contrainte moyenne
   ler1 = ABS ((ENLE lsig 1) - lsig1) / lsig1 ;
   mer1 = MAXI ler1 ;
@@ -588,8 +619,9 @@ SI (EXIS lcas 4) ;
   shaut   = mail COTE 3 ;
   p3      = shaut POIN 'PROC' (0. long) ;
 *nh145313
-*rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
+cadr1 = COUL ((0. 1.2) ET (1. 1.2)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -638,6 +670,7 @@ SI (EXIS lcas 4) ;
   tv = t . 'VARIABLES_INTERNES' ;
   tu = t . 'DEPLACEMENTS' ;
   tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
   ltps = PROG ;
   lend = PROG ;
   lsig = PROG ;
@@ -714,7 +747,15 @@ SI (EXIS lcas 4) ;
     evepzz = evepzz ET (EVOL 'VERT' 'TEMP' t 'DEFORMATIONS' 'EPZZ' 1 1 &b) ;
   FIN b ;
   DESS evepzz 'LEGE' 'NO' tleg 'TITR' '[2D Axi.] EPZZ vs Temps' ;
-*nh145313
+* deformee
+  REPE b2 (DIME tt) ;
+    tps1 = tt . (&b2 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b2 - 1)) 333. 'ROUG' ;
+    tit1 = CHAI '[2D Axi.] Deformee au temps' ' ' tps1 ;
+*    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FIN b2 ;
+  TRAC (def0 ET def1) 'TITR' tit1 ;
 * comparaison Calcul / Reference sur la contrainte moyenne
   ler1 = ABS ((ENLE lsig 1) - lsig1) / lsig1 ;
   mer1 = MAXI ler1 ;
@@ -759,8 +800,9 @@ SI (EXIS lcas 5) ;
   mail    = DROI 1 p1 p2 ;
   mes1    = MESU mails ;
 *nh145313
-*rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[2D PaF] Maillages de la Poutre et de sa Section' ;
+cadr1 = COUL ((-0.1 0.) ET (1.2 0.)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.2 0.2) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[2D PaF] Maillages de la Poutre et de sa Section' ;
 
 ** Modele et caracteristiques materiau
   mos = MODE mails 'MECANIQUE' 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
@@ -823,6 +865,7 @@ SI (EXIS lcas 5) ;
   tv = t . 'VARIABLES_INTERNES' ;
   tu = t . 'DEPLACEMENTS' ;
   tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
   ltps = PROG ;
   lend1 = PROG ;
   lend2 = PROG ;
@@ -894,6 +937,15 @@ SI (EXIS lcas 5) ;
   DESS (ev0 ET an0) 'LEGE' 'SE' tleg 'TITR' '[2D PaF] Endommagement vs Temps' ;
   DESS (ev1 ET an1) 'LEGE' 'NE' tleg 'TITR' '[2D PaF] Contrainte vs Deformation' ;
   DESS ev2 'TITR' '[2D PaF] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+* deformee
+  REPE b2 (DIME tt) ;
+    tps1 = tt . (&b2 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b2 - 1)) 333. 'ROUG' ;
+    tit1 = CHAI '[2D PaF] Deformee au temps' ' ' tps1 ;
+*    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FIN b2 ;
+  TRAC (def0 ET def1) 'TITR' tit1 ;
 * comparaison Calcul / Reference sur la contrainte moyenne
   lsig = (lsig1 + lsig2 + lsig3 + lsig4) / 4. ;
   ler1 = ABS ((ENLE lsig 1) - lsan1) / lsan1 ;

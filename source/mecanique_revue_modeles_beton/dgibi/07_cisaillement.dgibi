@@ -407,7 +407,7 @@ SI (EXIS lcas 3) ;
   mes1    = MESU mail ;
 *nh145313
 cadr1 = COUL ((0. 2.1) ET (1. 2.1)) 'BLAN' ;
-rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
 TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG') ET ((p3 et p3) COUL 'BLEU')) 'TITR' '[2D Plan cont.] Maillage' ;
 
 ** Modele et caracteristiques materiau
@@ -430,7 +430,7 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'RO
   cha  = CHAR 'DIMP' dim ev1 ;
 
 ** Tracé des blocages et du chargement
-  re0 = @REPERE (-0.55 -0.55) ;
+  re0 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) ;
   mor = MODE re0 'MECANIQUE' 'BARR' ;
   mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
   rir = RIGI mor mar ;

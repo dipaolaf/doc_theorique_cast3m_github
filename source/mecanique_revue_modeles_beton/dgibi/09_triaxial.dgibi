@@ -72,11 +72,12 @@ SI (EXIS lcas 1) ;
   p3      = mail POIN 'PROC' (0. 0. haut) ;
   mes1    = MESU mail ;
 *nh145313
-*rep1 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage - sgauche, sdroite' ;
-*TRAC 'QUAL' (rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[3D V] Maillage - sbas, shaut' ;
-*TRAC 'QUAL' (rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' '[3D V] Maillage - sdevant, sderrie' ;
-*TRAC 'QUAL' (rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+cadr1 = COUL ((0. (long + 5.E-3) (haut + 5.E-3)) ET (long (long + 5.E-3) (haut + 5.E-3))) 'BLAN' ;
+rep1 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage - sgauche, sdroite' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[3D V] Maillage - sbas, shaut' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' '[3D V] Maillage - sdevant, sderrie' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -151,6 +152,7 @@ SI (EXIS lcas 1) ;
     tv = t . 'VARIABLES_INTERNES' ;
     tu = t . 'DEPLACEMENTS' ;
     tr = t . 'REACTIONS' ;
+    def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
     ltps = PROG ;
     lend = PROG ;
     lsig = PROG ;
@@ -178,6 +180,15 @@ SI (EXIS lcas 1) ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
     tleg . 'TITRE' . &b0 = CHAI 'FORMAT' '(F3.1)' 'Calcul_P=' (pre1*1.E-6) '_MPa' ;
+*   deformee
+    REPE b2 (DIME t . 'TEMPS') ;
+      tps1 = t . 'TEMPS' . (&b2 - 1) ;
+*     trace de la deformee (pour controle visuel)
+      def1 = DEFO mail (tu . (&b2 - 1)) 10. 'ROUG' ;
+      tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FIN b2 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
   FIN b0 ;
 
 ** Donnees experimentales de reference (FdP)
@@ -274,8 +285,9 @@ SI (EXIS lcas 2) ;
   p3      = shaut POIN 'PROC' (0. haut) ;
   sdroite = mail COTE 2 ;
 *nh145313
-*rep1 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) 'TURQ' ;
-*TRAC 'QUAL' (rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+cadr1 = COUL ((0. (haut + 5.E-3)) ET (long (haut + 5.E-3))) 'BLAN' ;
+rep1 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) 'TURQ' ;
+TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -352,6 +364,7 @@ SI (EXIS lcas 2) ;
     tv = t . 'VARIABLES_INTERNES' ;
     tu = t . 'DEPLACEMENTS' ;
     tr = t . 'REACTIONS' ;
+    def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
     ltps = PROG ;
     lend = PROG ;
     lsig = PROG ;
@@ -379,6 +392,15 @@ SI (EXIS lcas 2) ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
     tleg . 'TITRE' . &b0 = CHAI 'FORMAT' '(F3.1)' 'Calcul_P=' (pre1*1.E-6) '_MPa' ;
+*   deformee
+    REPE b2 (DIME t . 'TEMPS') ;
+      tps1 = t . 'TEMPS' . (&b2 - 1) ;
+*     trace de la deformee (pour controle visuel)
+      def1 = DEFO mail (tu . (&b2 - 1)) 10. 'ROUG' ;
+      tit1 = CHAI '[2D Axi.] Deformee au temps' ' ' tps1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FIN b2 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
   FIN b0 ;
 
 ** Donnees experimentales de reference (FdP)

@@ -377,7 +377,7 @@ SI (EXIS lcas 2) ;
   p3      = mail POIN 'PROC' (long long) ;
 *nh145313
 cadr1 = COUL ((0. 1.05) ET (0.75 1.05)) 'BLAN' ;
-rep1 = @REPERE (-0.55 -0.55) 'TURQ' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
 TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT')) 'TITR' '[2D Plan cont.] Maillage' ;
                               
 ** Calcul 1

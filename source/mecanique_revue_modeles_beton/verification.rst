@@ -2384,7 +2384,7 @@ Biaxial
 ~~~~~~~
 Le cas-test se dénomme ``08_biaxial.dgibi``
 
-On n'applique le cas de chargement de traction-compression biaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_biax>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
+On n'applique le cas de chargement de traction-compression biaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_biax>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
 Le chargement biaxial est en contraintes imposées croissante jusqu'à atteindre un endommagement proche de 1 (ruine complète).
 
@@ -2506,7 +2506,7 @@ Triaxial
 ~~~~~~~~
 Le cas-test se dénomme ``09_triaxial.dgibi``
 
-On n'applique le cas de chargement triaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_triax>`. En effet, la triaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
+On n'applique le cas de chargement triaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_triax>`. En effet, la triaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
 Le chargement triaxial est la combinaison de deux phases successives : La mise en place au préalable d'un état de confinement auquel on ajoute ensuite un chargement de compression simple en déplacement imposé négatif. On réalise le test dans quatre états de confinement différents qui correspondent aux quatre valeurs de pression hydrostatique, c'est-à-dire de contrainte normale de compression, suivantes : P = 0 Pa/ 1,5 MPa/ 4,5 MPa/ 9 MPa. On applique ensuite le chargement de compression en déplacement imposé négatif, croissant en valeur absolue, jusqu'à atteindre le déplacement maximal : :math:`u_{max}=-4,5.10^{-3}` m.
 
@@ -2612,7 +2612,7 @@ Test de Willam
 ~~~~~~~~~~~~~~
 Le cas-test se dénomme ``10_willam.dgibi``
 
-On n'applique le cas test de Willam que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_willam>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traîte que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
+On n'applique le cas test de Willam que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_willam>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
 Le chargement du test de Willam est consistué de deux phases successives. La phase 1 consiste en un chargement de traction simple en déformation imposée ``EPXX`` dans la direction X, jusqu'à atteindre le seuil d'endommagement en déformation. La phase 2, dans laquelle on vise l'endommagement complet proche de 1, est la combinaison de trois chargements superposés : tout d'abord le chargement de traction en déformation imposée ``EPXX`` de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; puis un deuxième chargement de traction en déformation imposée ``EPYY`` est appliqué dans la direction Y jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin un troisième chargement de cisaillement en glissement imposé ``GAXY`` est appliqué dans le plan XY jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
 
