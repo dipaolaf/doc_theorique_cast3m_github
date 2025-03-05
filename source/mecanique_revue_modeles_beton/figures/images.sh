@@ -259,8 +259,10 @@ cast-post.sh -o -l 5 mazars_cisa_mono_beta1.06_char_2dplan.ps mazars_cisa_mono_b
 cast-post.sh -o -l 5 mazars_cisa_mono_beta1.06_char_2dpaf.ps  mazars_cisa_mono_beta1.06_char_2dpaf.ps
 cast-post.sh -o -l 5 mazars_biax_char_3d.ps          mazars_biax_char_3d.ps
 cast-post.sh -o -l 5 mazars_biax_char_2dplan.ps      mazars_biax_char_2dplan.ps
-cast-post.sh -o -l 5 mazars_triax_char_3d.ps         mazars_triax_char_3d.ps
-cast-post.sh -o -l 5 mazars_triax_char_2daxi.ps      mazars_triax_char_2daxi.ps
+cast-post.sh -o -l 5 mazars_triax_0MPa_char_3d.ps    mazars_triax_0MPa_char_3d.ps
+cast-post.sh -o -l 5 mazars_triax_9MPa_char_3d.ps    mazars_triax_9MPa_char_3d.ps
+cast-post.sh -o -l 5 mazars_triax_0MPa_char_2daxi.ps mazars_triax_0MPa_char_2daxi.ps
+cast-post.sh -o -l 5 mazars_triax_9MPa_char_2daxi.ps mazars_triax_9MPa_char_2daxi.ps
 cast-post.sh -o -l 5 mazars_will_char_3d.ps          mazars_will_char_3d.ps
 cast-post.sh -o -l 5 mazars_will_prin_3d.ps          mazars_will_prin_3d.ps
 cast-post.sh -o -l 5 mazars_will_char_2dplan.ps      mazars_will_char_2dplan.ps

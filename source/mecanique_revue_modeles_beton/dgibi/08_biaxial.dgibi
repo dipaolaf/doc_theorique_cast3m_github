@@ -319,13 +319,13 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
   tit1 = CHAI '[3D V] SMXX vs SMYY, Ecart.Rel. Calcul/Reference' ' ' everel ;
   DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
   
-* Courbes normalisées à la resistance en compression uniaxiale Fc : SMXX/Fc - SMYY/Fc
+* Courbes normalisées à la resistance en compression uniaxiale Fc : SMXX/|Fc| - SMYY/|Fc|
 * - REX cas-test 2D-CP de compression uniaxiale en contrainte imposée 08_biaxial_Ref_1222c.dgibi : Fc = -25,64 MPa
   Fc = -0.2564E8 ;
 *  - normalisation
-  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/Fc' (lsigxx / (ABS Fc)) 'SMYY' (lsigyy / (ABS Fc)) ;
-  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/Fc' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
-  DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[3D V] Diagramme des contraintes normalisees SMXX/Fc - SMYY/Fc' 'LEGE' tdess ;
+  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx / (ABS Fc)) 'SMYY/|Fc|' (lsigyy / (ABS Fc)) ;
+  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
+  DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[3D V] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
 
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
@@ -614,13 +614,13 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
   tit1 = CHAI '[2D Plan cont.] SMXX vs SMYY, Ecart.Rel. Calcul/Reference' ' ' everel ;
   DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
   
-* Courbes normalisées à la resistance en compression uniaxiale Fc : SMXX/Fc - SMYY/Fc
+* Courbes normalisées à la resistance en compression uniaxiale Fc : SMXX/|Fc| - SMYY/|Fc|
 * - REX cas-test 2D-CP de compression uniaxiale en contrainte imposée 08_biaxial_Ref_1222c.dgibi : Fc = -25,64 MPa
   Fc = -0.2564E8 ;
 *  - normalisation
-  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/Fc' (lsigxx / (ABS Fc)) 'SMYY' (lsigyy / (ABS Fc)) ;
-  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/Fc' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
-  DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[2D Plan cont.] Diagramme des contraintes normalisees SMXX/Fc - SMYY/Fc' 'LEGE' tdess ;
+  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx / (ABS Fc)) 'SMYY/|Fc|' (lsigyy / (ABS Fc)) ;
+  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
+  DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[2D Plan cont.] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
 
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;

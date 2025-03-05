@@ -1,5 +1,10 @@
-* Comparaison des courbes Contrainte vs Deformation selon les hypotheses de calcul
-* ================================================================================
+************************************************************************
+*      Cas test elementaire pour la loi d'endommagement de Mazars      *
+*                Essai de cisaillement simple monotone                 *
+*                                                                      *
+*          Comparaison des courbes Contrainte vs Deformation           *
+*                    selon les hypotheses de calcul                    *
+************************************************************************
 
     tdess = TABL;
     tdess . 'TITRE' = TABL;

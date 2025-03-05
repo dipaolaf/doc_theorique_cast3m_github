@@ -2461,13 +2461,13 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.70981.10^{-3} < 3.10^{-2}`.
 
 Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 .. figure:: figures/mazars_biax_SxSysFc_3d.png
    :width: 15cm
    :align: center
    
-   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+   Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 
 La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
    
@@ -2494,7 +2494,7 @@ Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\s
    :width: 15cm
    :align: center
    
-   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+   Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 
 La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
    

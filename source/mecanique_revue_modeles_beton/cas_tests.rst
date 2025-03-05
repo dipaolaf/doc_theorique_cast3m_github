@@ -191,7 +191,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
-- :download:`Test pour la loi de Mazars <./dgibi/04_compression_cyclique.trace>`
+- :download:`Test pour la loi de Mazars <./dgibi/04_compression_cyclique.dgibi>`
 
 
 .. _sec:modeles_beton_test_pout_trac_comp:
@@ -1092,7 +1092,7 @@ Quatre calculs successifs sont effectués pour autant de valeurs croissantes de 
 
 Blocages et chargement
 """"""""""""""""""""""
-Le chargement consiste à imposé au préalable une contrainte normale de compression sur l'enveloppe de l'échantillon, puis à piloter le déplacement de sa face supérieure en l'augmentant (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max}(<0)`. La particularité de l'essai est que l'expansion par effet de Poisson est entravée par la pression hydrostatique.
+Le chargement consiste à imposer au préalable une contrainte normale de compression sur l'enveloppe de l'échantillon, puis à piloter le déplacement de sa face supérieure en l'augmentant (en valeur absolue) progressivement jusqu'à une valeur :math:`u_{max}(<0)`. La particularité de l'essai est que l'expansion par effet de Poisson est entravée par la pression hydrostatique.
 
 - En 3D, la contrainte normale de compression est appliquée sur les faces "droite" (située dans le plan :math:`x=L`), "arrière" (dans le plan :math:`y=L`) et "supérieure" (dans le plan :math:`z=H`) et on bloque les déplacements des faces opposées dans les directions normales aux faces. Puis on pilote le déplacement **UZ** de la face supérieure (dans le plan :math:`z=H`), le déplacement **UZ** de la face opposée inférieure (dans le plan :math:`z=0`) étant déjà bloqué.
 - En 2D axisymétrique, la contrainte normale de compression est appliquée sur la surface latérale cylindrique (située en :math:`r=R`) et sur la surface plane supérieure (dans le plan :math:`z=H`), puis on pilote le déplacement **UZ** de cette même face. On bloque le déplacement **UZ** de la face opposée inférieure (dans le plan :math:`z=0`).
@@ -1284,7 +1284,7 @@ Les paramètres de la seconde phase de chargement sont issus de l'article suivan
 Enfin, le paramètre **BTRA** du modèle Mazars est issu d'une communication personnelle de L. Jason (CEA/DES/ISAS/DM2S/SEMT), d'après sa contribution au benchmark [2]. Le paramètre **ATRA**, qui pilote la valeur asymptotique vers laquelle tendent les contraintes lorsque l'endommagement est maximal, est choisi pour optimiser la corrélation du calcul avec les résultats numériques de référence.
 
 
-.. admonition:: Test de Willam : Paramètres géométrique et matériau
+.. admonition:: Test de Willam : Paramètres géométrique, matériau et chargement
 
    .. literalinclude:: dgibi/10_willam.ecr
       :lines: 96-117

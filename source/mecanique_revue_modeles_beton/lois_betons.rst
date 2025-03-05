@@ -172,6 +172,12 @@ avec :math:`\alpha_{t(c)} \in [0,1]` des facteurs de combinaison qui s'expriment
 
    \alpha_t = \sum_{i=1}^{n} \frac{\varepsilon_i^t \langle \varepsilon_i \rangle_+}{e} \qquad \alpha_c = 1 - \alpha_t
 
+[nh145313 : correction d'après source cmazar.eso]
+
+.. math::
+
+   \alpha_t = \frac{\sum_{i=1}^{n} \varepsilon_i^t \langle \varepsilon_i \rangle_+}{e^2} \qquad \alpha_c = 1 - \alpha_t
+
 avec :math:`\varepsilon_i^t` les déformations associées aux contraintes principales positives. Le paramètre :math:`\beta` a été introduit historiquement plus tard dans le modèle pour éviter une évolution trop rapide de l'endommagement en cisaillement [PIJAUDIER-1991]_.
 
 Réponses typiques
@@ -307,6 +313,11 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 
 	.. math::
 		\gamma = \frac{\sum_{i=1}^n \langle \sigma_i \rangle_{-}^2}{\sum_{i=1}^n \langle \sigma_i \rangle_{-}}
+
+[nh145313 : correction d'après source cmazar.eso]
+
+	.. math::
+		\gamma = -\frac{\sqrt{\sum_{i=1}^n \langle \sigma_i \rangle_{-}^2}}{\sum_{i=1}^n \langle \sigma_i \rangle_{-}}
   
   avec :math:`\langle \cdot \rangle_{-}` l'opérateur partie négative.
 	
