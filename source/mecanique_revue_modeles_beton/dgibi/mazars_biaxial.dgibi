@@ -5,10 +5,20 @@
 * Le test est realise avec plusieurs modes de calcul :                 *
 *   1) 3D volumique                                                    *
 *   2) 2D contraintes planes                                           *
+*                                                                      *
+* ITRAC1 : VRAI => affichage resultats                                 *
+* IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
 ************************************************************************
 
 ** Options pour les traces
-OPTI 'TRAC' 'PSC' ;
+ITRAC1 = VRAI ;
+IPSC1  = VRAI ;
+SI IPSC1 ;
+  OPTI 'TRAC' 'PSC' ;
+FINSI ;
+
+** Sortie sur Erreur 1152 "Solution calculee non conforme par rapport a la solution de reference"
+IERR = FAUX ;
 
 ** Liste des modes de calcul a traiter
 lcas = LECT 1 2 ;
@@ -74,7 +84,9 @@ SI (EXIS lcas 1) ;
 *nh145313
 cadr1 = COUL ((0. 1.05 1.05) ET (1. 1.05 1.05)) 'BLAN' ;
 rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+FINSI ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -112,7 +124,9 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
       vfx = VECT fprx 'FORC' 'ROUG' (3.E-7 * 2.5E6 / 5.7735E7) ;
       vfy = VECT fpry 'FORC' 'ROUG' (3.E-7 * 2.5E6 / 5.7735E7) ;
       tit0 = CHAI '[3D V] Blocages et chargement, angle' ' ' angl1 ' deg.';
-      TRAC ((RIGI mo ma) ET bl ET rir) (vfx ET vfy) 'NOLE' 'TITR' tit0 ;
+      SI ITRAC1 ;
+        TRAC ((RIGI mo ma) ET bl ET rir) (vfx ET vfy) 'NOLE' 'TITR' tit0 ;
+      FINSI ;
     FINSI ;
 
 ** Resolution
@@ -212,7 +226,9 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
         tdess1.'TITRE'. &b_dess1 = t_evd1.'TITRE'. &b_dess1 ;
       FIN b_dess1 ;
       tit1 = CHAI '[3D V] Dommage D en fn de UX et UY, angle' ' ' angl1 ' deg.';
-      DESS evd1a 'TITR' tit1 'LEGE' tdess1 ;
+      SI ITRAC1 ;
+        DESS evd1a 'TITR' tit1 'LEGE' tdess1 ;
+      FINSI ;
 
 *     Courbes Contraintes en fonction des déformations : SMXX=fn(EPXX) et SMYY=fn(EPYYY)
 *     - (SMXX,EPXX) et (SMYY,EPYY) calcules au point de Gauss k de l'element j de la zone i
@@ -268,7 +284,9 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
         tdess2.'TITRE'. &b_dess2 = t_evse1.'TITRE'. &b_dess2 ;
       FIN b_dess2 ;
       tit2 = CHAI '[3D V] SMXX=fn(EPXX) et SMYY=fn(EPYY), angle' ' ' angl1 ' deg.';
-      DESS evse1a 'TITR' tit2 'LEGE' tdess2 ;
+      SI ITRAC1 ;
+        DESS evse1a 'TITR' tit2 'LEGE' tdess2 ;
+      FINSI ;
 
 *     contraintes SMXX et SMYY et deformations EPXX et EPYY a l'avant dernier instant (on retient l'etat avant dommage total)
       nn = ((DIME t . 'VARIABLES_INTERNES') - 2) ;
@@ -289,12 +307,16 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
 *       trace de la deformee (pour controle visuel)
         def1 = DEFO mail (tu . (&b2 - 1)) 516. 'ROUG' ;
         tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
-*        TRAC (def0 ET def1) 'TITR' tit1 ;
-        SI (&b2 EGA ((DIME t . 'TEMPS') - 1)) ;
-          TRAC (def0 ET def1) 'TITR' tit1 ;
+        SI ITRAC1 ;
+*          TRAC (def0 ET def1) 'TITR' tit1 ;
+          SI (&b2 EGA ((DIME t . 'TEMPS') - 1)) ;
+            TRAC (def0 ET def1) 'TITR' tit1 ;
+          FINSI ;
         FINSI ;
       FIN b2 ;
-*      TRAC (def0 ET def1) 'TITR' tit1 ;
+      SI ITRAC1 ;
+*        TRAC (def0 ET def1) 'TITR' tit1 ;
+      FINSI ;
     FINSI ;
   FIN b0 ;
 * test que pour toutes les valeurs d'angle, on a atteint la ruine
@@ -310,35 +332,37 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
   ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx 'SMYY' lsigyy ;
   iv1 = INTG ev1 'ABS' ;
 * - sol. de Référence (calculée) 
-  OPTI REST '08_biaxial_Ref_1342.out' ;
+  OPTI REST 'mazars_biaxial_Ref_1342.out' ;
   REST ;
   ev2 = ev_ref ;
   iv2 = INTG ev2 'ABS' ;
   evecart = iv2 - iv1 ;
   everel = evecart / iv2 ;
   tit1 = CHAI '[3D V] SMXX vs SMYY, Ecart.Rel. Calcul/Reference' ' ' everel ;
-  DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
-  
+  SI ITRAC1 ;
+    DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
+  FINSI ;
+
 * Courbes normalisées à la resistance en compression uniaxiale Fc : SMXX/|Fc| - SMYY/|Fc|
 * - REX cas-test 2D-CP de compression uniaxiale en contrainte imposée 08_biaxial_Ref_1222c.dgibi : Fc = -25,64 MPa
   Fc = -0.2564E8 ;
 *  - normalisation
   ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx / (ABS Fc)) 'SMYY/|Fc|' (lsigyy / (ABS Fc)) ;
   ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
-  DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[3D V] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
+  SI ITRAC1 ;
+    DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[3D V] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
+  FINSI ;
 
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
   SAUT 1 LIGN ;
-  SI (everel < 3.E-2) ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' < 3.E-2 => OK' ;
+  SI (everel < 3.E-3) ;
+    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' < 3.E-03 => OK' ;
     SAUT 1 LIGN ;
-    ERRE 0 ;
   SINO ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' > 3.E-2 => ERREUR' ;
-    ERRE 0 ;
-*    ERRE 'ECHEC DU CAS-TEST' ;
+    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' > 3.E-03 => ECHEC' ;
+    IERR = VRAI ;
     SAUT 1 LIGN ;
   FINS ;
   SAUT 1 LIGN ;
@@ -369,7 +393,9 @@ SI (EXIS lcas 2) ;
 *nh145313
 cadr1 = COUL ((0. 1.11) ET (1. 1.11)) 'BLAN' ;
 rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
+FINSI ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -407,7 +433,9 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
       vfx = VECT fprx 'FORC' 'ROUG' (1.E-6 * 0.25E6 / 5.7735E6) ;
       vfy = VECT fpry 'FORC' 'ROUG' (1.E-6 * 0.25E6 / 5.7735E6) ;
       tit0 = CHAI '[2D Plan cont.] Blocages et chargement, angle' ' ' angl1 ' deg.';
-      TRAC ((RIGI mo ma) ET bl ET rir) (vfx ET vfy) 'NOLE' 'TITR' tit0 ;
+      SI ITRAC1 ;
+        TRAC ((RIGI mo ma) ET bl ET rir) (vfx ET vfy) 'NOLE' 'TITR' tit0 ;
+      FINSI ;
     FINSI ;
 
 ** Resolution
@@ -507,7 +535,9 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
         tdess1.'TITRE'. &b_dess1 = t_evd1.'TITRE'. &b_dess1 ;
       FIN b_dess1 ;
       tit1 = CHAI '[2D Plan cont.] Dommage D en fn de UX et UY, angle' ' ' angl1 ' deg.';
-      DESS evd1a 'TITR' tit1 'LEGE' tdess1 ;
+      SI ITRAC1 ;
+        DESS evd1a 'TITR' tit1 'LEGE' tdess1 ;
+      FINSI ;
 
 *     Courbes Contraintes en fonction des déformations : SMXX=fn(EPXX) et SMYY=fn(EPYYY)
 *     - (SMXX,EPXX) et (SMYY,EPYY) calcules au point de Gauss k de l'element j de la zone i
@@ -563,7 +593,9 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
         tdess2.'TITRE'. &b_dess2 = t_evse1.'TITRE'. &b_dess2 ;
       FIN b_dess2 ;
       tit2 = CHAI '[2D Plan cont.] SMXX=fn(EPXX) et SMYY=fn(EPYY), angle' ' ' angl1 ' deg.';
-      DESS evse1a 'TITR' tit2 'LEGE' tdess2 ;
+      SI ITRAC1 ;
+        DESS evse1a 'TITR' tit2 'LEGE' tdess2 ;
+      FINSI ;
 
 *     contraintes SMXX et SMYY et deformations EPXX et EPYY a l'avant dernier instant (on retient l'etat avant dommage total)
       nn = ((DIME t . 'VARIABLES_INTERNES') - 2) ;
@@ -584,12 +616,16 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
 *       trace de la deformee (pour controle visuel)
         def1 = DEFO mail (tu . (&b2 - 1)) 516. 'ROUG' ;
         tit1 = CHAI '[2D Plan cont.] Deformee au temps' ' ' tps1 ;
-*        TRAC (def0 ET def1) 'TITR' tit1 ;
-        SI (&b2 EGA ((DIME t . 'TEMPS') - 1)) ;
-          TRAC (def0 ET def1) 'TITR' tit1 ;
+        SI ITRAC1 ;
+*          TRAC (def0 ET def1) 'TITR' tit1 ;
+          SI (&b2 EGA ((DIME t . 'TEMPS') - 1)) ;
+            TRAC (def0 ET def1) 'TITR' tit1 ;
+          FINSI ;
         FINSI ;
       FIN b2 ;
-*      TRAC (def0 ET def1) 'TITR' tit1 ;
+      SI ITRAC1 ;
+*        TRAC (def0 ET def1) 'TITR' tit1 ;
+      FINSI ;
     FINSI ;
   FIN b0 ;
 * test que pour toutes les valeurs d'angle, on a atteint la ruine
@@ -605,14 +641,16 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
   ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx 'SMYY' lsigyy ;
   iv1 = INTG ev1 'ABS' ;
 * - sol. de Référence (calculée) 
-  OPTI REST '08_biaxial_Ref_1242c.out' ;
+  OPTI REST 'mazars_biaxial_Ref_1242c.out' ;
   REST ;
   ev2 = ev_ref ;
   iv2 = INTG ev2 'ABS' ;
   evecart = iv2 - iv1 ;
   everel = evecart / iv2 ;
   tit1 = CHAI '[2D Plan cont.] SMXX vs SMYY, Ecart.Rel. Calcul/Reference' ' ' everel ;
-  DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
+  SI ITRAC1 ;
+    DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
+  FINSI ;
   
 * Courbes normalisées à la resistance en compression uniaxiale Fc : SMXX/|Fc| - SMYY/|Fc|
 * - REX cas-test 2D-CP de compression uniaxiale en contrainte imposée 08_biaxial_Ref_1222c.dgibi : Fc = -25,64 MPa
@@ -620,20 +658,20 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
 *  - normalisation
   ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx / (ABS Fc)) 'SMYY/|Fc|' (lsigyy / (ABS Fc)) ;
   ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
-  DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[2D Plan cont.] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
+  SI ITRAC1 ;
+    DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[2D Plan cont.] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
+  FINSI ;
 
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' ******* C A S  #2  :  2 D   C O N T R A I N T E S   P L A N E S *******';
   SAUT 1 LIGN ;
-  SI (everel < 3.E-2) ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' < 3.E-2 => OK' ;
+  SI (everel < 3.E-3) ;
+    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' < 3.E-03 => OK' ;
     SAUT 1 LIGN ;
-    ERRE 0 ;
   SINO ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' > 3.E-2 => ERREUR' ;
-    ERRE 0 ;
-*    ERRE 'ECHEC DU CAS-TEST' ;
+    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' > 3.E-03 => ECHEC' ;
+    IERR = VRAI ;
     SAUT 1 LIGN ;
   FINS ;
   SAUT 1 LIGN ;
@@ -641,8 +679,13 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroi
 
 FINSI ;
 
-*nh145313
-TEMPS ;
+** Sortie sur Erreur 1152 en cas de non conformite
+SI IERR ;
+  ERRE 1152 ;
+FINSI ;
+
+
+
 
 
 FIN ;

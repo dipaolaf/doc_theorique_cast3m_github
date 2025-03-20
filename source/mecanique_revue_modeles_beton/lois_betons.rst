@@ -18,91 +18,9 @@ Caracteristiques et limitations principales :
 
 - Dans ce modèle la dégradation des propriétés élastiques du matériau est représentée à l'aide d'une variable scalaire :math:`D` variant entre zéro (matériau sain) et l'unité (matériau totalement endommagé). Cette dernière est obtenue par la combinaison de deux variables scalaires représentant l'endommagement sous sollicitations de compression et de traction séparément ;
 
-- Cela permet de modéliser convenablement la dyssimétrie traction-compression observée expérimentalement pour les bétons. Cependant, aucune reprise de raideur *[nh145313 induite par la refermeture des fissures]* lors du passage d'une sollicitation de traction à une sollicitation de compression ne peut être prise en compte, c'est-à-dire que l'effet unilatéral n'est pas modélisé ;
+- Cela permet de modéliser convenablement la dyssimétrie traction-compression observée expérimentalement pour les bétons. Cependant, aucune reprise de raideur induite par la refermeture des fissures lors du passage d'une sollicitation de traction à une sollicitation de compression ne peut être prise en compte, c'est-à-dire que l'effet unilatéral n'est pas modélisé ;
 
 - Compte tenu de cela, cette loi est adaptée à la simulation de la réponse du béton sous chargement monotone, mais nécessite des modifications pour une utilisation dans le cadre d'un calcul sous sollicitations cycliques et/ou dynamiques. Dans ce dernier cas, des limitations supplémentaires sont présentes (par exemple, l'impossibilité de modéliser des boucles d'hystérésis).
-
-Anomalies observées
-~~~~~~~~~~~~~~~~~~~
-
-Anomalie 1
-++++++++++
-Une anomalie a été identifiée dans les sources fibmaz.eso (modèles poutres à fibres) et cmazar.eso (modèles massifs) concernant le mauvais calibrage du test de bicompression dans le modèle Mazars. Dans fibmaz.eso, le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple ; tandis que, dans cmazar.eso, il conduisait à mal calculer les contraintes en situation de bicompression. 
-
-En ce qui concerne la source cmazar.eso pour les modèles massif, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). 
-
-En ce qui concerne la source fibmaz.eso pour les modèles poutres à fibres, la correction :math:`\gamma` a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. 
-
-Cette anomalie est corrigée dans la version du jour actuelle et dans la version 2024.1 de Cast3M.
-
-Anomalie 2
-++++++++++
-[valable au 19/09/2024]
-
-Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazar.eso. Cette anomalie ne rend pas le modèle Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M. Elle est corrigée dans la version du jour ainsi que dans la version 2024.1.
-
-Anomalie 3
-++++++++++
-[valable au 04/02/2025]
-
-Une anomalie de fonctionnement des modélisations poutre à fibres a été identifiée dans différents cas de chargement élémentaire (traction, compression, flexion, ...) et avec différents modèles de comportement (Mazars, ACIER_UNI, ...). Il s'agit d'une instabilité numérique de type "flambement" qui conduit soit à un arrêt du calcul par non convergence de PASAPAS, soit à des résultats erronés produits après l'instabilité, comme ici un champ de dommage devenant hétérogène dans la section du modèle poutre à fibres, avec une bifurcation entre les résultats de deux paires de points de Gauss conduisant à des valeurs anormales (cf. figure ci-dessous).
-
-.. image:: figures/Figure_anomalie3_1.png
-   :width: 51%
-.. image:: figures/Figure_anomalie3_2.png
-   :width: 47%
-.. image:: figures/Figure_anomalie3_3.png
-   :width: 47%
-.. image:: figures/Figure_anomalie3_4.png
-   :width: 51%
-
-.. figure:: figures/Figure_anomalie3_4.png
-   :width: 0%
-   
-   Anomalie constatée dans le cas d'une modélisation poutre à fibres soumise à un chargement uniaxial de compression en déplacement imposé à l'extrémité libre d'une poutre encastrée à son autre extrémité - Maillage et conditions aux limites, champ de dommage hétérogène dans la section en fin de calcul, évolutions anormales au cours du chargement de la contrainte moyenne en fonction de la déformation moyenne et du dommage en chaque point de Gauss de la section en fonction du temps.
-
-Cette anomalie, qui concerne donc le modèle poutre à fibres et pas le modèle Mazars, est contournée dans tous les cas rencontrés jusqu'ici en bloquant les rotations du point correspondant à l'extrémité libre soumise au chargement de la poutre à fibres (cf. figure ci-dessous).
-
-.. image:: figures/Figure_solution3_1.png
-   :width: 51%
-.. image:: figures/Figure_solution3_2.png
-   :width: 47%
-.. image:: figures/Figure_solution3_3.png
-   :width: 47%
-.. image:: figures/Figure_solution3_4.png
-   :width: 51%
-
-.. figure:: figures/Figure_solution3_4.png
-   :width: 0%
-   
-   Anomalie contournée en bloquant les rotations du point d'extrémité libre de la poutre - Maillage et conditions aux limites, champ de dommage homogène en fin de calcul, évolutions normales au cours du chargement de la contrainte moyenne en fonction de la déformation moyenne et du dommage en chaque point de Gauss de la section en fonction du temps.
-
-Limitation numérique
-++++++++++++++++++++
-Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazar.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
-
-.. math::
-   D_{max}=(1 - \epsilon)
-   
-où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de ce paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
-
-En effet, la consolidation qui en découlerait dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissibles et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle. 
-
-Le choix de la valeur du paramètre :math:`\epsilon` résulte donc d'un compromis à faire entre convergence numérique et représentativité physique du modèle.
-
-L'historique des valeurs attribuées au paramètre :math:`\epsilon` est le suivant :
-
-- dans la configuration éléments volumiques (source cmazar.eso) :
-
-  - :math:`\epsilon=10^{-20}` : valeur d'origine ;
-
-  - :math:`\epsilon=10^{-4}` : valeur dans la version du jour de Cast3M jusqu'au 9/10/2024 ;
-
-  - :math:`\epsilon=10^{-8}` : valeur dans la version du jour de Cast3M depuis le 10/10/2024 ;
-   
-- dans la configuration éléments poutres à fibres (source fibmaz.eso) :
-
-  - :math:`\epsilon=10^{-5}` : valeur d'origine.
 
 .. _mazars:
 
@@ -167,12 +85,6 @@ comme suit :
    D = \alpha_t^\beta D_t + \alpha_c^\beta D_c
    
 avec :math:`\alpha_{t(c)} \in [0,1]` des facteurs de combinaison qui s'expriment en fonction des déformations principales comme suit :
-
-.. math::
-
-   \alpha_t = \sum_{i=1}^{n} \frac{\varepsilon_i^t \langle \varepsilon_i \rangle_+}{e} \qquad \alpha_c = 1 - \alpha_t
-
-[nh145313 : correction d'après source cmazar.eso]
 
 .. math::
 
@@ -310,11 +222,6 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 		e = e \gamma
 		 
   le coefficient :math:`\gamma` est calculé de la façon suivante :
-
-	.. math::
-		\gamma = \frac{\sum_{i=1}^n \langle \sigma_i \rangle_{-}^2}{\sum_{i=1}^n \langle \sigma_i \rangle_{-}}
-
-[nh145313 : correction d'après source cmazar.eso]
 
 	.. math::
 		\gamma = -\frac{\sqrt{\sum_{i=1}^n \langle \sigma_i \rangle_{-}^2}}{\sum_{i=1}^n \langle \sigma_i \rangle_{-}}
@@ -532,3 +439,95 @@ Prise en compte de la régularisation dans la définition des paramètres matér
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 - Régularisation énergetique 
 - Régularisation non-locale (quelle formulation? quelle variable est rendue non-locale?)
+
+Anomalies observées et limitation numérique
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Anomalie 1
+++++++++++
+
+Une anomalie a été identifiée dans les sources fibmaz.eso (modèles poutres à fibres) et cmazar.eso (modèles massifs) concernant le mauvais calibrage du test de bicompression dans le modèle Mazars. Dans fibmaz.eso, le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple ; tandis que, dans cmazar.eso, il conduisait à mal calculer les contraintes en situation de bicompression. 
+
+En ce qui concerne la source cmazar.eso pour les modèles massif, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). 
+
+- Constatée le 24/07/2024.
+- **Anomalie #12209 corrigée dans la version 2025 de Cast3M.**
+
+En ce qui concerne la source fibmaz.eso pour les modèles poutres à fibres, la correction :math:`\gamma` a été inhibée car la biaxialité du chargement n'a pas de sens avec l'élément poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. 
+
+- Constatée le 24/07/2024.
+- **Anomalie #11959 corrigée dans la version 2025 de Cast3M.**
+
+Anomalie 2
+++++++++++
+
+- Constatée le 13/06/2024.
+- **Anomalie #11948 corrigée dans la version 2024.1 de Cast3M.**
+
+Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazar.eso. Cette anomalie ne rend pas le modèle Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M.
+
+Anomalie 3
+++++++++++
+
+- Constatée le 04/02/2025.
+- **Non corrigée à ce jour.**
+
+Une anomalie de fonctionnement des modélisations poutre à fibres a été identifiée dans différents cas de chargement élémentaire (traction, compression, flexion, ...) et avec différents modèles de comportement (Mazars, ACIER_UNI, ...). Il s'agit d'une instabilité numérique de type "flambement" qui conduit soit à un arrêt du calcul par non convergence de PASAPAS, soit à des résultats erronés produits après l'instabilité, comme ici un champ de dommage devenant hétérogène dans la section du modèle poutre à fibres, avec une bifurcation entre les résultats de deux paires de points de Gauss conduisant à des valeurs anormales (cf. figure ci-dessous).
+
+.. image:: figures/Figure_anomalie3_1.png
+   :width: 51%
+.. image:: figures/Figure_anomalie3_2.png
+   :width: 47%
+.. image:: figures/Figure_anomalie3_3.png
+   :width: 47%
+.. image:: figures/Figure_anomalie3_4.png
+   :width: 51%
+
+.. figure:: figures/Figure_anomalie3_4.png
+   :width: 0%
+   
+   Anomalie constatée dans le cas d'une modélisation poutre à fibres soumise à un chargement uniaxial de compression en déplacement imposé à l'extrémité libre d'une poutre encastrée à son autre extrémité - Maillage et conditions aux limites, champ de dommage hétérogène dans la section en fin de calcul, évolutions anormales au cours du chargement de la contrainte moyenne en fonction de la déformation moyenne et du dommage en chaque point de Gauss de la section en fonction du temps.
+
+Cette anomalie, qui concerne donc le modèle poutre à fibres et pas le modèle Mazars, est contournée dans tous les cas rencontrés jusqu'ici en bloquant les rotations du point correspondant à l'extrémité libre soumise au chargement de la poutre à fibres (cf. figure ci-dessous).
+
+.. image:: figures/Figure_solution3_1.png
+   :width: 51%
+.. image:: figures/Figure_solution3_2.png
+   :width: 47%
+.. image:: figures/Figure_solution3_3.png
+   :width: 47%
+.. image:: figures/Figure_solution3_4.png
+   :width: 51%
+
+.. figure:: figures/Figure_solution3_4.png
+   :width: 0%
+   
+   Anomalie contournée en bloquant les rotations du point d'extrémité libre de la poutre - Maillage et conditions aux limites, champ de dommage homogène en fin de calcul, évolutions normales au cours du chargement de la contrainte moyenne en fonction de la déformation moyenne et du dommage en chaque point de Gauss de la section en fonction du temps.
+
+Limitation numérique
+++++++++++++++++++++
+Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazar.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
+
+.. math::
+   D_{max}=(1 - \epsilon)
+   
+où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de ce paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
+
+En effet, la consolidation qui en découlerait dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissibles et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle. 
+
+Le choix de la valeur du paramètre :math:`\epsilon` résulte donc d'un compromis à faire entre convergence numérique et représentativité physique du modèle.
+
+L'historique des valeurs attribuées au paramètre :math:`\epsilon` est le suivant :
+
+- dans la configuration éléments volumiques (source cmazar.eso) :
+
+  - :math:`\epsilon=10^{-20}` : valeur d'origine ;
+
+  - :math:`\epsilon=10^{-4}` : valeur dans la version du jour de Cast3M jusqu'au 9/10/2024 ;
+
+  - :math:`\epsilon=10^{-8}` : valeur dans la version du jour de Cast3M depuis le 10/10/2024 ;
+   
+- dans la configuration éléments poutres à fibres (source fibmaz.eso) :
+
+  - :math:`\epsilon=10^{-5}` : valeur d'origine.
+

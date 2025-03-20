@@ -1,4 +1,4 @@
-C CMAZAR    SOURCE    PV090527  24/10/09    21:15:03     12032          
+C CMAZAR    SOURCE    MB234859  25/03/18    21:15:01     12209          
       SUBROUTINE CMAZAR (WRK52,WRK53,WRK54,WRKK2,NSTRS1,NVARI,
      1                   ICARA,JDIM,IFOUR2)
 C MAZARS    SOURCE    AM        98/12/23    21:38:30     3409
@@ -67,7 +67,6 @@ C
       REAL*8 XZERO,UN,DEUX,XPETIT
       REAL*8 DINI,D,DT,DC,EPSTIL,EPSTIM,ALFAT,ALFAC,GAMMA
       PARAMETER (XZERO=0.D0 , UN=1.D0 , DEUX=2.D0, XPETIT=1.D-12)
-C nh145313
       PARAMETER (YPETIT=1.)
 
 C
@@ -215,7 +214,6 @@ C
      1                                 SIGPC(3)*SIGPC(3)
                GAMMA=-SQRT(GAMMA)/TRSIGC
                EPSTIM=EPSTIM*GAMMA
-             ELSE
             END IF
 C
 C        amelioration de la reponse en cisaillement pour beta > 1.
@@ -306,6 +304,7 @@ C
       RETURN
       END
 
+ 
  
  
  

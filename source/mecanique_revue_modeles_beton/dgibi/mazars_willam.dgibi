@@ -1,0 +1,709 @@
+*fichier : mazars_willam.dgibi
+************************************************************************
+*      Cas test elementaire pour la loi d'endommagement de Mazars      *
+*              Essai de Willam (traction / cisaillement)               *
+*                                                                      *
+* Versions du test de Willam decrites dans les                         *
+* references bibliographiques suivantes :                              *
+* - Article d'origine du test                                          *
+* [1] Willam, K.; Pramono, E.; Sture, S. Fundamental issues of         *
+*     smeared crack models. In Proc. of the SEM-RILEM Int. conf. on    *
+*     fracture of concrete and rock, TX USA 17-19 June 1987,           *
+*     Shah S.P., Swartz S.E. (eds), 1989, pp. 142-157.                 *
+* - Geometrie, parametres elastiques et courbes de reference LGCNSN iso*
+* [2] Ghavamian, S.; Carol, I.; Delaplace A. Discussions over          *
+*     MECA project results. Revue Française de Génie Civil. 7 (2003)   *
+*     pp. 543-581. doi:10.1080/127951119.2003.9692509.                 *
+* - Parametres de chargement                                           *
+* [3] Wosatko, A.; Szczecina, M.; Winnicki A. Selected Concrete Models *
+*     Studied Using Willam's Test. Materials 2020, 13, 4756;           *
+*     doi:10.3390/ma13214756.                                          *
+* - Parametres du modele Mazars                                        *
+* Communication personnelle jdd L.Jason (2000)                         *
+*                                                                      *
+* Le test est realise avec plusieurs modes de calcul :                 *
+*   1) 3D volumique                                                    *
+*   2) 2D contraintes planes                                           *
+*                                                                      *
+* ITRAC1 : VRAI => affichage resultats                                 *
+* IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
+************************************************************************
+
+DIVERS = 'VENV' 'CASTEM_DIVERS' ;
+FIC1   = 'CHAI' DIVERS '/mazars_willam_LGCNSNiso_smxx.csv' ;
+FIC2   = 'CHAI' DIVERS '/mazars_willam_LGCNSNiso_smyy.csv' ;
+FIC3   = 'CHAI' DIVERS '/mazars_willam_LGCNSNiso_smxy.csv' ;
+
+** Options pour les traces
+ITRAC1 = VRAI ;
+IPSC1  = VRAI ;
+SI IPSC1 ;
+  OPTI 'TRAC' 'PSC' ;
+FINSI ;
+
+** Liste des modes de calcul a traiter
+lcas = LECT 1 2 ;
+*nh145313
+*lcas = LECT 1 ; COMM '3D volumique' ;
+*lcas = LECT 2 ; COMM '2D contraintes planes' ;
+
+** Parametres geometriques [2] Ghavamian (2003)
+long = 0.56 ;
+epai = 0.1 ;
+
+** Parametres materiau [2] Ghavamian (2003) sauf commentaire 'LJason' jdd L.Jason (2000)
+you = 32.E9 ;
+nu   = 0.2 ;
+ft   = 3.E6 ;
+epd0 = ft / you ;
+at   = 0.99 ;
+bt   = 18000.   ; COMM 'LJason';
+ac   = 1.5 ;
+bc   = 1550. ;
+beta = 1.  ;
+
+** Parametres chargement en deformation imposee [3] Wosatko (2020)
+*  - Phase 1
+  ep1 = epd0 ;
+*  - Phase 2
+  ep2 = 10. * epd0 ;
+  c2epxx = 0.5  ;
+  c2epyy = 0.75 ;
+  c2gaxy = 0.5  ;
+
+OPTI ECHO 0 ;
+SAUT 1 lign ;
+mess 'Parametres' ;
+mess '==========';
+SAUT 1 lign ;
+mess 'Parametre de taille de l element' ;
+mess '- H = arete du cube : long (m)' ' ' long ;
+SAUT 1 lign ;
+mess 'Coef. elastiques' ;
+mess '- Module d Young         : you (Pa)' you ;
+mess '- Coefficient de Poisson : nu' ' ' ' ' ' ' ' ' ' ' ' ' nu ;
+SAUT 1 lign ;
+mess 'Coef. Mazars' ;
+mess '- KTR0 : epd0' ' ' epd0 ;
+mess '- ATRA : at' ' ' ' ' ' ' at ;
+mess '- BTRA : bt' ' ' ' ' ' ' bt ;
+mess '- ACOM : ac' ' ' ' ' ' ' ac ;
+mess '- BCOM : bc' ' ' ' ' ' ' bc ;
+mess '- BETA : beta' ' ' beta ;
+SAUT 1 lign ;
+mess 'Coef. chargement Phase 2' ;
+mess '- fact.mult. EPXX : c2epxx' ' ' c2epxx ;
+mess '- fact.mult. EPYY : c2epyy' ' ' c2epyy ;
+mess '- fact.mult. GAXY : c2gaxy' ' ' c2gaxy ;
+SAUT 1 lign ;
+OPTI ECHO 1 ;
+*opti donn 5;
+
+
+**************** C A S  #1  :  3 D   V O L U M I Q U E ****************
+SI (EXIS lcas 1) ;
+
+** Options generales
+  OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+
+** Maillage
+  p1      = 0. 0. 0. ;
+  p2      = 0. long 0. ;
+  l12     = DROI 1 p1 p2 ;
+  sgauche = l12 TRAN 1 (0. 0. long) ;
+  mail    = sgauche VOLU 'TRAN' 1 (long 0. 0.) ;
+*nh145313
+cadr1 = COUL ((0. 0.9 0.6) ET (0.75 1. 0.6)) 'BLAN' ;
+rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT')) 'TITR' '[3D V] Maillage' ;
+FINSI ;
+                            
+** Calcul 1
+*  sur un modele elastique avec le chargement en deformation imposee en 2 pas de calcul
+*  pour avoir les deplacements a imposer dans le calcul 2 au vrai modele non lineaire
+
+** Modele et caracteristiques materiau elastique
+  mo1 = MODE mail 'MECANIQUE' ;
+  ma1 = MATE mo1 'YOUN' you 'NU' nu ;
+
+** Blocages
+  bl1 = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' 'UZ' p1) ET (BLOQ 'UZ' p2) ;
+
+** Chargement en deformation imposee
+*  - Phase 1
+  cheps1 = MANU 'CHML' mo1 'EPXX' (1. * ep1)
+                           'EPYY' ((-1. * nu) * ep1)
+                           'EPZZ' ((-1. * nu) * ep1)
+                           'GAXY' 0.
+                           'GAXZ' 0.
+                           'GAYZ' 0.
+                           'TYPE' 'DEFORMATIONS' 'STRESSES' ;
+*  - Phase 2
+  cheps2 = MANU 'CHML' mo1 'EPXX' ((1. * ep1)         + (c2epxx * ep2))
+                           'EPYY' (((-1. * nu) * ep1) + (c2epyy * ep2))
+                           'EPZZ' ((-1. * nu) * ep1) 
+                           'GAXY'                       (c2gaxy * 2. * ep2)
+                           'GAXZ' 0.
+                           'GAYZ' 0.
+                           'TYPE' 'DEFORMATIONS' 'STRESSES' ;
+  ttps1     = TABL ;
+  ttps1 . 0 = 0. ;
+  ttps1 . 1 = 0.5 ;
+  ttps1 . 2 = 1. ;
+  tcha1     = TABL ;
+  tcha1 . 0 = 0. * cheps1 ;
+  tcha1 . 1 = cheps1 ;
+  tcha1 . 2 = cheps2 ;
+  cha1 = CHAR 'DEFI' ttps1 tcha1 ;
+                              
+** Resolution 1 : sur un modele elastique avec le chargement en deformation imposee
+*  en 2 pas de calcul pour avoir les deplacements a imposer ensuite au vrai modele non lineaire
+  t1                         = TABL ;
+  t1 . 'MODELE'              = mo1 ;
+  t1 . 'CARACTERISTIQUES'    = ma1 ;
+  t1 . 'BLOCAGES_MECANIQUES' = bl1 ;
+  t1 . 'CHARGEMENT'          = cha1 ;
+  t1 . 'TEMPS_CALCULES'      = PROG 0. 'PAS' 0.5 1. ;
+  PASAPAS t1 ;
+
+** Calcul 2
+*  la cinematique issue du résultat du calcul 1 est imposee au modele non lineaire
+
+** Modele et caracteristiques materiau non lineaire
+  mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma2 = MATE mo2 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+
+** Blocages 2
+  bl2 = BLOQ 'DEPL' mail ;
+
+** Chargement 2 en deplacement imposee
+  t1 . 'DIMP'     = TABL ;
+  t1 . 'DIMP' . 0 = DEPI bl2 (t1 . 'DEPLACEMENTS' . 0) ;
+  t1 . 'DIMP' . 1 = DEPI bl2 (t1 . 'DEPLACEMENTS' . 1) ;
+  t1 . 'DIMP' . 2 = DEPI bl2 (t1 . 'DEPLACEMENTS' . 2) ;
+  cha2 = CHAR 'DIMP' (t1 . 'TEMPS') (t1 . 'DIMP') ;
+
+** Resolution 2 : la cinematique résultat de la Resolution 1
+*  est imposee au modele non lineaire
+  t2                               = TABL ;
+  t2 . 'MODELE'                    = mo2 ;
+  t2 . 'CARACTERISTIQUES'          = ma2 ;
+  t2 . 'BLOCAGES_MECANIQUES'       = bl2 ;
+  t2 . 'CHARGEMENT'                = cha2 ;
+  t2 . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.01 0.5 'PAS' 0.002 1. ;
+  t2 . 'MOVA'                      = MOT 'D' ;
+  t2 . 'MES_SAUVEGARDES'           = TABL ;
+  t2 . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t2 ;
+
+** Post traitement
+* courbes : endommagement/contraintes/deformations aux points de Gauss vs temps
+*           contraintes/deformations principales vs temps
+*           angles des directions principales vs temps
+  tt = t2 . 'TEMPS' ;
+  tu = t2 . 'DEPLACEMENTS' ;
+*nh145313
+*  def0 = DEFO mail (tu . 0) 0. ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
+* evolutions temporelles a tous les points de Gauss de l'endommagement, des contraintes et des deformations
+  ng = 8 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 5 = MOT 'MARQ TRID NOLI' ;
+  tleg . 6 = MOT 'MARQ TRIU NOLI' ;
+  tleg . 7 = MOT 'MARQ TRIL NOLI' ;
+  tleg . 8 = MOT 'MARQ TRIR NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
+  FIN b ;
+* endommagement
+  evd = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evd = evd ET (EVOL 'VIOL' 'TEMP' t2 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evd 'LEGE' tleg 'TITR' '[3D V] D vs Temps' ;
+  FINSI ;
+* contraintes
+  evsmxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t2 'CONTRAINTES' 'SMXX' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evsmxx 'LEGE' tleg 'TITR' '[3D V] SMXX vs Temps' ;
+  FINSI ;
+  evsmyy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmyy = evsmyy ET (EVOL 'VERT' 'TEMP' t2 'CONTRAINTES' 'SMYY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evsmyy 'LEGE' tleg 'TITR' '[3D V] SMYY vs Temps' ;
+  FINSI ;
+  evsmxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxy = evsmxy ET (EVOL 'ROUG' 'TEMP' t2 'CONTRAINTES' 'SMXY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evsmxy 'LEGE' tleg 'TITR' '[3D V] SMXY vs Temps' ;
+  FINSI ;
+* deformations
+  evepxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxx = evepxx ET (EVOL 'BLEU' 'TEMP' t2 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepxx 'LEGE' tleg 'TITR' '[3D V] EPXX vs Temps' ;
+  FINSI ;
+  evepyy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepyy = evepyy ET (EVOL 'VERT' 'TEMP' t2 'DEFORMATIONS' 'EPYY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepyy 'LEGE' tleg 'TITR' '[3D V] EPYY vs Temps' ;
+  FINSI ;
+  evepxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxy = evepxy ET (EVOL 'ROUG' 'TEMP' t2 'DEFORMATIONS' 'GAXY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepxy 'LEGE' tleg 'TITR' '[3D V] GAXY vs Temps' ;
+  FINSI ;
+* contraintes principales
+  tprin = TABL 'PASAPAS' ;
+  tprin . 'TEMPS' = t2 . 'TEMPS' ;
+  tprin . 'CONTRAINTES' = TABL ;
+  REPE b1 (DIME tt) ;
+    tprin . 'CONTRAINTES' . (&b1 - 1) = PRIN mo2 (t2 . 'CONTRAINTES' . (&b1 - 1)) ;
+  FIN b1 ;
+* angle direction principale 1
+  evcos11 = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evcos11 = evcos11 ET (EVOL 'ORAN' 'TEMP' tprin 'CONTRAINTES' 'COX1' 1 1 &b) ;
+  FIN b ;
+  evang11 = ACOS evcos11 ;
+  SI ITRAC1 ;
+    DESS evang11 'LEGE' tleg 'TITR' '[3D V] Angle X ^ SI11 vs Temps' ;
+  FINSI ;
+
+* courbe Contraintes vs Deformation EPXX
+  evxx = EVOL 'BLEU' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxx 'ORDO') ;
+  evyy = EVOL 'VERT' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmyy 'ORDO') ;
+  evxy = EVOL 'ROUG' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxy 'ORDO') ;
+  tleg = TABL ;
+  tleg . 'TITRE' = TABL ;
+  tleg . 'TITRE' . 1 = 'Calc_SMXX' ;
+  tleg . 'TITRE' . 2 = 'Calc_SMYY' ;
+  tleg . 'TITRE' . 3 = 'Calc_SMXY' ;
+* resultats de reference [2] Ghavamian (2003) LGCNSNiso
+  evref = VIDE 'EVOLUTIO' ;
+  tref = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ;
+  evref = evref ET (EVOL 'BLEU' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ;
+  tref = LIRE 'CSV' FIC2 'DEBU' 2 'SEPA' ',' ;
+  evref = evref ET (EVOL 'VERT' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ;
+  tref = LIRE 'CSV' FIC3 'DEBU' 2 'SEPA' ',' ;
+  evref = evref ET (EVOL 'ROUG' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ;
+  tleg . 4   = MOT 'TIRR' ;
+  tleg . 'TITRE' . 4  = 'Ref_SMXX' ;
+  tleg . 5   = MOT 'TIRR' ;
+  tleg . 'TITRE' . 5  = 'Ref_SMYY' ;
+  tleg . 6   = MOT 'TIRR' ;
+  tleg . 'TITRE' . 6  = 'Ref_SMXY' ;
+  SI ITRAC1 ;
+    DESS (evxx et evyy et evxy et evref) 'LEGE' tleg 'TITR' '[3D V] Contraintes vs Deformation' ;
+  FINSI ;
+
+* comparaison calcul / reference sur l'aire sous la courbe Contraintes vs Deformation EPXX
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
+  SAUT 1 LIGN ;
+  tbid = TABL ;
+  tbid . 'TITRE' = TABL ;
+  tbid . 1 = 'MARQ PLUS' ;
+  tbid . 'TITRE' . 1 = 'Cal.init.' ;
+  tbid . 2 = 'MARQ ETOI' ;
+  tbid . 'TITRE' . 2 = ' Ref.' ;
+  tbid . 3 = 'MARQ CROI' ;
+  tbid . 'TITRE' . 3 = 'Cal.lim.' ;
+  REPE b2 (DIME evref) ;
+    evri = EXTR evref 'COUR' &b2 ;
+    xmri = EXTR (EXTR evri 'ABSC') (DIME (EXTR evri 'ABSC')) ;
+    SI (&b2 EGA 1) ;
+      evcal = evxx ;
+    FINSI ;
+    SI (&b2 EGA 2) ;
+      evcal = evyy ;
+    FINSI ;
+    SI (&b2 EGA 3) ;
+      evcal = evxy ;
+    FINSI ;
+    ymcal = IPOL xmri evcal ;
+    xcal2 = PROG ;
+    ycal2 = PROG ; 
+    REPE b3 (DIME (EXTR evcal 'ABSC')) ;
+      xx = EXTR (EXTR evcal 'ABSC') &b3 ;
+      yy = EXTR (EXTR evcal 'ORDO') &b3 ;
+      SI (xx >EG xmri) ;
+        QUIT b3 ;
+      FINSI ;
+      xcal2 = xcal2 ET (PROG xx) ;
+      ycal2 = ycal2 ET (PROG yy) ;
+    FIN b3 ;
+    xcal2 = xcal2 ET (PROG xmri) ;
+    ycal2 = ycal2 ET (PROG ymcal) ;
+    evcal2 = EVOL MANU 'EPZZ' xcal2 'CONTRAINTE' ycal2 ;
+    ivref = INTG evri ;
+    ivcal = INTG evcal2 ;
+    ec1 = ivcal - ivref ;
+    er1 = ec1 / ivref ;
+    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Aire courb.ref' ivref ' Aire courb.cal' ivcal '   Ec.Rel.' er1;
+    SI ITRAC1 ;
+      DESS (evcal et evri et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    FINSI ;
+    MESS ' Courbe :' (tleg . 'TITRE' . &b2) ' vs EPXX, Ecart relatif entre Calcul et Reference :' er1 ;
+    SAUT 1 LIGN ;
+  FIN b2 ;
+  OPTI ECHO 1 ;
+
+* deformee et vecteurs principaux
+  REPE b1 (DIME tt) ;
+    tps1 = tt . (&b1 - 1) ;
+*   trace de la deformee (pour controle visuel)
+*nh145313
+*    def1 = DEFO mail (tu . (&b1 - 1)) 1000. 'ROUG' ;
+    def1 = DEFO mail (tu . (&b1 - 1)) 500. 'ROUG' ;
+    tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
+  FIN b1 ;
+  SI ITRAC1 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FINSI ;
+  REPE b1 (DIME tt) ;
+    tps1 = tt . (&b1 - 1) ;
+*   trace des vecteurs contraintes principales
+    vecs = VECT (tprin . 'CONTRAINTES' . (&b1 - 1)) mo2 1.E-7 ;
+    tit1 = CHAI '[3D V] Directions principales au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ;
+      SI (tps1 EGA 5.52E-1) ;
+        TRAC vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ;
+      FINSI ;
+    FINSI ;
+  FIN b1 ;
+  SI ITRAC1 ;
+*    TRAC vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ;
+  FINSI ;
+FINSI ;
+
+
+
+
+
+******* C A S  #2  :  2 D   C O N T R A I N T E S   P L A N E S ********
+SI (EXIS lcas 2) ;
+
+** Options generales
+  OPTI 'DIME' 2 'MODE' 'PLAN' 'CONT' 'ELEM' 'QUA4' ;
+
+** Maillage
+  p1      = 0. 0. ;
+  p2      = 0. long ;
+  sgauche = DROI 1 p1 p2 ;
+  mail    = sgauche TRAN 1 (long 0.) ;
+  p3      = mail POIN 'PROC' (long long) ;
+*nh145313
+cadr1 = COUL ((0. 1.05) ET (0.75 1.05)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT')) 'TITR' '[2D Plan cont.] Maillage' ;
+FINSI ;
+                            
+** Calcul 1
+*  sur un modele elastique avec le chargement en deformation imposee en 2 pas de calcul
+*  pour avoir les deplacements a imposer dans le calcul 2 au vrai modele non lineaire
+
+** Modele et caracteristiques materiau elastique
+  mo1 = MODE mail 'MECANIQUE' ;
+  ma1 = MATE mo1 'YOUN' you 'NU' nu 'DIM3' epai ;
+
+** Blocages
+  bl1 = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' p1) ;
+
+** Chargement en deformation imposee
+*  - Phase 1
+  cheps1 = MANU 'CHML' mo1 'EPXX' (1. * ep1)
+                           'EPYY' ((-1. * nu) * ep1)
+                           'EPZZ' 0.
+                           'GAXY' 0.
+                           'TYPE' 'DEFORMATIONS' 'STRESSES' ;
+*  - Phase 2
+  cheps2 = MANU 'CHML' mo1 'EPXX' ((1. * ep1)         + (c2epxx * ep2))
+                           'EPYY' (((-1. * nu) * ep1) + (c2epyy * ep2))
+                           'EPZZ' 0.
+                           'GAXY'                       (c2gaxy * 2. * ep2)
+                           'TYPE' 'DEFORMATIONS' 'STRESSES' ;
+  ttps1     = TABL ;
+  ttps1 . 0 = 0. ;
+  ttps1 . 1 = 0.5 ;
+  ttps1 . 2 = 1. ;
+  tcha1     = TABL ;
+  tcha1 . 0 = 0. * cheps1 ;
+  tcha1 . 1 = cheps1 ;
+  tcha1 . 2 = cheps2 ;
+  cha1 = CHAR 'DEFI' ttps1 tcha1 ;
+                              
+** Resolution 1 : sur un modele elastique avec le chargement en deformation imposee
+*  en 2 pas de calcul pour avoir les deplacements a imposer ensuite au vrai modele non lineaire
+  t1                         = TABL ;
+  t1 . 'MODELE'              = mo1 ;
+  t1 . 'CARACTERISTIQUES'    = ma1 ;
+  t1 . 'BLOCAGES_MECANIQUES' = bl1 ;
+  t1 . 'CHARGEMENT'          = cha1 ;
+  t1 . 'TEMPS_CALCULES'      = PROG 0. 'PAS' 0.5 1. ;
+  PASAPAS t1 ;
+
+** Calcul 2
+*  la cinematique issue du résultat du calcul 1 est imposee au modele non lineaire
+
+** Modele et caracteristiques materiau non lineaire
+  mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma2 = MATE mo2 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+
+** Blocages 2
+  bl2 = BLOQ 'DEPL' mail ;
+
+** Chargement 2 en deplacement imposee
+  t1 . 'DIMP'     = TABL ;
+  t1 . 'DIMP' . 0 = DEPI bl2 (t1 . 'DEPLACEMENTS' . 0) ;
+  t1 . 'DIMP' . 1 = DEPI bl2 (t1 . 'DEPLACEMENTS' . 1) ;
+  t1 . 'DIMP' . 2 = DEPI bl2 (t1 . 'DEPLACEMENTS' . 2) ;
+  cha2 = CHAR 'DIMP' (t1 . 'TEMPS') (t1 . 'DIMP') ;
+
+** Resolution 2 : la cinematique résultat de la Resolution 1
+*  est imposee au modele non lineaire
+  t2                               = TABL ;
+  t2 . 'MODELE'                    = mo2 ;
+  t2 . 'CARACTERISTIQUES'          = ma2 ;
+  t2 . 'BLOCAGES_MECANIQUES'       = bl2 ;
+  t2 . 'CHARGEMENT'                = cha2 ;
+  t2 . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 0.01 0.5 'PAS' 0.002 1. ;
+  t2 . 'MOVA'                      = MOT 'D' ;
+  t2 . 'MES_SAUVEGARDES'           = TABL ;
+  t2 . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t2 ;
+
+** Post traitement
+* courbes : endommagement/contraintes/deformations aux points de Gauss vs temps
+*           contraintes/deformations principales vs temps
+*           angles des directions principales vs temps
+  tt = t2 . 'TEMPS' ;
+  tu = t2 . 'DEPLACEMENTS' ;
+*nh145313
+*  def0 = DEFO mail (tu . 0) 0. ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
+* evolutions temporelles a tous les points de Gauss de l'endommagement, des contraintes et des deformations
+  ng = 4 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
+  FIN b ;
+* endommagement
+  evd = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evd = evd ET (EVOL 'VIOL' 'TEMP' t2 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evd 'LEGE' tleg 'TITR' '[2D Plan cont.] D vs Temps' ;
+  FINSI ;
+* contraintes
+  evsmxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t2 'CONTRAINTES' 'SMXX' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evsmxx 'LEGE' tleg 'TITR' '[2D Plan cont.] SMXX vs Temps' ;
+  FINSI ;
+  evsmyy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmyy = evsmyy ET (EVOL 'VERT' 'TEMP' t2 'CONTRAINTES' 'SMYY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evsmyy 'LEGE' tleg 'TITR' '[2D Plan cont.] SMYY vs Temps' ;
+  FINSI ;
+  evsmxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxy = evsmxy ET (EVOL 'ROUG' 'TEMP' t2 'CONTRAINTES' 'SMXY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evsmxy 'LEGE' tleg 'TITR' '[2D Plan cont.] SMXY vs Temps' ;
+  FINSI ;
+* deformations
+  evepxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxx = evepxx ET (EVOL 'BLEU' 'TEMP' t2 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepxx 'LEGE' tleg 'TITR' '[2D Plan cont.] EPXX vs Temps' ;
+  FINSI ;
+  evepyy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepyy = evepyy ET (EVOL 'VERT' 'TEMP' t2 'DEFORMATIONS' 'EPYY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepyy 'LEGE' tleg 'TITR' '[2D Plan cont.] EPYY vs Temps' ;
+  FINSI ;
+  evepxy = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxy = evepxy ET (EVOL 'ROUG' 'TEMP' t2 'DEFORMATIONS' 'GAXY' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepxy 'LEGE' tleg 'TITR' '[2D Plan cont.] GAXY vs Temps' ;
+  FINSI ;
+* contraintes principales
+  tprin = TABL 'PASAPAS' ;
+  tprin . 'TEMPS' = t2 . 'TEMPS' ;
+  tprin . 'CONTRAINTES' = TABL ;
+  REPE b1 (DIME tt) ;
+    tprin . 'CONTRAINTES' . (&b1 - 1) = PRIN mo2 (t2 . 'CONTRAINTES' . (&b1 - 1)) ;
+  FIN b1 ;
+* angle direction principale 1
+  evcos11 = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evcos11 = evcos11 ET (EVOL 'ORAN' 'TEMP' tprin 'CONTRAINTES' 'COX1' 1 1 &b) ;
+  FIN b ;
+  evang11 = ACOS evcos11 ;
+  SI ITRAC1 ;
+    DESS evang11 'LEGE' tleg 'TITR' '[2D Plan cont.] Angle X ^ SI11 vs Temps' ;
+  FINSI ;
+
+* courbe Contraintes vs Deformation EPXX
+  evxx = EVOL 'BLEU' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxx 'ORDO') ;
+  evyy = EVOL 'VERT' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmyy 'ORDO') ;
+  evxy = EVOL 'ROUG' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxy 'ORDO') ;
+  tleg = TABL ;
+  tleg . 'TITRE' = TABL ;
+  tleg . 'TITRE' . 1 = 'Calc_SMXX' ;
+  tleg . 'TITRE' . 2 = 'Calc_SMYY' ;
+  tleg . 'TITRE' . 3 = 'Calc_SMXY' ;
+* resultats de reference [2] Ghavamian (2003) LGCNSNiso
+  evref = VIDE 'EVOLUTIO' ;
+  tref = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ;
+  evref = evref ET (EVOL 'BLEU' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ;
+  tref = LIRE 'CSV' FIC2 'DEBU' 2 'SEPA' ',' ;
+  evref = evref ET (EVOL 'VERT' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ;
+  tref = LIRE 'CSV' FIC3 'DEBU' 2 'SEPA' ',' ;
+  evref = evref ET (EVOL 'ROUG' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ;
+  tleg . 4   = MOT 'TIRR' ;
+  tleg . 'TITRE' . 4  = 'Ref_SMXX' ;
+  tleg . 5   = MOT 'TIRR' ;
+  tleg . 'TITRE' . 5  = 'Ref_SMYY' ;
+  tleg . 6   = MOT 'TIRR' ;
+  tleg . 'TITRE' . 6  = 'Ref_SMXY' ;
+  SI ITRAC1 ;
+    DESS (evxx et evyy et evxy et evref) 'LEGE' tleg 'TITR' '[2D Plan cont.] Contraintes vs Deformation' ;
+  FINSI ;
+
+* comparaison calcul / reference sur l'aire sous la courbe Contraintes vs Deformation EPXX
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' ******* C A S  #2  :  2 D   C O N T R A I N T E S   P L A N E S ********';
+  SAUT 1 LIGN ;
+  tbid = TABL ;
+  tbid . 'TITRE' = TABL ;
+  tbid . 1 = 'MARQ PLUS' ;
+  tbid . 'TITRE' . 1 = 'Cal.init.' ;
+  tbid . 2 = 'MARQ ETOI' ;
+  tbid . 'TITRE' . 2 = ' Ref.' ;
+  tbid . 3 = 'MARQ CROI' ;
+  tbid . 'TITRE' . 3 = 'Cal.lim.' ;
+  REPE b2 (DIME evref) ;
+    evri = EXTR evref 'COUR' &b2 ;
+    xmri = EXTR (EXTR evri 'ABSC') (DIME (EXTR evri 'ABSC')) ;
+    SI (&b2 EGA 1) ;
+      evcal = evxx ;
+    FINSI ;
+    SI (&b2 EGA 2) ;
+      evcal = evyy ;
+    FINSI ;
+    SI (&b2 EGA 3) ;
+      evcal = evxy ;
+    FINSI ;
+    ymcal = IPOL xmri evcal ;
+    xcal2 = PROG ;
+    ycal2 = PROG ; 
+    REPE b3 (DIME (EXTR evcal 'ABSC')) ;
+      xx = EXTR (EXTR evcal 'ABSC') &b3 ;
+      yy = EXTR (EXTR evcal 'ORDO') &b3 ;
+      SI (xx >EG xmri) ;
+        QUIT b3 ;
+      FINSI ;
+      xcal2 = xcal2 ET (PROG xx) ;
+      ycal2 = ycal2 ET (PROG yy) ;
+    FIN b3 ;
+    xcal2 = xcal2 ET (PROG xmri) ;
+    ycal2 = ycal2 ET (PROG ymcal) ;
+    evcal2 = EVOL MANU 'EPZZ' xcal2 'CONTRAINTE' ycal2 ;
+    ivref = INTG evri ;
+    ivcal = INTG evcal2 ;
+    ec1 = ivcal - ivref ;
+    er1 = ec1 / ivref ;
+    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Aire courb.ref' ivref ' Aire courb.cal' ivcal '   Ec.Rel.' er1;
+    SI ITRAC1 ;
+      DESS (evcal et evri et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    FINSI ;
+    MESS ' Courbe :' (tleg . 'TITRE' . &b2) ' vs EPXX, Ecart relatif entre Calcul et Reference :' er1 ;
+    SAUT 1 LIGN ;
+  FIN b2 ;
+  OPTI ECHO 1 ;
+
+* deformee et vecteurs principaux
+  REPE b1 (DIME tt) ;
+    tps1 = tt . (&b1 - 1) ;
+*   trace de la deformee (pour controle visuel)
+*nh145313
+*    def1 = DEFO mail (tu . (&b1 - 1)) 1000. 'ROUG' ;
+    def1 = DEFO mail (tu . (&b1 - 1)) 500. 'ROUG' ;
+    tit1 = CHAI '[2D Plan cont.] Deformee au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
+  FIN b1 ;
+  SI ITRAC1 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FINSI ;
+  REPE b1 (DIME tt) ;
+    tps1 = tt . (&b1 - 1) ;
+*   trace des vecteurs contraintes principales
+    vecs = VECT (tprin . 'CONTRAINTES' . (&b1 - 1)) mo2 1.E-7 ;
+    tit1 = CHAI '[2D Plan cont.] Directions principales au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC vecs (rep1 ET mail) 'TITR' tit1 ;
+      SI (tps1 EGA 5.52E-1) ;
+        TRAC vecs (rep1 ET mail) 'TITR' tit1 ;
+      FINSI ;
+    FINSI ;
+  FIN b1 ;
+  SI ITRAC1 ;
+*    TRAC vecs (rep1 ET mail) 'TITR' tit1 ;
+  FINSI ;
+FINSI ;
+
+
+
+
+
+FIN ;
+ 
+

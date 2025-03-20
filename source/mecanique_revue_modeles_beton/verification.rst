@@ -29,7 +29,7 @@ Loi MAZARS
 
 Traction monotone
 ~~~~~~~~~~~~~~~~~
-Le cas-test se dénomme ``01_traction.dgibi``
+Le cas-test se dénomme ``mazars_traction.dgibi``
 
 On applique le cas de chargement de traction simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_trac_mono>`
 et :ref:`massif <sec:modeles_beton_test_mass_trac_mono>` en déplacement imposé croissant jusqu’à atteindre l’endommagement autour de 0,9.
@@ -151,7 +151,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    3,18393.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -238,7 +238,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    3,18393.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -314,7 +314,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    5,57047.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -390,7 +390,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    5,74126.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -466,7 +466,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    5,61645.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``01_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -483,7 +483,7 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 Compression monotone
 ~~~~~~~~~~~~~~~~~~~~
-Le cas-test se dénomme ``02_compression.dgibi``
+Le cas-test se dénomme ``mazars_compression.dgibi``
 
 On applique le cas de chargement de compression simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_comp_mono>` et :ref:`massif <sec:modeles_beton_test_mass_comp_mono>` en déplacement imposé négatif, croissant en valeur absolue, jusqu’à atteindre l’endommagement autour de 0,9.
 
@@ -602,9 +602,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   8,35516.10^{-09} > 1.10^{-10}
+   8,35516.10^{-9} < 1.10^{-8}
    
-En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -689,9 +689,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   8,35516.10^{-09} > 1.10^{-10}
+   8,35516.10^{-9} < 1.10^{-8}
    
-En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -765,9 +765,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   9,13189.10^{-09} > 1.10^{-10}
+   5,14017.10^{-9} < 1.10^{-8}
    
-En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -843,7 +843,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 .. math::
    1,26037.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -917,9 +917,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1,15429.10^{-15} < 1.10^{-10}
+   1,68409.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``02_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -934,7 +934,7 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 Traction cyclique
 ~~~~~~~~~~~~~~~~~
-Le cas-test se dénomme ``03_traction_cyclique.dgibi``
+Le cas-test se dénomme ``mazars_traction_cyclique.dgibi``
 
 On applique le cas de chargement de traction simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_trac_cycl>`
 et :ref:`massif <sec:modeles_beton_test_mass_trac_cycl>` en déplacement imposé entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur du déplacement au pic augmente progressivement jusqu’à atteindre l’endommagement autour de 0,9.
@@ -982,7 +982,7 @@ On observe que :
 .. math::
    3,35150.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1022,7 +1022,7 @@ On observe que :
 .. math::
    3,35150.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1062,7 +1062,7 @@ On observe que :
 .. math::
    7,86303.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1102,7 +1102,7 @@ On observe que :
 .. math::
    4,11873.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1142,7 +1142,7 @@ On observe que :
 .. math::
    3,92767.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``03_traction_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1157,7 +1157,7 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 Compression cyclique
 ~~~~~~~~~~~~~~~~~~~~
-Le cas-test se dénomme ``04_compression_cyclique.dgibi``
+Le cas-test se dénomme ``mazars_compression_cyclique.dgibi``
 
 On applique le cas de chargement de compression simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_comp_cycl>` et :ref:`massif <sec:modeles_beton_test_mass_comp_cycl>` en déplacement imposé négatif entre 0 et un pic de façon cyclique avec retour à 0 entre chaque cycle. La valeur absolue du déplacement au pic augmente progressivement jusqu’à atteindre l’endommagement autour de 0,9.
 
@@ -1202,9 +1202,9 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,66400.10^{-9} > 1.10^{-10}
+   3,66400.10^{-9} < 1.10^{-8}
    
-En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1242,9 +1242,9 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,66400.10^{-9} > 1.10^{-10}
+   3,66400.10^{-9} < 1.10^{-8}
    
-En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1282,9 +1282,9 @@ On observe que :
 - L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,29566.10^{-9} > 1.10^{-10}
+   3,29566.10^{-9} < 1.10^{-8}
    
-En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1324,7 +1324,7 @@ On observe que :
 .. math::
    6,59015.10^{-15} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1364,7 +1364,7 @@ On observe que :
 .. math::
    1,02395.10^{-14} < 1.10^{-10}
    
-En conséquence, les résultats du cas-test ``04_compression_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1379,7 +1379,7 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 Traction compression
 ~~~~~~~~~~~~~~~~~~~~
-Le cas-test se dénomme ``05_traction_compression.dgibi``
+Le cas-test se dénomme ``mazars_traction_compression.dgibi``
 
 On applique le cas de chargement de traction compression alternées pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_trac_comp>`
 et :ref:`massif <sec:modeles_beton_test_mass_trac_comp>` en déplacement imposé croissant en valeur absolue (positif en traction, puis négatif en compression) jusqu’à atteindre l’endommagement autour de 0,9.
@@ -1460,9 +1460,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 - en traction : :math:`6,98622.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`9,55546.10^{-09} > 1.10^{-10}`.
+- en compression : :math:`9,55546.10^{-9} < 1.10^{-8}`.
    
-En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1532,9 +1532,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 - en traction : :math:`6,98622.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`9,55546.10^{-09} > 1.10^{-10}`.
+- en compression : :math:`9,55546.10^{-9} < 1.10^{-8}`.
    
-En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1604,9 +1604,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 - en traction : :math:`5,58898.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`1,10157.10^{-08} > 1.10^{-10}`.
+- en compression : :math:`1,45298.10^{-9} < 1.10^{-8}`.
    
-En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1678,7 +1678,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 - en traction : :math:`4,01321.10^{-16} < 1.10^{-10}` ;
 - en compression : :math:`1,64633.10^{-15} < 1.10^{-10}`.
    
-En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1750,7 +1750,7 @@ L'écart relatif maximum en contrainte entre la solution calculée et la solutio
 - en traction : :math:`4,35418.10^{-16} < 1.10^{-10}` ;
 - en compression : :math:`1,56858.10^{-15} < 1.10^{-10}`.
    
-En conséquence, les résultats du cas-test ``05_traction_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1765,7 +1765,7 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 Traction compression traction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Le cas-test se dénomme ``06_traction_compression_traction.dgibi``
+Le cas-test se dénomme ``mazars_traction_compression_traction.dgibi``
 
 On applique le cas de chargement de traction compression traction alternées pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_trac_comp_trac>`
 et :ref:`massif <sec:modeles_beton_test_mass_trac_comp_trac>` en déplacement imposé dont la valeur absolue est croissante dans chacun des sens, jusqu’à atteindre un endommagement supérieur à 0,95.
@@ -1845,11 +1845,11 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`6,89936.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`7,42313.10^{-09} > 1.10^{-10}`.
-- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}` ;
+- dans la phase 1 de traction : :math:`5,51949.10^{-16} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`7,42313.10^{-9} < 1.10^{-8}` ;
+- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}`.
    
-En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 3D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1918,11 +1918,11 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`6,89936.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`7,42313.10^{-09} > 1.10^{-10}`.
-- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}` ;
+- dans la phase 1 de traction : :math:`5,51949.10^{-16} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`7,42313.10^{-9} < 1.10^{-8}` ;
+- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}`.
    
-En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 2D poutre à fibres sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1992,10 +1992,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 - dans la phase 1 de traction : :math:`8,27923.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`1,40855.10^{-09} > 1.10^{-10}`.
-- dans la phase 3 de traction : :math:`1,18978.10^{-14} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`1,40855.10^{-9} < 1.10^{-8}` ;
+- dans la phase 3 de traction : :math:`1,18978.10^{-14} < 1.10^{-10}`.
    
-En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 3D volumique sont jugés *[nh145313 : non satisfaisants ?]*.
+En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2065,10 +2065,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 - dans la phase 1 de traction : :math:`3,04041.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`1,24288.10^{-15} < 1.10^{-10}`.
-- dans la phase 3 de traction : :math:`2,84878.10^{-15} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`1,24288.10^{-15} < 1.10^{-10}` ;
+- dans la phase 3 de traction : :math:`2,84878.10^{-15} < 1.10^{-10}`.
    
-En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2138,10 +2138,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
 
 - dans la phase 1 de traction : :math:`1,52021.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`7,96489.10^{-16} < 1.10^{-10}`.
-- dans la phase 3 de traction : :math:`1,45408.10^{-14} < 1.10^{-10}` ;
+- dans la phase 2 de compression : :math:`8,04868.10^{-16} < 1.10^{-10}` ;
+- dans la phase 3 de traction : :math:`1,41478.10^{-14} < 1.10^{-10}`.
    
-En conséquence, les résultats du cas-test ``06_traction_compression_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2156,7 +2156,7 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
 
 Cisaillement
 ~~~~~~~~~~~~
-Le cas-test se dénomme ``07_cisaillement.dgibi``
+Le cas-test se dénomme ``mazars_cisaillement.dgibi``
 
 On applique le cas de chargement de cisaillement simple pour les modélisations :ref:`poutre <sec:modeles_beton_test_pout_cisa_mono>`
 et :ref:`massif <sec:modeles_beton_test_mass_cisa_mono>` en déformation imposée de cisaillement (glissement) croissante jusqu’à atteindre l’endommagement proche de 1.
@@ -2221,7 +2221,7 @@ On observe que :
 
 - En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
 
-Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``mazars_cisaillement.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
 Résultats du cas 2D poutre à fibres
 +++++++++++++++++++++++++++++++++++
@@ -2272,7 +2272,7 @@ On observe que :
 
 - En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
 
-Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``mazars_cisaillement.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
 Résultats du cas 3D volumique
 +++++++++++++++++++++++++++++
@@ -2323,7 +2323,7 @@ On observe que :
 
 - En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
 
-Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``mazars_cisaillement.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Résultats du cas 2D contraintes planes
 ++++++++++++++++++++++++++++++++++++++
@@ -2374,7 +2374,7 @@ On observe que :
 
 - En revanche, tandis que l'évolution de la contrainte en fonction de la déformation calculée avec :math:`\beta=1` (sans amélioration de la réponse en cisaillement) décroît pour les grandes valeurs de déformation (:math:`\sigma_{xy}=0` pour :math:`\gamma_{xy}>0,6`), celle calculée avec :math:`\beta=1,06` (amélioration de la réponse en cisaillement) se remet à croître au-delà de :math:`\gamma_{xy}>0,4`. Cette conséquence de la correction correspond à la reprise de rigidité à des niveaux de déformation élévée décrite dans les pathologies du modèle (cf. chapitre :ref:`Formulation du modèle <sec:beta>`).
 
-Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``07_cisaillement.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+Le fait de retouver ces deux tendances attendues permet de conclure que les résultats du cas-test ``mazars_cisaillement.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 Enfin, on constate que les résultats sont identiques d'un mode de représentation géométrique à l'autre. La cohérence des résultats entre eux confirme qu'ils sont satisfaisants dans chaque mode de représentation.
 
@@ -2382,7 +2382,7 @@ Enfin, on constate que les résultats sont identiques d'un mode de représentati
 
 Biaxial
 ~~~~~~~
-Le cas-test se dénomme ``08_biaxial.dgibi``
+Le cas-test se dénomme ``mazars_biaxial.dgibi``
 
 On n'applique le cas de chargement de traction-compression biaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_biax>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
@@ -2432,7 +2432,7 @@ Solution de référence
 Contrairement aux cas de chargements en déplacement imposé traîtés précédemment, dans les cas de chargement en contrainte imposée comme ici l'évolution temporelle de l'endommagement n'est pas prévisible et celle du déplacement qui en dépend ne l'est pas non plus. Or, du fait des dimensions géométriques unitaires du cas-test, la déformation est équivalente au déplacement et donc l'évolution temporelle de la déformation n'est pas définie *a priori*. En conséquence, les évolutions temporelles de l'endommagement qui dépend de celle de la déformation ainsi que l'évolution temporelle de la contrainte qui dépend de celle de l'endommagement ne sont pas définies *a priori*, ce qui ne permet pas de donner une solution analytique au problème.
 
 Néanmoins, il est possible de donner une solution numérique de référence issue de résultats de calculs dans lesquels on a confiance.
-Cette solution de référence est obtenue dans les conditions de calcul suivantes qui sont comparées à celle du cas-test ``08_biaxial.dgibi`` dénommé "calcul standard" :
+Cette solution de référence est obtenue dans les conditions de calcul suivantes qui sont comparées à celle du cas-test ``mazars_biaxial.dgibi`` dénommé "calcul standard" :
 
 - Un pas de calcul deux fois plus fin que le calcul standard (:math:`1.10^{-3}` au lieu de :math:`2.10^{-3}`) ;
 - La réalisation de 360 calculs sur le domaine :math:`\theta \in [0°;360°]`, avec un incrément d'angle :math:`\delta\theta=1°` au lieu de 144 calculs avec :math:`\delta\theta=2,5°` pour le calcul standard.
@@ -2458,7 +2458,7 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    
    Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 
-L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.70981.10^{-3} < 3.10^{-2}`.
+L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.70981.10^{-3} < 3.10^{-3}`.
 
 Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2471,7 +2471,7 @@ Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\s
 
 La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
    
-En conséquence de ces deux constats, les résultats du cas-test ``08_biaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+En conséquence de ces deux constats, les résultats du cas-test ``mazars_biaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Résultats du cas 2D contraintes planes
 ++++++++++++++++++++++++++++++++++++++
@@ -2485,7 +2485,7 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    
    Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 
-L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.44110.10^{-3} < 3.10^{-2}`.
+L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.44110.10^{-3} < 3.10^{-3}`.
 
 Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2498,13 +2498,13 @@ Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\s
 
 La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
    
-En conséquence de ces deux constats, les résultats du cas-test ``08_biaxial.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence de ces deux constats, les résultats du cas-test ``mazars_biaxial.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
 
 
 Triaxial
 ~~~~~~~~
-Le cas-test se dénomme ``09_triaxial.dgibi``
+Le cas-test se dénomme ``mazars_triaxial.dgibi``
 
 On n'applique le cas de chargement triaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_triax>`. En effet, la triaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
@@ -2556,7 +2556,8 @@ Pour les quatre valeurs de pression hydrostatique, l'écart relatif sur l'aire s
 - Pour P = 4,5 MPa : :math:`Ecart_{relatif} = 8.54961.10^{-2}` ;
 - Pour P = 9 MPa   : :math:`Ecart_{relatif} = 1.68086.10^{-1}`.
 
-En conséquence, les résultats du cas-test ``09_triaxial.dgibi`` en mode 3D volumique sont jugés ???.
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul.
+En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbes d'évolution de la force de réaction en fonction du déplacement imposé
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2595,7 +2596,8 @@ Pour les quatre valeurs de pression hydrostatique, l'écart relatif sur l'aire s
 - Pour P = 4,5 MPa : :math:`Ecart_{relatif} = 8.55150.10^{-2}` ;
 - Pour P = 9 MPa   : :math:`Ecart_{relatif} = 1.68078.10^{-1}`.
 
-En conséquence, les résultats du cas-test ``09_triaxial.dgibi`` en mode 2D axisymétrique sont jugés ???.
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul.
+En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbes d'évolution de la force de réaction en fonction du déplacement imposé
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2610,7 +2612,7 @@ Courbes d'évolution de la force de réaction en fonction du déplacement impos�
 
 Test de Willam
 ~~~~~~~~~~~~~~
-Le cas-test se dénomme ``10_willam.dgibi``
+Le cas-test se dénomme ``mazars_willam.dgibi``
 
 On n'applique le cas test de Willam que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_willam>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
@@ -2660,7 +2662,7 @@ Pour les trois composantes de contrainte, l'écart relatif sur l'aire sous la co
 - Pour ``SMYY`` : :math:`Ecart_{relatif} = -5.88999.10^{-2}` ;
 - Pour ``SMXY`` : :math:`Ecart_{relatif} = -8.87497.10^{-2}` ;
 
-En conséquence, les résultats du cas-test ``10_willam.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Résultats du cas 2D contraintes planes
 ++++++++++++++++++++++++++++++++++++++
@@ -2689,5 +2691,5 @@ Pour les trois composantes de contrainte, l'écart relatif sur l'aire sous la co
 - Pour ``SMYY`` : :math:`Ecart_{relatif} = -1.42927.10^{-1}` ;
 - Pour ``SMXY`` : :math:`Ecart_{relatif} = -8.87497.10^{-2}` ;
 
-En conséquence, les résultats du cas-test ``10_willam.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 

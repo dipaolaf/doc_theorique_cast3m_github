@@ -2,7 +2,7 @@
 
 # Au programme :
 # - extraction de certaines pages des fichiers .ps
-# - convertion des images en .eps (suppression des marges) puis en .png
+# - Conversion des images en .eps (suppression des marges) puis en .png
 # - menage des images .ps et .eps
 
 # Dépendances :
@@ -13,215 +13,215 @@
 
 
 # Création d'un répertoire qui contiendra les images créées
-cp ../dgibi/01_traction.ps .
-cp ../dgibi/02_compression.ps .
-cp ../dgibi/03_traction_cyclique.ps .
-cp ../dgibi/04_compression_cyclique.ps .
-cp ../dgibi/05_traction_compression.ps .
-cp ../dgibi/06_traction_compression_traction.ps .
-cp ../dgibi/07_cisaillement_Beta_1.06.ps .
-cp ../dgibi/07_cisaillement_Beta_1.ps .
-cp ../dgibi/08_biaxial.ps .
-cp ../dgibi/09_triaxial.ps .
-cp ../dgibi/10_willam.ps .
+cp ../dgibi/mazars_traction.ps .
+cp ../dgibi/mazars_compression.ps .
+cp ../dgibi/mazars_traction_cyclique.ps .
+cp ../dgibi/mazars_compression_cyclique.ps .
+cp ../dgibi/mazars_traction_compression.ps .
+cp ../dgibi/mazars_traction_compression_traction.ps .
+cp ../dgibi/mazars_cisaillement_Beta_1.06.ps .
+cp ../dgibi/mazars_cisaillement_Beta_1.ps .
+cp ../dgibi/mazars_biaxial.ps .
+cp ../dgibi/mazars_triaxial.ps .
+cp ../dgibi/mazars_willam.ps .
 
 # Retrait des titres
 echo "  --> Suppression des titres"
-cast-post.sh -o -t 01_traction.ps 01_traction.ps
-cast-post.sh -o -t 02_compression.ps 02_compression.ps
-cast-post.sh -o -t 03_traction_cyclique.ps 03_traction_cyclique.ps
-cast-post.sh -o -t 04_compression_cyclique.ps 04_compression_cyclique.ps
-cast-post.sh -o -t 05_traction_compression.ps 05_traction_compression.ps
-cast-post.sh -o -t 06_traction_compression_traction.ps 06_traction_compression_traction.ps
-cast-post.sh -o -t 07_cisaillement_Beta_1.06.ps 07_cisaillement_Beta_1.06.ps
-cast-post.sh -o -t 07_cisaillement_Beta_1.ps 07_cisaillement_Beta_1.ps
-cast-post.sh -o -t 08_biaxial.ps 08_biaxial.ps
-cast-post.sh -o -t 09_triaxial.ps 09_triaxial.ps
-cast-post.sh -o -t 10_willam.ps 10_willam.ps
+cast-post.sh -o -t mazars_traction.ps mazars_traction.ps
+cast-post.sh -o -t mazars_compression.ps mazars_compression.ps
+cast-post.sh -o -t mazars_traction_cyclique.ps mazars_traction_cyclique.ps
+cast-post.sh -o -t mazars_compression_cyclique.ps mazars_compression_cyclique.ps
+cast-post.sh -o -t mazars_traction_compression.ps mazars_traction_compression.ps
+cast-post.sh -o -t mazars_traction_compression_traction.ps mazars_traction_compression_traction.ps
+cast-post.sh -o -t mazars_cisaillement_Beta_1.06.ps mazars_cisaillement_Beta_1.06.ps
+cast-post.sh -o -t mazars_cisaillement_Beta_1.ps mazars_cisaillement_Beta_1.ps
+cast-post.sh -o -t mazars_biaxial.ps mazars_biaxial.ps
+cast-post.sh -o -t mazars_triaxial.ps mazars_triaxial.ps
+cast-post.sh -o -t mazars_willam.ps mazars_willam.ps
 
 # Extraction des pages utilses
 echo "  --> Extraction des pages"
-psselect -q -p2    01_traction.ps mazars_trac_mono_char_3d.ps
-psselect -q -p3    01_traction.ps mazars_trac_mono_d_3d.ps
-psselect -q -p4    01_traction.ps mazars_trac_mono_s_3d.ps
-psselect -q -p5    01_traction.ps mazars_trac_mono_f_3d.ps
-psselect -q -p12   01_traction.ps mazars_trac_mono_char_3dpaf.ps
-psselect -q -p13   01_traction.ps mazars_trac_mono_d_3dpaf.ps
-psselect -q -p14   01_traction.ps mazars_trac_mono_s_3dpaf.ps
-psselect -q -p15   01_traction.ps mazars_trac_mono_f_3dpaf.ps
-psselect -q -p19   01_traction.ps mazars_trac_mono_char_2dplan.ps
-psselect -q -p20   01_traction.ps mazars_trac_mono_d_2dplan.ps
-psselect -q -p21   01_traction.ps mazars_trac_mono_s_2dplan.ps
-psselect -q -p22   01_traction.ps mazars_trac_mono_f_2dplan.ps
-psselect -q -p29   01_traction.ps mazars_trac_mono_char_2daxi.ps
-psselect -q -p30   01_traction.ps mazars_trac_mono_d_2daxi.ps
-psselect -q -p31   01_traction.ps mazars_trac_mono_s_2daxi.ps
-psselect -q -p32   01_traction.ps mazars_trac_mono_f_2daxi.ps
-psselect -q -p39   01_traction.ps mazars_trac_mono_char_2dpaf.ps
-psselect -q -p40   01_traction.ps mazars_trac_mono_d_2dpaf.ps
-psselect -q -p41   01_traction.ps mazars_trac_mono_s_2dpaf.ps
-psselect -q -p42   01_traction.ps mazars_trac_mono_f_2dpaf.ps
-psselect -q -p2    02_compression.ps mazars_comp_mono_char_3d.ps
-psselect -q -p3    02_compression.ps mazars_comp_mono_d_3d.ps
-psselect -q -p4    02_compression.ps mazars_comp_mono_s_3d.ps
-psselect -q -p5    02_compression.ps mazars_comp_mono_f_3d.ps
-psselect -q -p12   02_compression.ps mazars_comp_mono_char_3dpaf.ps
-psselect -q -p13   02_compression.ps mazars_comp_mono_d_3dpaf.ps
-psselect -q -p14   02_compression.ps mazars_comp_mono_s_3dpaf.ps
-psselect -q -p15   02_compression.ps mazars_comp_mono_f_3dpaf.ps
-psselect -q -p19   02_compression.ps mazars_comp_mono_char_2dplan.ps
-psselect -q -p20   02_compression.ps mazars_comp_mono_d_2dplan.ps
-psselect -q -p21   02_compression.ps mazars_comp_mono_s_2dplan.ps
-psselect -q -p22   02_compression.ps mazars_comp_mono_f_2dplan.ps
-psselect -q -p29   02_compression.ps mazars_comp_mono_char_2daxi.ps
-psselect -q -p30   02_compression.ps mazars_comp_mono_d_2daxi.ps
-psselect -q -p31   02_compression.ps mazars_comp_mono_s_2daxi.ps
-psselect -q -p32   02_compression.ps mazars_comp_mono_f_2daxi.ps
-psselect -q -p39   02_compression.ps mazars_comp_mono_char_2dpaf.ps
-psselect -q -p40   02_compression.ps mazars_comp_mono_d_2dpaf.ps
-psselect -q -p41   02_compression.ps mazars_comp_mono_s_2dpaf.ps
-psselect -q -p42   02_compression.ps mazars_comp_mono_f_2dpaf.ps
-psselect -q -p2    03_traction_cyclique.ps mazars_trac_cycl_char_3d.ps
-psselect -q -p3    03_traction_cyclique.ps mazars_trac_cycl_d_3d.ps
-psselect -q -p4    03_traction_cyclique.ps mazars_trac_cycl_s_3d.ps
-psselect -q -p5    03_traction_cyclique.ps mazars_trac_cycl_f_3d.ps
-psselect -q -p12   03_traction_cyclique.ps mazars_trac_cycl_char_3dpaf.ps
-psselect -q -p13   03_traction_cyclique.ps mazars_trac_cycl_d_3dpaf.ps
-psselect -q -p14   03_traction_cyclique.ps mazars_trac_cycl_s_3dpaf.ps
-psselect -q -p15   03_traction_cyclique.ps mazars_trac_cycl_f_3dpaf.ps
-psselect -q -p19   03_traction_cyclique.ps mazars_trac_cycl_char_2dplan.ps
-psselect -q -p20   03_traction_cyclique.ps mazars_trac_cycl_d_2dplan.ps
-psselect -q -p21   03_traction_cyclique.ps mazars_trac_cycl_s_2dplan.ps
-psselect -q -p22   03_traction_cyclique.ps mazars_trac_cycl_f_2dplan.ps
-psselect -q -p29   03_traction_cyclique.ps mazars_trac_cycl_char_2daxi.ps
-psselect -q -p30   03_traction_cyclique.ps mazars_trac_cycl_d_2daxi.ps
-psselect -q -p31   03_traction_cyclique.ps mazars_trac_cycl_s_2daxi.ps
-psselect -q -p32   03_traction_cyclique.ps mazars_trac_cycl_f_2daxi.ps
-psselect -q -p39   03_traction_cyclique.ps mazars_trac_cycl_char_2dpaf.ps
-psselect -q -p40   03_traction_cyclique.ps mazars_trac_cycl_d_2dpaf.ps
-psselect -q -p41   03_traction_cyclique.ps mazars_trac_cycl_s_2dpaf.ps
-psselect -q -p42   03_traction_cyclique.ps mazars_trac_cycl_f_2dpaf.ps
-psselect -q -p2    04_compression_cyclique.ps mazars_comp_cycl_char_3d.ps
-psselect -q -p3    04_compression_cyclique.ps mazars_comp_cycl_d_3d.ps
-psselect -q -p4    04_compression_cyclique.ps mazars_comp_cycl_s_3d.ps
-psselect -q -p5    04_compression_cyclique.ps mazars_comp_cycl_f_3d.ps
-psselect -q -p12   04_compression_cyclique.ps mazars_comp_cycl_char_3dpaf.ps
-psselect -q -p13   04_compression_cyclique.ps mazars_comp_cycl_d_3dpaf.ps
-psselect -q -p14   04_compression_cyclique.ps mazars_comp_cycl_s_3dpaf.ps
-psselect -q -p15   04_compression_cyclique.ps mazars_comp_cycl_f_3dpaf.ps
-psselect -q -p19   04_compression_cyclique.ps mazars_comp_cycl_char_2dplan.ps
-psselect -q -p20   04_compression_cyclique.ps mazars_comp_cycl_d_2dplan.ps
-psselect -q -p21   04_compression_cyclique.ps mazars_comp_cycl_s_2dplan.ps
-psselect -q -p22   04_compression_cyclique.ps mazars_comp_cycl_f_2dplan.ps
-psselect -q -p29   04_compression_cyclique.ps mazars_comp_cycl_char_2daxi.ps
-psselect -q -p30   04_compression_cyclique.ps mazars_comp_cycl_d_2daxi.ps
-psselect -q -p31   04_compression_cyclique.ps mazars_comp_cycl_s_2daxi.ps
-psselect -q -p32   04_compression_cyclique.ps mazars_comp_cycl_f_2daxi.ps
-psselect -q -p39   04_compression_cyclique.ps mazars_comp_cycl_char_2dpaf.ps
-psselect -q -p40   04_compression_cyclique.ps mazars_comp_cycl_d_2dpaf.ps
-psselect -q -p41   04_compression_cyclique.ps mazars_comp_cycl_s_2dpaf.ps
-psselect -q -p42   04_compression_cyclique.ps mazars_comp_cycl_f_2dpaf.ps
-psselect -q -p2    05_traction_compression.ps mazars_trac_comp_char_3d.ps
-psselect -q -p3    05_traction_compression.ps mazars_trac_comp_d_3d.ps
-psselect -q -p4    05_traction_compression.ps mazars_trac_comp_s_3d.ps
-psselect -q -p5    05_traction_compression.ps mazars_trac_comp_f_3d.ps
-psselect -q -p14   05_traction_compression.ps mazars_trac_comp_char_3dpaf.ps
-psselect -q -p15   05_traction_compression.ps mazars_trac_comp_d_3dpaf.ps
-psselect -q -p16   05_traction_compression.ps mazars_trac_comp_s_3dpaf.ps
-psselect -q -p17   05_traction_compression.ps mazars_trac_comp_f_3dpaf.ps
-psselect -q -p23   05_traction_compression.ps mazars_trac_comp_char_2dplan.ps
-psselect -q -p24   05_traction_compression.ps mazars_trac_comp_d_2dplan.ps
-psselect -q -p25   05_traction_compression.ps mazars_trac_comp_s_2dplan.ps
-psselect -q -p26   05_traction_compression.ps mazars_trac_comp_f_2dplan.ps
-psselect -q -p35   05_traction_compression.ps mazars_trac_comp_char_2daxi.ps
-psselect -q -p36   05_traction_compression.ps mazars_trac_comp_d_2daxi.ps
-psselect -q -p37   05_traction_compression.ps mazars_trac_comp_s_2daxi.ps
-psselect -q -p38   05_traction_compression.ps mazars_trac_comp_f_2daxi.ps
-psselect -q -p47   05_traction_compression.ps mazars_trac_comp_char_2dpaf.ps
-psselect -q -p48   05_traction_compression.ps mazars_trac_comp_d_2dpaf.ps
-psselect -q -p49   05_traction_compression.ps mazars_trac_comp_s_2dpaf.ps
-psselect -q -p50   05_traction_compression.ps mazars_trac_comp_f_2dpaf.ps
-psselect -q -p2    06_traction_compression_traction.ps mazars_trac_comp_trac_char_3d.ps
-psselect -q -p3    06_traction_compression_traction.ps mazars_trac_comp_trac_d_3d.ps
-psselect -q -p4    06_traction_compression_traction.ps mazars_trac_comp_trac_s_3d.ps
-psselect -q -p5    06_traction_compression_traction.ps mazars_trac_comp_trac_f_3d.ps
-psselect -q -p15   06_traction_compression_traction.ps mazars_trac_comp_trac_char_3dpaf.ps
-psselect -q -p16   06_traction_compression_traction.ps mazars_trac_comp_trac_d_3dpaf.ps
-psselect -q -p17   06_traction_compression_traction.ps mazars_trac_comp_trac_s_3dpaf.ps
-psselect -q -p18   06_traction_compression_traction.ps mazars_trac_comp_trac_f_3dpaf.ps
-psselect -q -p25   06_traction_compression_traction.ps mazars_trac_comp_trac_char_2dplan.ps
-psselect -q -p26   06_traction_compression_traction.ps mazars_trac_comp_trac_d_2dplan.ps
-psselect -q -p27   06_traction_compression_traction.ps mazars_trac_comp_trac_s_2dplan.ps
-psselect -q -p28   06_traction_compression_traction.ps mazars_trac_comp_trac_f_2dplan.ps
-psselect -q -p38   06_traction_compression_traction.ps mazars_trac_comp_trac_char_2daxi.ps
-psselect -q -p39   06_traction_compression_traction.ps mazars_trac_comp_trac_d_2daxi.ps
-psselect -q -p40   06_traction_compression_traction.ps mazars_trac_comp_trac_s_2daxi.ps
-psselect -q -p41   06_traction_compression_traction.ps mazars_trac_comp_trac_f_2daxi.ps
-psselect -q -p51   06_traction_compression_traction.ps mazars_trac_comp_trac_char_2dpaf.ps
-psselect -q -p52   06_traction_compression_traction.ps mazars_trac_comp_trac_d_2dpaf.ps
-psselect -q -p53   06_traction_compression_traction.ps mazars_trac_comp_trac_s_2dpaf.ps
-psselect -q -p54   06_traction_compression_traction.ps mazars_trac_comp_trac_f_2dpaf.ps
-psselect -q -p2    07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_3d.ps
-psselect -q -p3    07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_3d.ps
-psselect -q -p4    07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_3d.ps
-psselect -q -p10   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_3dpaf.ps
-psselect -q -p11   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_3dpaf.ps
-psselect -q -p12   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_3dpaf.ps
-psselect -q -p15   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_2dplan.ps
-psselect -q -p16   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_2dplan.ps
-psselect -q -p17   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_2dplan.ps
-psselect -q -p23   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_2dpaf.ps
-psselect -q -p24   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_2dpaf.ps
-psselect -q -p25   07_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_2dpaf.ps
-psselect -q -p2    07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_3d.ps
-psselect -q -p3    07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_3d.ps
-psselect -q -p4    07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_3d.ps
-psselect -q -p10   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_3dpaf.ps
-psselect -q -p11   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_3dpaf.ps
-psselect -q -p12   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_3dpaf.ps
-psselect -q -p15   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_2dplan.ps
-psselect -q -p16   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_2dplan.ps
-psselect -q -p17   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_2dplan.ps
-psselect -q -p23   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_2dpaf.ps
-psselect -q -p24   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_2dpaf.ps
-psselect -q -p25   07_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_2dpaf.ps
-psselect -q -p2    08_biaxial.ps  mazars_biax_char_3d.ps
-psselect -q -p6    08_biaxial.ps  mazars_biax_SxSy_3d.ps
-psselect -q -p7    08_biaxial.ps  mazars_biax_SxSysFc_3d.ps
-psselect -q -p9    08_biaxial.ps  mazars_biax_char_2dplan.ps
-psselect -q -p13   08_biaxial.ps  mazars_biax_SxSy_2dplan.ps
-psselect -q -p14   08_biaxial.ps  mazars_biax_SxSysFc_2dplan.ps
-psselect -q -p5    09_triaxial.ps mazars_triax_0MPa_char_3d.ps
-psselect -q -p11   09_triaxial.ps mazars_triax_9MPa_char_3d.ps
-psselect -q -p13   09_triaxial.ps mazars_triax_d_3d.ps
-psselect -q -p14   09_triaxial.ps mazars_triax_s_3d.ps
-psselect -q -p15   09_triaxial.ps mazars_triax_f_3d.ps
-psselect -q -p21   09_triaxial.ps mazars_triax_0MPa_char_2daxi.ps
-psselect -q -p27   09_triaxial.ps mazars_triax_9MPa_char_2daxi.ps
-psselect -q -p29   09_triaxial.ps mazars_triax_d_2daxi.ps
-psselect -q -p30   09_triaxial.ps mazars_triax_s_2daxi.ps
-psselect -q -p31   09_triaxial.ps mazars_triax_f_2daxi.ps
-psselect -q -p2    10_willam.ps  mazars_will_d_3d.ps
-psselect -q -p10   10_willam.ps  mazars_will_s_3d.ps
-psselect -q -p14   10_willam.ps  mazars_will_char_3d.ps
-psselect -q -p15   10_willam.ps  mazars_will_prin_3d.ps
-psselect -q -p17   10_willam.ps  mazars_will_d_2dplan.ps
-psselect -q -p25   10_willam.ps  mazars_will_s_2dplan.ps
-psselect -q -p29   10_willam.ps  mazars_will_char_2dplan.ps
-psselect -q -p30   10_willam.ps  mazars_will_prin_2dplan.ps
+psselect -q -p2    mazars_traction.ps mazars_trac_mono_char_3d.ps
+psselect -q -p3    mazars_traction.ps mazars_trac_mono_d_3d.ps
+psselect -q -p4    mazars_traction.ps mazars_trac_mono_s_3d.ps
+psselect -q -p5    mazars_traction.ps mazars_trac_mono_f_3d.ps
+psselect -q -p12   mazars_traction.ps mazars_trac_mono_char_3dpaf.ps
+psselect -q -p13   mazars_traction.ps mazars_trac_mono_d_3dpaf.ps
+psselect -q -p14   mazars_traction.ps mazars_trac_mono_s_3dpaf.ps
+psselect -q -p15   mazars_traction.ps mazars_trac_mono_f_3dpaf.ps
+psselect -q -p19   mazars_traction.ps mazars_trac_mono_char_2dplan.ps
+psselect -q -p20   mazars_traction.ps mazars_trac_mono_d_2dplan.ps
+psselect -q -p21   mazars_traction.ps mazars_trac_mono_s_2dplan.ps
+psselect -q -p22   mazars_traction.ps mazars_trac_mono_f_2dplan.ps
+psselect -q -p29   mazars_traction.ps mazars_trac_mono_char_2daxi.ps
+psselect -q -p30   mazars_traction.ps mazars_trac_mono_d_2daxi.ps
+psselect -q -p31   mazars_traction.ps mazars_trac_mono_s_2daxi.ps
+psselect -q -p32   mazars_traction.ps mazars_trac_mono_f_2daxi.ps
+psselect -q -p39   mazars_traction.ps mazars_trac_mono_char_2dpaf.ps
+psselect -q -p40   mazars_traction.ps mazars_trac_mono_d_2dpaf.ps
+psselect -q -p41   mazars_traction.ps mazars_trac_mono_s_2dpaf.ps
+psselect -q -p42   mazars_traction.ps mazars_trac_mono_f_2dpaf.ps
+psselect -q -p2    mazars_compression.ps mazars_comp_mono_char_3d.ps
+psselect -q -p3    mazars_compression.ps mazars_comp_mono_d_3d.ps
+psselect -q -p4    mazars_compression.ps mazars_comp_mono_s_3d.ps
+psselect -q -p5    mazars_compression.ps mazars_comp_mono_f_3d.ps
+psselect -q -p12   mazars_compression.ps mazars_comp_mono_char_3dpaf.ps
+psselect -q -p13   mazars_compression.ps mazars_comp_mono_d_3dpaf.ps
+psselect -q -p14   mazars_compression.ps mazars_comp_mono_s_3dpaf.ps
+psselect -q -p15   mazars_compression.ps mazars_comp_mono_f_3dpaf.ps
+psselect -q -p19   mazars_compression.ps mazars_comp_mono_char_2dplan.ps
+psselect -q -p20   mazars_compression.ps mazars_comp_mono_d_2dplan.ps
+psselect -q -p21   mazars_compression.ps mazars_comp_mono_s_2dplan.ps
+psselect -q -p22   mazars_compression.ps mazars_comp_mono_f_2dplan.ps
+psselect -q -p29   mazars_compression.ps mazars_comp_mono_char_2daxi.ps
+psselect -q -p30   mazars_compression.ps mazars_comp_mono_d_2daxi.ps
+psselect -q -p31   mazars_compression.ps mazars_comp_mono_s_2daxi.ps
+psselect -q -p32   mazars_compression.ps mazars_comp_mono_f_2daxi.ps
+psselect -q -p39   mazars_compression.ps mazars_comp_mono_char_2dpaf.ps
+psselect -q -p40   mazars_compression.ps mazars_comp_mono_d_2dpaf.ps
+psselect -q -p41   mazars_compression.ps mazars_comp_mono_s_2dpaf.ps
+psselect -q -p42   mazars_compression.ps mazars_comp_mono_f_2dpaf.ps
+psselect -q -p2    mazars_traction_cyclique.ps mazars_trac_cycl_char_3d.ps
+psselect -q -p3    mazars_traction_cyclique.ps mazars_trac_cycl_d_3d.ps
+psselect -q -p4    mazars_traction_cyclique.ps mazars_trac_cycl_s_3d.ps
+psselect -q -p5    mazars_traction_cyclique.ps mazars_trac_cycl_f_3d.ps
+psselect -q -p12   mazars_traction_cyclique.ps mazars_trac_cycl_char_3dpaf.ps
+psselect -q -p13   mazars_traction_cyclique.ps mazars_trac_cycl_d_3dpaf.ps
+psselect -q -p14   mazars_traction_cyclique.ps mazars_trac_cycl_s_3dpaf.ps
+psselect -q -p15   mazars_traction_cyclique.ps mazars_trac_cycl_f_3dpaf.ps
+psselect -q -p19   mazars_traction_cyclique.ps mazars_trac_cycl_char_2dplan.ps
+psselect -q -p20   mazars_traction_cyclique.ps mazars_trac_cycl_d_2dplan.ps
+psselect -q -p21   mazars_traction_cyclique.ps mazars_trac_cycl_s_2dplan.ps
+psselect -q -p22   mazars_traction_cyclique.ps mazars_trac_cycl_f_2dplan.ps
+psselect -q -p29   mazars_traction_cyclique.ps mazars_trac_cycl_char_2daxi.ps
+psselect -q -p30   mazars_traction_cyclique.ps mazars_trac_cycl_d_2daxi.ps
+psselect -q -p31   mazars_traction_cyclique.ps mazars_trac_cycl_s_2daxi.ps
+psselect -q -p32   mazars_traction_cyclique.ps mazars_trac_cycl_f_2daxi.ps
+psselect -q -p39   mazars_traction_cyclique.ps mazars_trac_cycl_char_2dpaf.ps
+psselect -q -p40   mazars_traction_cyclique.ps mazars_trac_cycl_d_2dpaf.ps
+psselect -q -p41   mazars_traction_cyclique.ps mazars_trac_cycl_s_2dpaf.ps
+psselect -q -p42   mazars_traction_cyclique.ps mazars_trac_cycl_f_2dpaf.ps
+psselect -q -p2    mazars_compression_cyclique.ps mazars_comp_cycl_char_3d.ps
+psselect -q -p3    mazars_compression_cyclique.ps mazars_comp_cycl_d_3d.ps
+psselect -q -p4    mazars_compression_cyclique.ps mazars_comp_cycl_s_3d.ps
+psselect -q -p5    mazars_compression_cyclique.ps mazars_comp_cycl_f_3d.ps
+psselect -q -p12   mazars_compression_cyclique.ps mazars_comp_cycl_char_3dpaf.ps
+psselect -q -p13   mazars_compression_cyclique.ps mazars_comp_cycl_d_3dpaf.ps
+psselect -q -p14   mazars_compression_cyclique.ps mazars_comp_cycl_s_3dpaf.ps
+psselect -q -p15   mazars_compression_cyclique.ps mazars_comp_cycl_f_3dpaf.ps
+psselect -q -p19   mazars_compression_cyclique.ps mazars_comp_cycl_char_2dplan.ps
+psselect -q -p20   mazars_compression_cyclique.ps mazars_comp_cycl_d_2dplan.ps
+psselect -q -p21   mazars_compression_cyclique.ps mazars_comp_cycl_s_2dplan.ps
+psselect -q -p22   mazars_compression_cyclique.ps mazars_comp_cycl_f_2dplan.ps
+psselect -q -p29   mazars_compression_cyclique.ps mazars_comp_cycl_char_2daxi.ps
+psselect -q -p30   mazars_compression_cyclique.ps mazars_comp_cycl_d_2daxi.ps
+psselect -q -p31   mazars_compression_cyclique.ps mazars_comp_cycl_s_2daxi.ps
+psselect -q -p32   mazars_compression_cyclique.ps mazars_comp_cycl_f_2daxi.ps
+psselect -q -p39   mazars_compression_cyclique.ps mazars_comp_cycl_char_2dpaf.ps
+psselect -q -p40   mazars_compression_cyclique.ps mazars_comp_cycl_d_2dpaf.ps
+psselect -q -p41   mazars_compression_cyclique.ps mazars_comp_cycl_s_2dpaf.ps
+psselect -q -p42   mazars_compression_cyclique.ps mazars_comp_cycl_f_2dpaf.ps
+psselect -q -p2    mazars_traction_compression.ps mazars_trac_comp_char_3d.ps
+psselect -q -p3    mazars_traction_compression.ps mazars_trac_comp_d_3d.ps
+psselect -q -p4    mazars_traction_compression.ps mazars_trac_comp_s_3d.ps
+psselect -q -p5    mazars_traction_compression.ps mazars_trac_comp_f_3d.ps
+psselect -q -p14   mazars_traction_compression.ps mazars_trac_comp_char_3dpaf.ps
+psselect -q -p15   mazars_traction_compression.ps mazars_trac_comp_d_3dpaf.ps
+psselect -q -p16   mazars_traction_compression.ps mazars_trac_comp_s_3dpaf.ps
+psselect -q -p17   mazars_traction_compression.ps mazars_trac_comp_f_3dpaf.ps
+psselect -q -p23   mazars_traction_compression.ps mazars_trac_comp_char_2dplan.ps
+psselect -q -p24   mazars_traction_compression.ps mazars_trac_comp_d_2dplan.ps
+psselect -q -p25   mazars_traction_compression.ps mazars_trac_comp_s_2dplan.ps
+psselect -q -p26   mazars_traction_compression.ps mazars_trac_comp_f_2dplan.ps
+psselect -q -p35   mazars_traction_compression.ps mazars_trac_comp_char_2daxi.ps
+psselect -q -p36   mazars_traction_compression.ps mazars_trac_comp_d_2daxi.ps
+psselect -q -p37   mazars_traction_compression.ps mazars_trac_comp_s_2daxi.ps
+psselect -q -p38   mazars_traction_compression.ps mazars_trac_comp_f_2daxi.ps
+psselect -q -p47   mazars_traction_compression.ps mazars_trac_comp_char_2dpaf.ps
+psselect -q -p48   mazars_traction_compression.ps mazars_trac_comp_d_2dpaf.ps
+psselect -q -p49   mazars_traction_compression.ps mazars_trac_comp_s_2dpaf.ps
+psselect -q -p50   mazars_traction_compression.ps mazars_trac_comp_f_2dpaf.ps
+psselect -q -p2    mazars_traction_compression_traction.ps mazars_trac_comp_trac_char_3d.ps
+psselect -q -p3    mazars_traction_compression_traction.ps mazars_trac_comp_trac_d_3d.ps
+psselect -q -p4    mazars_traction_compression_traction.ps mazars_trac_comp_trac_s_3d.ps
+psselect -q -p5    mazars_traction_compression_traction.ps mazars_trac_comp_trac_f_3d.ps
+psselect -q -p15   mazars_traction_compression_traction.ps mazars_trac_comp_trac_char_3dpaf.ps
+psselect -q -p16   mazars_traction_compression_traction.ps mazars_trac_comp_trac_d_3dpaf.ps
+psselect -q -p17   mazars_traction_compression_traction.ps mazars_trac_comp_trac_s_3dpaf.ps
+psselect -q -p18   mazars_traction_compression_traction.ps mazars_trac_comp_trac_f_3dpaf.ps
+psselect -q -p25   mazars_traction_compression_traction.ps mazars_trac_comp_trac_char_2dplan.ps
+psselect -q -p26   mazars_traction_compression_traction.ps mazars_trac_comp_trac_d_2dplan.ps
+psselect -q -p27   mazars_traction_compression_traction.ps mazars_trac_comp_trac_s_2dplan.ps
+psselect -q -p28   mazars_traction_compression_traction.ps mazars_trac_comp_trac_f_2dplan.ps
+psselect -q -p38   mazars_traction_compression_traction.ps mazars_trac_comp_trac_char_2daxi.ps
+psselect -q -p39   mazars_traction_compression_traction.ps mazars_trac_comp_trac_d_2daxi.ps
+psselect -q -p40   mazars_traction_compression_traction.ps mazars_trac_comp_trac_s_2daxi.ps
+psselect -q -p41   mazars_traction_compression_traction.ps mazars_trac_comp_trac_f_2daxi.ps
+psselect -q -p51   mazars_traction_compression_traction.ps mazars_trac_comp_trac_char_2dpaf.ps
+psselect -q -p52   mazars_traction_compression_traction.ps mazars_trac_comp_trac_d_2dpaf.ps
+psselect -q -p53   mazars_traction_compression_traction.ps mazars_trac_comp_trac_s_2dpaf.ps
+psselect -q -p54   mazars_traction_compression_traction.ps mazars_trac_comp_trac_f_2dpaf.ps
+psselect -q -p2    mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_3d.ps
+psselect -q -p3    mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_3d.ps
+psselect -q -p4    mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_3d.ps
+psselect -q -p10   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_3dpaf.ps
+psselect -q -p11   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_3dpaf.ps
+psselect -q -p12   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_3dpaf.ps
+psselect -q -p15   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_2dplan.ps
+psselect -q -p16   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_2dplan.ps
+psselect -q -p17   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_2dplan.ps
+psselect -q -p23   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_2dpaf.ps
+psselect -q -p24   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_2dpaf.ps
+psselect -q -p25   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_2dpaf.ps
+psselect -q -p2    mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_3d.ps
+psselect -q -p3    mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_3d.ps
+psselect -q -p4    mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_3d.ps
+psselect -q -p10   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_3dpaf.ps
+psselect -q -p11   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_3dpaf.ps
+psselect -q -p12   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_3dpaf.ps
+psselect -q -p15   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_2dplan.ps
+psselect -q -p16   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_2dplan.ps
+psselect -q -p17   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_2dplan.ps
+psselect -q -p23   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_2dpaf.ps
+psselect -q -p24   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_2dpaf.ps
+psselect -q -p25   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_2dpaf.ps
+psselect -q -p2    mazars_biaxial.ps  mazars_biax_char_3d.ps
+psselect -q -p6    mazars_biaxial.ps  mazars_biax_SxSy_3d.ps
+psselect -q -p7    mazars_biaxial.ps  mazars_biax_SxSysFc_3d.ps
+psselect -q -p9    mazars_biaxial.ps  mazars_biax_char_2dplan.ps
+psselect -q -p13   mazars_biaxial.ps  mazars_biax_SxSy_2dplan.ps
+psselect -q -p14   mazars_biaxial.ps  mazars_biax_SxSysFc_2dplan.ps
+psselect -q -p5    mazars_triaxial.ps mazars_triax_0MPa_char_3d.ps
+psselect -q -p11   mazars_triaxial.ps mazars_triax_9MPa_char_3d.ps
+psselect -q -p13   mazars_triaxial.ps mazars_triax_d_3d.ps
+psselect -q -p14   mazars_triaxial.ps mazars_triax_s_3d.ps
+psselect -q -p15   mazars_triaxial.ps mazars_triax_f_3d.ps
+psselect -q -p21   mazars_triaxial.ps mazars_triax_0MPa_char_2daxi.ps
+psselect -q -p27   mazars_triaxial.ps mazars_triax_9MPa_char_2daxi.ps
+psselect -q -p29   mazars_triaxial.ps mazars_triax_d_2daxi.ps
+psselect -q -p30   mazars_triaxial.ps mazars_triax_s_2daxi.ps
+psselect -q -p31   mazars_triaxial.ps mazars_triax_f_2daxi.ps
+psselect -q -p2    mazars_willam.ps  mazars_will_d_3d.ps
+psselect -q -p10   mazars_willam.ps  mazars_will_s_3d.ps
+psselect -q -p14   mazars_willam.ps  mazars_will_char_3d.ps
+psselect -q -p15   mazars_willam.ps  mazars_will_prin_3d.ps
+psselect -q -p17   mazars_willam.ps  mazars_will_d_2dplan.ps
+psselect -q -p25   mazars_willam.ps  mazars_will_s_2dplan.ps
+psselect -q -p29   mazars_willam.ps  mazars_will_char_2dplan.ps
+psselect -q -p30   mazars_willam.ps  mazars_will_prin_2dplan.ps
 
 # Traitement des images
-rm 01_traction.ps
-rm 02_compression.ps
-rm 03_traction_cyclique.ps
-rm 04_compression_cyclique.ps
-rm 05_traction_compression.ps
-rm 06_traction_compression_traction.ps
-rm 07_cisaillement_Beta_1.06.ps
-rm 07_cisaillement_Beta_1.ps
-rm 08_biaxial.ps
-rm 09_triaxial.ps
-rm 10_willam.ps
+rm mazars_traction.ps
+rm mazars_compression.ps
+rm mazars_traction_cyclique.ps
+rm mazars_compression_cyclique.ps
+rm mazars_traction_compression.ps
+rm mazars_traction_compression_traction.ps
+rm mazars_cisaillement_Beta_1.06.ps
+rm mazars_cisaillement_Beta_1.ps
+rm mazars_biaxial.ps
+rm mazars_triaxial.ps
+rm mazars_willam.ps
 echo "  --> Augmentation de l'épaisseur des lignes"
 cast-post.sh -o -l 5 mazars_trac_mono_char_3d.ps     mazars_trac_mono_char_3d.ps
 cast-post.sh -o -l 5 mazars_trac_mono_char_3dpaf.ps  mazars_trac_mono_char_3dpaf.ps
@@ -267,12 +267,12 @@ cast-post.sh -o -l 5 mazars_will_char_3d.ps          mazars_will_char_3d.ps
 cast-post.sh -o -l 5 mazars_will_prin_3d.ps          mazars_will_prin_3d.ps
 cast-post.sh -o -l 5 mazars_will_char_2dplan.ps      mazars_will_char_2dplan.ps
 cast-post.sh -o -l 5 mazars_will_prin_2dplan.ps      mazars_will_prin_2dplan.ps
-echo "  --> Convertion en eps (ajout de la bounding box)"
+echo "  --> Conversion en eps (ajout de la bounding box)"
 for fic in *.ps
 do
   ps2eps -R + $fic >/dev/null 2>&1
 done
-echo "  --> Convertion en png"
+echo "  --> Conversion en png"
 for fic in *.eps
 do
   fic2=`basename $fic .eps`.png

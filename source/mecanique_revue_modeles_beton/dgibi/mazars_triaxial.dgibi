@@ -1,3 +1,4 @@
+* fichier : mazars_triaxial.dgibi
 ************************************************************************
 *      Cas test elementaire pour la loi d'endommagement de Mazars      *
 *           Essai de compression sous confinement (triaxial)           *
@@ -11,10 +12,23 @@
 * Le test est realise avec plusieurs modes de calcul :                 *
 *   1) 3D volumique                                                    *
 *   2) 2D axisymetrique                                                *
+*                                                                      *
+* ITRAC1 : VRAI => affichage resultats                                 *
+* IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
 ************************************************************************
 
+DIVERS = 'VENV' 'CASTEM_DIVERS' ;
+FIC1   = 'CHAI' DIVERS '/mazars_triaxial_0MPa_courbe0.csv';
+FIC2   = 'CHAI' DIVERS '/mazars_triaxial_1.5MPa_courbe0.csv';
+FIC3   = 'CHAI' DIVERS '/mazars_triaxial_4.5MPa_courbe0.csv';
+FIC4   = 'CHAI' DIVERS '/mazars_triaxial_9MPa_courbe0.csv';
+
 ** Options pour les traces
-OPTI 'TRAC' 'PSC' ;
+ITRAC1 = VRAI ;
+IPSC1  = VRAI ;
+SI IPSC1 ;
+  OPTI 'TRAC' 'PSC' ;
+FINSI ;
 
 ** Liste des modes de calcul a traiter
 lcas = LECT 1 2 ;
@@ -74,10 +88,12 @@ SI (EXIS lcas 1) ;
 *nh145313
 cadr1 = COUL ((0. (long + 5.E-3) (haut + 5.E-3)) ET (long (long + 5.E-3) (haut + 5.E-3))) 'BLAN' ;
 rep1 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) 'TURQ' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage - sgauche, sdroite' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[3D V] Maillage - sbas, shaut' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' '[3D V] Maillage - sdevant, sderrie' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage - sgauche, sdroite' ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[3D V] Maillage - sbas, shaut' ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' '[3D V] Maillage - sdevant, sderrie' ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+FINSI ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -132,15 +148,19 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT')
     vprz = VECT fprz 'FORC' 'VERT' 1.2E-6 ;
     vdiz = VECT dihaut ' ' ' ' 'FLX' 'ROUG' 3.E-2 ;
     tit0 = CHAI '[3D V] Blocages et chargement Uimp et Pres.imp =' pre1 ' Pa' ;
-    TRAC ((RIGI mo ma) ET bl ET rir) (vprx ET vpry ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
+    SI ITRAC1 ;
+      TRAC ((RIGI mo ma) ET bl ET rir) (vprx ET vpry ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
+    FINSI ;
     t . 'BLOCAGES_MECANIQUES'       = bl ;
     t . 'CHARGEMENT'                = chap ET chadi ;
     t . 'TEMPS_CALCULES'            = PROG 0.505 'PAS' 0.005 1. ;
     PASAPAS t ;
-*    tit1 = CHAI '[3D V] UZ vs Temps - P =' ' ' pre1 ;
-*    DESS (EVOL 'TEMPE' t 'DEPLACEMENTS' 'UZ' p3) 'TITR' tit1 ;
-*    tit1 = CHAI '[3D V] SMZZ vs Temps - P =' ' ' pre1 ;
-*    DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
+*    SI ITRAC1 ;
+*      tit1 = CHAI '[3D V] UZ vs Temps - P =' ' ' pre1 ;
+*      DESS (EVOL 'TEMPE' t 'DEPLACEMENTS' 'UZ' p3) 'TITR' tit1 ;
+*      tit1 = CHAI '[3D V] SMZZ vs Temps - P =' ' ' pre1 ;
+*      DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
+*    FINSI ;
 
 ** Post traitement :
 * courbes : endommagement moyen vs temps
@@ -186,9 +206,13 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT')
 *     trace de la deformee (pour controle visuel)
       def1 = DEFO mail (tu . (&b2 - 1)) 10. 'ROUG' ;
       tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
-*      TRAC (def0 ET def1) 'TITR' tit1 ;
+      SI ITRAC1 ;
+*        TRAC (def0 ET def1) 'TITR' tit1 ;
+      FINSI ;
     FIN b2 ;
-    TRAC (def0 ET def1) 'TITR' tit1 ;
+    SI ITRAC1 ;
+      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
   FIN b0 ;
 
 ** Donnees experimentales de reference (FdP)
@@ -203,23 +227,25 @@ si (resexp);
   tleg . (npres + 4) = MOT 'MARQ CROI NOLI' ;
   tleg . 'TITRE' . (npres + 4) = 'Ref_Exp_P=9.0_MPa' ;
 * Courbes Contrainte vs Deformation  
-  txp  = LIRE 'CSV' '09_triaxial_0MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-  txp  = LIRE 'CSV' '09_triaxial_1.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC2 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'ORAN' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-  txp  = LIRE 'CSV' '09_triaxial_4.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC3 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'VERT' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-  txp  = LIRE 'CSV' '09_triaxial_9MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC4 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'ROUG' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
 fins;
 ** Trace des courbes pour les differents niveaux de pression
-  DESS evtot0 'TITR' '[3D V] Endommagement vs Temps'    'LEGE' tleg ;
-si (resexp);
-  DESS (evtot1 ET evxp0) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
-sino;
-  DESS evtot1 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
-fins;
-  DESS evtot2 'TITR' '[3D V] Reaction vs Deplacement'   'LEGE' tleg ;
+  SI ITRAC1 ;
+    DESS evtot0 'TITR' '[3D V] Endommagement vs Temps'    'LEGE' tleg ;
+    SI RESEXP ;
+      DESS (evtot1 ET evxp0) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
+    SINON ;
+      DESS evtot1 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
+    FINSI ;
+    DESS evtot2 'TITR' '[3D V] Reaction vs Deplacement'   'LEGE' tleg ;
+  FINSI ;
 *nh145313
 ** Comparaison Calcul / Reference sur l'aire sous la courbe Contrainte vs Deformation
 si (resexp);
@@ -260,7 +286,9 @@ si (resexp);
     er1 = ec1 / ivexp ;
 *    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Defo.max' xmexp ' -> Contr.cal' ymcal ;
     tit0  = CHAI (tleg . 'TITRE' . &b2) ' Aire courb.exp' ivexp ' Aire courb.cal' ivcal '   Ec.Rel.' er1;
-    DESS (evcal et evexp et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    SI ITRAC1 ;
+      DESS (evcal et evexp et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    FINSI ;
     MESS ' Pres.hydrostat :' (tleg . 'TITRE' . &b2) ', Ecart relatif entre Calcul et Reference :' er1 ;
     SAUT 1 LIGN ;
   FIN b2 ;
@@ -287,7 +315,9 @@ SI (EXIS lcas 2) ;
 *nh145313
 cadr1 = COUL ((0. (haut + 5.E-3)) ET (long (haut + 5.E-3))) 'BLAN' ;
 rep1 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) 'TURQ' ;
-TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
+FINSI ;
 
 ** Modele et caracteristiques materiau
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
@@ -344,15 +374,19 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) 
     vprz = VECT fprz 'FORC' 'VERT' 1.E-7 ;
     vdiz = VECT dihaut ' ' 'FLX' 'ROUG' 3.E-2 ;
     tit0 = CHAI '[2D Axi.] Blocages et chargement Uimp et Pres.imp =' pre1 ' Pa' ;
-    TRAC ((RIGI mo ma) ET bl ET rir) (vprr ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
+    SI ITRAC1 ;
+      TRAC ((RIGI mo ma) ET bl ET rir) (vprr ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
+    FINSI ;
     t . 'BLOCAGES_MECANIQUES'       = bl ;
     t . 'CHARGEMENT'                = chap ET chadi ;
     t . 'TEMPS_CALCULES'            = PROG 0.505 'PAS' 0.005 1. ;
     PASAPAS t ;
-*    tit1 = CHAI '[2D Axi.] UZ vs Temps - P =' ' ' pre1 ;
-*    DESS (EVOL 'TEMPE' t 'DEPLACEMENTS' 'UZ' p3) 'TITR' tit1 ;
-*    tit1 = CHAI '[2D Axi.] SMZZ vs Temps - P =' ' ' pre1 ;
-*    DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
+*    SI ITRAC1 ;
+*      tit1 = CHAI '[2D Axi.] UZ vs Temps - P =' ' ' pre1 ;
+*      DESS (EVOL 'TEMPE' t 'DEPLACEMENTS' 'UZ' p3) 'TITR' tit1 ;
+*      tit1 = CHAI '[2D Axi.] SMZZ vs Temps - P =' ' ' pre1 ;
+*      DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
+*    FINSI ;
 
 ** Post traitement :
 * courbes : endommagement moyen vs temps
@@ -398,9 +432,13 @@ TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) 
 *     trace de la deformee (pour controle visuel)
       def1 = DEFO mail (tu . (&b2 - 1)) 10. 'ROUG' ;
       tit1 = CHAI '[2D Axi.] Deformee au temps' ' ' tps1 ;
-*      TRAC (def0 ET def1) 'TITR' tit1 ;
+      SI ITRAC1 ;
+*        TRAC (def0 ET def1) 'TITR' tit1 ;
+      FINSI ;
     FIN b2 ;
-    TRAC (def0 ET def1) 'TITR' tit1 ;
+    SI ITRAC1 ;
+      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
   FIN b0 ;
 
 ** Donnees experimentales de reference (FdP)
@@ -415,23 +453,25 @@ si (resexp);
   tleg . (npres + 4) = MOT 'MARQ CROI NOLI' ;
   tleg . 'TITRE' . (npres + 4) = 'Ref_Exp_P=9.0_MPa' ;
 * Courbes Contrainte vs Deformation  
-  txp  = LIRE 'CSV' '09_triaxial_0MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-  txp  = LIRE 'CSV' '09_triaxial_1.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC2 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'ORAN' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-  txp  = LIRE 'CSV' '09_triaxial_4.5MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC3 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'VERT' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
-  txp  = LIRE 'CSV' '09_triaxial_9MPa_courbe0.csv' 'DEBU' 2 'SEPA' ',' ;
+  txp  = LIRE 'CSV' FIC4 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'ROUG' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
 fins;
 ** Trace des courbes pour les differents niveaux de pression
-  DESS evtot0 'TITR' '[2D Axi.] Endommagement vs Temps'    'LEGE' tleg ;
-si (resexp);
-  DESS (evtot1 ET evxp0) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
-sino;
-  DESS evtot1 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
-fins;
-  DESS evtot2 'TITR' '[2D Axi.] Reaction vs Deplacement'   'LEGE' tleg ;
+  SI ITRAC1 ;
+    DESS evtot0 'TITR' '[2D Axi.] Endommagement vs Temps'    'LEGE' tleg ;
+    SI RESEXP ;
+      DESS (evtot1 ET evxp0) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
+    SINON ;
+      DESS evtot1 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
+    FINSI ;
+    DESS evtot2 'TITR' '[2D Axi.] Reaction vs Deplacement'   'LEGE' tleg ;
+  FINSI ;
 *nh145313
 ** Comparaison Calcul / Reference sur l'aire sous la courbe Contrainte vs Deformation
 si (resexp);
@@ -472,7 +512,9 @@ si (resexp);
     er1 = ec1 / ivexp ;
 *    tit0  = CHAI (tleg . 'TITRE' . &b2) ' Defo.max' xmexp ' -> Contr.cal' ymcal ;
     tit0  = CHAI (tleg . 'TITRE' . &b2) ' Aire courb.exp' ivexp ' Aire courb.cal' ivcal '   Ec.Rel.' er1;
-    DESS (evcal et evexp et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    SI ITRAC1 ;
+      DESS (evcal et evexp et evcal2) 'TITR' tit0 'LEGE' tbid ;
+    FINSI ;
     MESS ' Pres.hydrostat :' (tleg . 'TITRE' . &b2) ', Ecart relatif entre Calcul et Reference :' er1 ;
     SAUT 1 LIGN ;
   FIN b2 ;
@@ -484,3 +526,5 @@ FINSI ;
 
 
 FIN ;
+ 
+

@@ -1,0 +1,2798 @@
+* fichier : mazars_traction_compression_traction.dgibi
+************************************************************************
+*      Cas test elementaire pour la loi d'endommagement de Mazars      *
+*            Essai de traction-compression-traction alterné            *
+*                                                                      *
+* Le test est realise avec plusieurs modes de calcul :                 *
+*   1) 3D volumique                                                    *
+*   2) 3D poutre a fibre                                               *
+*   3) 2D contraintes planes                                           *
+*   4) 2D axisymetrique                                                *
+*   5) 2D poutre a fibre                                               *
+*                                                                      *
+* ITRAC1 : VRAI => affichage resultats                                 *
+* IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
+************************************************************************
+
+** Options pour les traces
+ITRAC1 = VRAI ;
+IPSC1  = VRAI ;
+SI IPSC1 ;
+  OPTI 'TRAC' 'PSC' ;
+FINSI ;
+
+** Sortie sur Erreur 1152 "Solution calculee non conforme par rapport a la solution de reference"
+IERR = FAUX ;
+
+** Liste des modes de calcul a traiter
+lcas = LECT 1 2 3 4 5 ;
+*nh145313
+*lcas = LECT 1 ; COMM '3D volumique' ;
+*lcas = LECT 2 ; COMM '3D poutre a fibre' ;
+*lcas = LECT 3 ; COMM '2D contraintes planes' ;
+*lcas = LECT 4 ; COMM '2D axisymetrique' ;
+*lcas = LECT 5 ; COMM '2D poutre a fibre' ;
+
+** Parametres geometriques
+long = 1. ;
+epai = 0.1 ;
+
+** Parametres materiau
+you   = 20.E9 ;
+nu    = 0.2 ;
+epd0  = 8.E-5 ;
+at    = 1. ;
+ac    = 1.5 ;
+bt    = 8000. ;
+bc    = 1550. ;
+beta  = 1. ;
+
+*nh145313
+** Paramètres chargement2.E-4 -4.E-3 5.E-4
+** 1. traction (u1max), instant d'alternance (inst_1a)
+** 2. compression (u2max), instant d'alternance (inst_2a)
+** 3. traction (u3max)
+u1max  =  2.E-4 ;
+u2max  = -4.E-3 ;
+u3max  =  5.E-4 ;
+inst_1a = 0.666 / (1. + (0.5*(ABS u2max)/u1max)) ;
+inst_2a = (1. + (0.666*(u3max/(ABS u2max)))) / (1. + (u3max/(ABS u2max))) ;
+
+** Legende courbes
+  tdess = 'TABLE' ;
+  tdess.'TITRE' = 'TABLE' ;
+  tdess. 1 = MOT 'MARQ LOSA' ;
+  tdess.'TITRE'. 1 = MOT 'Calcul' ;
+  tdess . 2 = MOT 'MARQ CROI REGU' ;
+  tdess . 'TITRE' . 2 = MOT 'Ref_1.Traction' ;
+  tdess . 3 = MOT 'MARQ PLUS REGU' ;
+  tdess . 'TITRE' . 3 = MOT 'Ref_2.Compression' ;
+  tdess . 4 = MOT 'MARQ S CROI REGU' ;
+  tdess . 'TITRE' . 4 = MOT 'Ref_3.Traction' ;
+
+
+
+
+
+
+**************** C A S  #1  :  3 D   V O L U M I Q U E ****************
+SI (EXIS lcas 1) ;
+
+** Options generales
+  OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+
+** Maillage
+  p1      = 0. 0. 0. ;
+  p2      = 0. long 0. ;
+  l12     = DROI 1 p1 p2 ;
+  sgauche = l12 TRAN 1 (0. 0. long) ;
+  mail    = sgauche VOLU 'TRAN' 1 (long 0. 0.) ;
+  sdroite = mail FACE 2 ;
+  p3      = sdroite POIN 'PROC' (long 0. 0.) ;
+  mes1    = MESU mail ;
+*nh145313
+cadr1 = COUL ((0. 1.05 1.05) ET (1.05 1.05 1.05)) 'BLAN' ;
+rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+FINSI ;
+
+** Modele et caracteristiques materiau
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+
+** Blocages
+  blgauche = BLOQ 'UX' sgauche ;
+  bldroite = BLOQ 'UX' sdroite ;
+  blrig    = (BLOQ 'UY' 'UZ' p1) ET (BLOQ 'UZ' p2) ;
+  bl       = blgauche ET bldroite ET blrig ;
+
+** Chargements
+  didroite = DEPI bldroite 1. ;
+  ec1      = EVOL 'MANU' (PROG 0. (0.5*inst_1a) inst_1a   0.666   inst_2a     1. )
+                         (PROG 0.    u1max         0.     u2max      0.     u3max) ;
+  cha      = CHAR 'DIMP' didroite ec1 ;
+*opti echo 0;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Chargement : 0.5*inst_1a' (0.5*inst_1a) ' inst_1a' inst_1a ' inst_2a' inst_2a ;
+*mess titi;
+*list ec1;
+*dess ec1 'TITRE' titi ;
+*saut 1 lign ;
+*opti echo 1;
+
+** Tracé des blocages et du chargement
+  re0 = @REPERE (-0.55 -0.55 0.) ;
+  mor = MODE re0 'MECANIQUE' 'BARR' ;
+  mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
+  rir = RIGI mor mar ;
+  vf  = VECT didroite 'FLX' ' ' ' ' 'ROUGE' ;
+  SI ITRAC1 ;
+    TRAC ((RIGI mo ma) ET blgauche ET blrig ET rir) vf 'NOLE' 'TITR' '[3D V] Blocages et chargement' ;
+  FINSI ;
+
+** Resolution
+  t                               = TABL ;
+  t . 'MODELE'                    = mo ;
+  t . 'CARACTERISTIQUES'          = ma ;
+  t . 'BLOCAGES_MECANIQUES'       = bl ;
+  t . 'CHARGEMENT'                = cha ;
+  t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 3.E-3 (0.5*inst_1a)
+                                            'PAS' 3.E-3 inst_1a
+                                            'PAS' 1.E-2 0.666
+                                            'PAS' 1.E-2 inst_2a
+                                            'PAS' 1.E-2 0.9629
+                                            'PAS' 3.E-3 1. ;
+  t . 'MOVA'                      = MOT 'D' ;
+  t . 'MES_SAUVEGARDES'           = TABL ;
+  t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t ;
+
+** Post traitement
+* courbes : endommagement moyen vs temps
+*           contrainte moyenne vs deformation moyenne
+*           force de reaction vs deplacement impose
+  tt = t . 'TEMPS' ;
+  tc = t . 'CONTRAINTES' ;
+  te = t . 'DEFORMATIONS' ;
+  tv = t . 'VARIABLES_INTERNES' ;
+  tu = t . 'DEPLACEMENTS' ;
+  tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
+  ltps    = PROG ;
+  ltps_t1 = PROG ;
+  ltps_c2 = PROG ;
+  ltps_t3 = PROG ;
+  lend = PROG ;
+  lsig = PROG ;
+  leps = PROG ;
+  ldep = PROG ;
+  lrea = PROG ;
+  REPE b0 (DIME tt) ;
+    tps1 = tt . (&b0 - 1) ;
+*   Liste des instants : globale (ltps)
+*               de 1.traction    (ltps_t1)
+*               de 2.compression (ltps_c2)
+*               de 3.traction    (ltps_t3)
+    ltps = ltps ET tps1 ;
+    SI (<EG tps1 inst_1a) ;
+      ltps_t1 = ltps_t1 ET tps1 ;
+    SINON ;
+      SI (<EG tps1 inst_2a) ;
+        ltps_c2 = ltps_c2 ET tps1 ;
+      SINON ;
+        ltps_t3 = ltps_t3 ET tps1 ;
+      FINSI ;
+    FINSI ;
+    end1 = (INTG mo (tv . (&b0 - 1)) 'D')    / mes1 ;
+    sig1 = (INTG mo (tc . (&b0 - 1)) 'SMXX') / mes1 ;
+    eps1 = (INTG mo (te . (&b0 - 1)) 'EPXX') / mes1 ;
+    u1   = EXTR (tu . (&b0 - 1)) 'UX' p3 ;
+    rea1 = 0. ;
+    SI (NEG &b0 1) ;
+      rea1 = @TOTAL (tr . (&b0 - 1)) sgauche 'FX' ;
+    FINSI ;
+    lend = lend ET end1 ;
+    lsig = lsig ET sig1 ;
+    leps = leps ET eps1 ;
+    ldep = ldep ET u1 ;
+    lrea = lrea ET rea1 ;
+  FIN b0 ;
+  ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
+  ev1 = EVOL 'ROUG' 'MANU' 'EPXX'  leps 'SMXX' lsig ;
+  ev2 = EVOL 'ROUG' 'MANU' 'UX'    ldep 'FX'   lrea ;
+*   Instant de transition 1.Traction-2.Compression tpst1_t
+    tpst1_t = 0.5*inst_1a ;
+*   Endommagement de transition 1.Traction-2.Compression end_t1
+    end_t1 = IPOL tpst1_t ltps lend ;
+*   Instant de transition 2.Compression-3.Traction tpst3_t
+    tpst3_t = 0.666 ;
+*   Endommagement de transition 2.Compression-3.Traction end_t3
+    end_t3 = IPOL tpst3_t ltps lend ;
+*nh145313
+** Sol.Ana. 1.Traction
+  ltps_t1 =  ENLE (ENLE ltps_t1 (DIME ltps_t1)) 1 ;
+  nb1 = DIME ltps_t1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd01 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+* defo.unidim.
+  lepu1 = (IPOL ltps_t1 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe1 = lepu1 ;
+  dt1 = un1 - ((epd0*(un1-lat1)/lepe1) + (at*(EXP(bt*(lepd01-lepe1))))) ;
+  lfiltr1 = LECT ;
+  REPE b1 ;
+    dt_i = EXTR dt1 &b1 ;
+    SI (EGA &b1 1) ;
+      dt_p1 = 0. ;
+    FINSI ;
+    ddt = dt_i - dt_p1 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr1 = lfiltr1 ET (LECT &b1) ;
+    FINSI ;
+    dt_p1 = dt_i ;
+    SI (EGA &b1 (DIME dt1)) ;
+      QUIT b1 ;
+    FINSI ;
+  FIN b1 ;
+  ltps_t1 = ENLE ltps_t1 lfiltr1 ;
+  un1     = ENLE un1     lfiltr1 ;
+  lepu1   = ENLE lepu1   lfiltr1 ;
+  dt1     = ENLE dt1     lfiltr1 ;
+  lsig1 = (un1 - dt1) * you * lepu1 ;
+  an01 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'D'    dt1   ;
+  an11 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1   'SMXX' lsig1 ;
+  epst1_t = IPOL tpst1_t ltps_t1 lepu1 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 1.Traction : end_t1' end_t1 ' tpst1_t' tpst1_t ' epst1_t' epst1_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 2.Compression
+  ltps_c2 = ENLE ltps_c2 (DIME ltps_c2) ;
+  nb2 = DIME ltps_c2 ;
+  un2 = PROG nb2 * 1.D0 ;
+  lepd02 = PROG nb2 * epd0 ;
+  lac2 = PROG nb2 * ac ;
+* defo.unidim.
+  lepu2 = (IPOL ltps_c2 ec1) / long ;
+* defo.eq.Mazars (eps.tild) compression = racine(2)*nu*|defo.unidim.|
+  lepe2 = (2.**0.5) * nu * (ABS lepu2) ;
+  dc2 = un2 - ((epd0*(un2-lac2)/lepe2) + (ac*(EXP(bc*(lepd02-lepe2))))) ;
+  lfiltr2 = LECT ;
+  dc_m = 0. ;
+  REPE b2 ;
+    dc_i = EXTR dc2 &b2 ;
+    SI (EGA &b2 1) ;
+      dc_p = 1. ;
+    FINSI ;
+    ddc = dc_i - dc_p ;
+*mess '=== Boucle b2 , passage' ' ' &b2 ;
+*mess '    dom.max  ' ' ' dc_m;
+*mess '    dom.prec.' ' ' dc_p ;
+*mess '    dom.cour.' ' ' dc_i ;
+*mess '    incr.dom.' ' ' ddc  ;
+    SI ((ddc < 0.) OU (dc_i < 0.) OU (dc_i > 1.)) ;
+      lfiltr2 = lfiltr2 ET (LECT &b2) ;
+*mess '    => on filtre';
+    SINON ;
+*mess '    a garder si le dommage augmente...';
+      dc_m = MAXI dc_m dc_i ;
+      SI (dc_i < dc_m) ;
+*mess '    ... NON => on ne garde pas';
+        lfiltr2 = lfiltr2 ET (LECT &b2) ;
+      SINON ;
+*mess '    ... OUI => on garde';
+      FINSI ;
+    FINSI ;
+    dc_p = dc_i ;
+    SI (EGA &b2 (DIME dc2)) ;
+      QUIT b2 ;
+    FINSI ;
+  FIN b2 ;
+  ltps_c2 = ENLE ltps_c2 lfiltr2 ;
+  un2     = ENLE un2     lfiltr2 ;
+  lepu2   = ENLE lepu2   lfiltr2 ;
+  dc2     = ENLE dc2     lfiltr2 ;
+  lsig2 = (un2 - dc2) * you * lepu2 ;
+  an02 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'D'    dc2   ;
+  tpsc2_t = IPOL end_t1 dc2 ltps_c2 ;
+  an12 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2   'SMXX' lsig2 ;
+  epsc2_t = IPOL tpsc2_t ltps_c2 lepu2 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 2.Compression : end_t1' end_t1 ' tpsc2_t' tpsc2_t ' epsc2_t' epsc2_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 3.Traction
+  ltps_t3 =  ENLE ltps_t3 1 ;
+  nb3 = DIME ltps_t3 ;
+  un3 = PROG nb3 * 1.D0 ;
+  lepd03 = PROG nb3 * epd0 ;
+  lat3 = PROG nb3 * at ;
+* defo.unidim.
+  lepu3 = (IPOL ltps_t3 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe3 = lepu3 ;
+  dt3 = un3 - ((epd0*(un3-lat3)/lepe3) + (at*(EXP(bt*(lepd03-lepe3))))) ;
+  lfiltr3 = LECT ;
+  REPE b3 ;
+    dt_i = EXTR dt3 &b3 ;
+    SI (EGA &b3 1) ;
+      dt_p3 = dt_p1 ;
+    FINSI ;
+    ddt = dt_i - dt_p3 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr3 = lfiltr3 ET (LECT &b3) ;
+    FINSI ;
+    dt_p3 = dt_i ;
+    SI (EGA &b3 (DIME dt3)) ;
+      QUIT b3 ;
+    FINSI ;
+  FIN b3 ;
+  ltps_t3 = ENLE ltps_t3 lfiltr3 ;
+  un3     = ENLE un3     lfiltr3 ;
+  lepu3   = ENLE lepu3   lfiltr3 ;
+  dt3     = ENLE dt3     lfiltr3 ;
+  lsig3 = (un3 - dt3) * you * lepu3 ;
+  an03 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'D'    dt3   ;
+  tpst3_t = IPOL end_t3 dt3 ltps_t3 ;
+  an13 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3   'SMXX' lsig3 ;
+  epst3_t = IPOL tpst3_t ltps_t3 lepu3 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 3.Traction : end_t3' end_t3 ' tpst3_t' tpst3_t ' epst3_t' epst3_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+  SI ITRAC1 ;
+    DESS (ev0 ET an01 ET an02 ET an03) 'TITR' '[3D V] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
+    DESS (ev1 ET an11 ET an12 ET an13) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' 'NO' tdess ;
+    DESS ev2 'TITR' '[3D V] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+  FINSI ;
+* evolutions temporelles a tous les points de Gauss
+  ng = 8 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 5 = MOT 'MARQ TRID NOLI' ;
+  tleg . 6 = MOT 'MARQ TRIU NOLI' ;
+  tleg . 7 = MOT 'MARQ TRIL NOLI' ;
+  tleg . 8 = MOT 'MARQ TRIR NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
+  FIN b ;
+* endommagement
+  evend = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
+  FIN b ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI REGU' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Ref_1.Traction' ;
+  tleg . (ng+2) = MOT 'MARQ PLUS REGU' ;
+  tleg . 'TITRE' . (ng+2) = MOT 'Ref_2.Compression' ;
+  tleg . (ng+3) = MOT 'MARQ S CROI REGU' ;
+  tleg . 'TITRE' . (ng+3) = MOT 'Ref_3.Traction' ;
+  SI ITRAC1 ;
+    DESS (evend ET an01 ET an02 ET an03) 'LEGE' 'SE' tleg 'TITR' '[3D V] D vs Temps' ;
+  FINSI ;
+* contrainte
+  evsmxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 &b) ;
+  FIN b ;
+*nh145313
+  ansmxx1 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'SMXX' lsig1 ;
+  ansmxx2 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'SMXX' lsig2 ;
+  ansmxx3 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'SMXX' lsig3 ;
+  SI ITRAC1 ;
+    DESS (evsmxx ET ansmxx1 ET ansmxx2 ET ansmxx3) 'LEGE' 'NE' tleg 'TITR' '[3D V] SMXX vs Temps' ;
+  FINSI ;
+* deformation
+  evepxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxx = evepxx ET (EVOL 'TURQ' 'TEMP' t 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepxx 'LEGE' 'NE' tleg 'TITR' '[3D V] EPXX vs Temps' ;
+  FINSI ;
+* deformee
+  REPE b3 (DIME tt) ;
+    tps1 = tt . (&b3 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b3 - 1)) 33. 'ROUG' ;
+    tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
+  FIN b3 ;
+  SI ITRAC1 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FINSI ;
+* comparaison Calcul / Reference sur la contrainte moyenne
+* 1.Traction, courbes réduites
+  lepu1_red = PROG ;
+  lsig1_red = PROG ;
+  born_inf = EXTR lepu1 1 ;
+  born_sup = epst1_t ;
+  REPE b_an11 (dime lepu1) ;
+    xi = EXTR lepu1 &b_an11 ;
+    yi = EXTR lsig1 &b_an11 ;
+    SI ((>EG xi born_inf) ET (<EG xi born_sup)) ;
+      lepu1_red = lepu1_red et (PROG xi) ;
+      lsig1_red = lsig1_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an11 ;
+  an11_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1_red  'SMXX' lsig1_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' 0.5inst_1a' (05.*inst_1a);
+  REPE b_ev1 (dime leps) ;
+    ti = EXTR ltps &b_ev1 ;
+    xi = EXTR leps &b_ev1 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev1 ;
+*mess '=== Boucle b_ev1, passage' &b_ev1 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (<EG ti (05.*inst_1a))) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev1 ;
+  ev1_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.1.Traction : 0.5*inst_1a' (0.5*inst_1a) ' tpst1_t' tpst1_t ;
+*mess titi;
+*dess (ev1_red ET an11_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an11_red leps_red ;
+  ler1 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[3D V] Ecart relatif Calcul/Reference Contrainte vs Deformation en 1.Traction, max' ' ' mer1 ;
+  SI ITRAC1 ;
+    DESS eer1 'TITR' tit1 ;
+  FINSI ;
+
+* 2.Compression, courbes réduites
+  lepu2_red = PROG ;
+  lsig2_red = PROG ;
+  born_inf = epsc2_t ;
+  born_sup = EXTR lepu2 (DIME lepu2) ;
+  REPE b_an12 (dime lepu2) ;
+    xi = EXTR lepu2 &b_an12 ;
+    yi = EXTR lsig2 &b_an12 ;
+    SI ((<EG xi born_inf) ET (>EG xi born_sup)) ;
+      lepu2_red = lepu2_red et (PROG xi) ;
+      lsig2_red = lsig2_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an12 ;
+  an12_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2_red  'SMXX' lsig2_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' t(dc2max)' 0.666;
+  REPE b_ev2 (dime leps) ;
+    ti = EXTR ltps &b_ev2 ;
+    xi = EXTR leps &b_ev2 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev2 ;
+*mess '=== Boucle b_ev2, passage' &b_ev2 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((<EG xi born_inf) ET (>EG xi born_sup) ET (<eg dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev2 ;
+  ev2_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.2.Compression : tpsc2_t' tpsc2_t ;
+*mess titi;
+*dess (ev2_red ET an12_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an12_red leps_red ;
+  ler2 = ABS ((lsig_red - lsiga_red) / lsiga_red) ;
+  mer2 = MAXI ler2 ;
+  eer2 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler2 ;
+  tit2 = CHAI '[3D V] Ecart relatif Calcul/Reference Contrainte vs Deformation en 2.Compression, max' ' ' mer2 ;
+  SI ITRAC1 ;
+    DESS eer2 'TITR' tit2 ;
+  FINSI ;
+  
+* 3.Traction, courbes réduites
+  lepu3_red = PROG ;
+  lsig3_red = PROG ;
+  born_inf = EXTR lepu3 1 ;
+  born_sup = 1.E3 ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' end_t3' end_t3;
+  REPE b_an13 (dime lepu3) ;
+    di = EXTR dt3 &b_an13 ;
+    xi = EXTR lepu3 &b_an13 ;
+    yi = EXTR lsig3 &b_an13 ;
+*mess '=== Boucle b_an13, passage' &b_an13 ' di' di ' xi' xi; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG di end_t3)) ;
+      lepu3_red = lepu3_red et (PROG xi) ;
+      lsig3_red = lsig3_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+  FIN b_an13 ;
+  an13_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3_red  'SMXX' lsig3_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' tpst3_t' tpst3_t;
+  REPE b_ev3 (dime leps) ;
+    ti = EXTR ltps &b_ev3 ;
+    xi = EXTR leps &b_ev3 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev3 ;
+*mess '=== Boucle b_ev3, passage' &b_ev3 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (>EG ti tpst3_t)) ;
+*    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev3 ;
+  ev3_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.3.Traction : tpst3_t' tpst3_t ' end_t3' end_t3 ;
+*mess titi;
+*dess (ev3_red ET an13_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an13_red leps_red ;
+  ler3 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer3 = MAXI ler3 ;
+  eer3 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler3 ;
+  tit3 = CHAI '[3D V] Ecart relatif Calcul/Reference Contrainte vs Deformation en 3.Traction, max' ' ' mer3 ;
+  SI ITRAC1 ;
+    DESS eer3 'TITR' tit3 ;
+  FINSI ;
+
+  tdes1 = 'TABLE' ;
+  tdes1.'TITRE' = 'TABLE' ;
+  tdes1 . 1 = MOT 'MARQ CROI' ;
+  tdes1 . 'TITRE' . 1 = MOT '1.Traction' ;
+  tdes1 . 2 = MOT 'MARQ PLUS' ;
+  tdes1 . 'TITRE' . 2 = MOT '2.Compression' ;
+  tdes1 . 3 = MOT 'MARQ S CROI' ;
+  tdes1 . 'TITRE' . 3 = MOT '3.Traction' ;
+  tit1 = CHAI '[3D V] Ec.rel.Cal./Ref. Cont.-Defo. en 1.Trac.(max' mer1 ') 2.Compr.(max' mer2 ') 3.Trac.(max' mer3 ')' ;
+  SI ITRAC1 ;
+    DESS (eer1 et eer2 et eer3) 'LEGE' 'NE' tdes1 'TITR' tit1 ;
+  FINSI ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
+  SAUT 1 LIGN ;
+  SI ((MAXI mer1 mer2 mer3) < 1.E-8) ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-08 => OK' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-08 => OK' ;
+    SAUT 1 LIGN ;
+  SINO ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-08 => ECHEC' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-08 => ECHEC' ;
+    IERR = VRAI ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
+FINSI ;
+
+
+
+
+
+*********** C A S  #2  :  3 D   P O U T R E   A   F I B R E ************
+SI (EXIS lcas 2) ;
+
+** Options generales
+  OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+
+** Maillage
+  p1s     = (-0.5 * epai) (-0.5 * epai) 0. ;
+  p2s     = (-0.5 * epai) ( 0.5 * epai) 0. ;
+  l12s    = DROI 1 p1s p2s ;
+  mails   = l12s TRAN 1 (epai 0. 0.) ;
+  p1      = 0. 0. 0. ;
+  p2      = long 0. 0. ;
+  mail    = DROI 1 p1 p2 ;
+  mes1    = MESU mails ;
+*nh145313
+cadr1 = COUL ((-0.1 0. 0.) ET (1.05 0. 0.)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2 0.) (PROG 0.2 0.2 0.2) 'TURQ' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[3D PaF] Maillages de la Poutre et de sa Section' ;
+FINSI ;
+
+
+** Modele et caracteristiques materiau
+  mos = MODE mails 'MECANIQUE' 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
+  mas = MATE mos 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta
+                 'ALPY' 1. 'ALPZ' 1. ;
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'SECTION' 'PLASTIQUE' 'SECTION' 'TIMO' ;
+  ma = MATE mo 'MODS' mos 'MATS' mas 'VECT' (0. 1. 0.) ;
+
+** Blocages
+  blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
+  bldroite = BLOQ 'UX' p2 ;
+  bl       = blgauche ET bldroite ;
+*nh145313
+  bldroit2 = BLOQ 'ROTA' p2 ;
+  bl       = bl ET bldroit2 ;
+
+** Chargements
+  didroite = DEPI bldroite 1. ;
+  ec1      = EVOL 'MANU' (PROG 0. (0.5*inst_1a) inst_1a   0.666   inst_2a     1. )
+                         (PROG 0.    u1max         0.     u2max      0.     u3max) ;
+  cha      = CHAR 'DIMP' didroite ec1 ;
+
+** Tracé des blocages et du chargement
+  re0 = @REPERE (-0.2 -0.2 0.) (PROG 0.2 0.2 0.2) ;
+  mor = MODE re0 'MECANIQUE' 'BARR' ;
+  mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
+  rir = RIGI mor mar ;
+  vf = VECT didroite 'FLX' ' ' ' ' 'ROUG' 0.1 ;
+  SI ITRAC1 ;
+    TRAC ((RIGI mo ma) ET blgauche ET rir) vf 'NOLE' 'TITR' '[3D PaF] Blocages et chargement' ;
+  FINSI ;
+
+** Resolution
+  t                               = TABL ;
+  t . 'MODELE'                    = mo ;
+  t . 'CARACTERISTIQUES'          = ma ;
+  t . 'BLOCAGES_MECANIQUES'       = bl ;
+  t . 'CHARGEMENT'                = cha ;
+  t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 3.E-3 (0.5*inst_1a)
+                                            'PAS' 3.E-3 inst_1a
+                                            'PAS' 1.E-2 0.666
+                                            'PAS' 1.E-2 inst_2a
+                                            'PAS' 1.E-2 0.9629
+                                            'PAS' 3.E-3 1. ;
+  t . 'MES_SAUVEGARDES'           = TABL ;
+  t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t ;
+
+** Post traitement
+* courbes : endommagement moyen vs temps
+*           contrainte moyenne vs deformation moyenne
+*           force de reaction vs deplacement impose
+* evolutions temporelles a tous les points de Gauss
+  ng = 4 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
+  FIN b ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI REGU' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Ref_1.Traction' ;
+  tleg . (ng+2) = MOT 'MARQ PLUS REGU' ;
+  tleg . 'TITRE' . (ng+2) = MOT 'Ref_2.Compression' ;
+  tleg . (ng+3) = MOT 'MARQ S CROI REGU' ;
+  tleg . 'TITRE' . (ng+3) = MOT 'Ref_3.Traction' ;
+  tt = t . 'TEMPS' ;
+  tv = t . 'VARIABLES_INTERNES' ;
+  tu = t . 'DEPLACEMENTS' ;
+  tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
+  ltps    = PROG ;
+  ltps_t1 = PROG ;
+  ltps_c2 = PROG ;
+  ltps_t3 = PROG ;
+  lend1 = PROG ;
+  lend2 = PROG ;
+  lend3 = PROG ;
+  lend4 = PROG ;
+  lsig1 = PROG ;
+  lsig2 = PROG ;
+  lsig3 = PROG ;
+  lsig4 = PROG ;
+  leps1 = PROG ;
+  leps2 = PROG ;
+  leps3 = PROG ;
+  leps4 = PROG ;
+  ldep = PROG ;
+  lrea = PROG ;
+  REPE b0 (DIME tt) ;
+    tps1 = tt . (&b0 - 1) ;
+*   Liste des instants : globale (ltps)
+*               de 1.traction    (ltps_t1)
+*               de 2.compression (ltps_c2)
+*               de 3.traction    (ltps_t3)
+    ltps = ltps ET tps1 ;
+    SI (<EG tps1 inst_1a) ;
+      ltps_t1 = ltps_t1 ET tps1 ;
+    SINON ;
+      SI (<EG tps1 inst_2a) ;
+        ltps_c2 = ltps_c2 ET tps1 ;
+      SINON ;
+        ltps_t3 = ltps_t3 ET tps1 ;
+      FINSI ;
+    FINSI ;
+    SI (EGA &b0 1) ;
+      lend1 = lend1 ET 0. ;
+      lend2 = lend2 ET 0. ;
+      lend3 = lend3 ET 0. ;
+      lend4 = lend4 ET 0. ;
+      lsig1 = lsig1 ET 0. ;
+      lsig2 = lsig2 ET 0. ;
+      lsig3 = lsig3 ET 0. ;
+      lsig4 = lsig4 ET 0. ;
+      leps1 = leps1 ET 0. ;
+      leps2 = leps2 ET 0. ;
+      leps3 = leps3 ET 0. ;
+      leps4 = leps4 ET 0. ;
+    SINON ;
+      lend1 = lend1 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 1) ;
+      lend2 = lend2 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 2) ;
+      lend3 = lend3 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 3) ;
+      lend4 = lend4 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 4) ;
+      lsig1 = lsig1 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 1) ;
+      lsig2 = lsig2 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 2) ;
+      lsig3 = lsig3 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 3) ;
+      lsig4 = lsig4 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 4) ;
+      leps1 = leps1 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 1) ;
+      leps2 = leps2 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 2) ;
+      leps3 = leps3 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 3) ;
+      leps4 = leps4 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 4) ;
+      end1 = EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 1 ;
+    FINSI ;
+    u1   = EXTR (tu . (&b0 - 1)) 'UX' p2 ;
+    rea1 = EXTR (tr . (&b0 - 1)) 'FX' p1 ;
+    ldep = ldep ET u1 ;
+    lrea = lrea ET rea1 ;
+  FIN b0 ;
+  ev0 = (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend1) ET (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend2) ET
+        (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend3) ET (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend4) ;
+  ev1 = (EVOL 'ROUG' 'MANU' 'EPXX'  leps1 'SMXX' lsig1) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps2 'SMXX' lsig2) ET
+        (EVOL 'ROUG' 'MANU' 'EPXX'  leps3 'SMXX' lsig3) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps4 'SMXX' lsig4) ;
+  ev2 = EVOL 'ROUG' 'MANU' 'UX' ldep 'FX' lrea ;
+* Moyennes des listreels en chaque pt de Gauss
+  lend = 0.25 * (lend1 + lend2 + lend3 + lend4) ;
+  lsig = 0.25 * (lsig1 + lsig2 + lsig3 + lsig4) ;
+  leps = 0.25 * (leps1 + leps2 + leps3 + leps4) ;
+  
+* Instant de transition 1.Traction-2.Compression tpst1_t
+  tpst1_t = 0.5*inst_1a ;
+* Endommagement de transition 1.Traction-2.Compression end_t1
+  end_t1 = IPOL tpst1_t ltps lend ;
+* Instant de transition 2.Compression-3.Traction tpst3_t
+  tpst3_t = 0.666 ;
+* Endommagement de transition 2.Compression-3.Traction end_t3
+  end_t3 = IPOL tpst3_t ltps lend ;
+*nh145313
+** Sol.Ana. 1.Traction
+  ltps_t1 =  ENLE (ENLE ltps_t1 (DIME ltps_t1)) 1 ;
+  nb1 = DIME ltps_t1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd01 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+* defo.unidim.
+  lepu1 = (IPOL ltps_t1 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe1 = lepu1 ;
+  dt1 = un1 - ((epd0*(un1-lat1)/lepe1) + (at*(EXP(bt*(lepd01-lepe1))))) ;
+  lfiltr1 = LECT ;
+  REPE b1 ;
+    dt_i = EXTR dt1 &b1 ;
+    SI (EGA &b1 1) ;
+      dt_p1 = 0. ;
+    FINSI ;
+    ddt = dt_i - dt_p1 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr1 = lfiltr1 ET (LECT &b1) ;
+    FINSI ;
+    dt_p1 = dt_i ;
+    SI (EGA &b1 (DIME dt1)) ;
+      QUIT b1 ;
+    FINSI ;
+  FIN b1 ;
+  ltps_t1 = ENLE ltps_t1 lfiltr1 ;
+  un1     = ENLE un1     lfiltr1 ;
+  lepu1   = ENLE lepu1   lfiltr1 ;
+  dt1     = ENLE dt1     lfiltr1 ;
+  asig1 = (un1 - dt1) * you * lepu1 ;
+  an01 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'D'    dt1   ;
+  an11 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1   'SMXX' asig1 ;
+  epst1_t = IPOL tpst1_t ltps_t1 lepu1 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 1.Traction : end_t1' end_t1 ' tpst1_t' tpst1_t ' epst1_t' epst1_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 2.Compression
+  ltps_c2 = ENLE ltps_c2 (DIME ltps_c2) ;
+  nb2 = DIME ltps_c2 ;
+  un2 = PROG nb2 * 1.D0 ;
+  lepd02 = PROG nb2 * epd0 ;
+  lac2 = PROG nb2 * ac ;
+* defo.unidim.
+  lepu2 = (IPOL ltps_c2 ec1) / long ;
+* defo.eq.Mazars (eps.tild) compression = racine(2)*nu*|defo.unidim.|
+  lepe2 = (2.**0.5) * nu * (ABS lepu2) ;
+  dc2 = un2 - ((epd0*(un2-lac2)/lepe2) + (ac*(EXP(bc*(lepd02-lepe2))))) ;
+  lfiltr2 = LECT ;
+  dc_m = 0. ;
+  REPE b2 ;
+    dc_i = EXTR dc2 &b2 ;
+    SI (EGA &b2 1) ;
+      dc_p = 1. ;
+    FINSI ;
+    ddc = dc_i - dc_p ;
+*mess '=== Boucle b2 , passage' ' ' &b2 ;
+*mess '    dom.max  ' ' ' dc_m;
+*mess '    dom.prec.' ' ' dc_p ;
+*mess '    dom.cour.' ' ' dc_i ;
+*mess '    incr.dom.' ' ' ddc  ;
+    SI ((ddc < 0.) OU (dc_i < 0.) OU (dc_i > 1.)) ;
+      lfiltr2 = lfiltr2 ET (LECT &b2) ;
+*mess '    => on filtre';
+    SINON ;
+*mess '    a garder si le dommage augmente...';
+      dc_m = MAXI dc_m dc_i ;
+      SI (dc_i < dc_m) ;
+*mess '    ... NON => on ne garde pas';
+        lfiltr2 = lfiltr2 ET (LECT &b2) ;
+      SINON ;
+*mess '    ... OUI => on garde';
+      FINSI ;
+    FINSI ;
+    dc_p = dc_i ;
+    SI (EGA &b2 (DIME dc2)) ;
+      QUIT b2 ;
+    FINSI ;
+  FIN b2 ;
+  ltps_c2 = ENLE ltps_c2 lfiltr2 ;
+  un2     = ENLE un2     lfiltr2 ;
+  lepu2   = ENLE lepu2   lfiltr2 ;
+  dc2     = ENLE dc2     lfiltr2 ;
+  asig2 = (un2 - dc2) * you * lepu2 ;
+  an02 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'D'    dc2   ;
+  tpsc2_t = IPOL end_t1 dc2 ltps_c2 ;
+  an12 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2   'SMXX' asig2 ;
+  epsc2_t = IPOL tpsc2_t ltps_c2 lepu2 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 2.Compression : end_t1' end_t1 ' tpsc2_t' tpsc2_t ' epsc2_t' epsc2_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 3.Traction
+  ltps_t3 =  ENLE ltps_t3 1 ;
+  nb3 = DIME ltps_t3 ;
+  un3 = PROG nb3 * 1.D0 ;
+  lepd03 = PROG nb3 * epd0 ;
+  lat3 = PROG nb3 * at ;
+* defo.unidim.
+  lepu3 = (IPOL ltps_t3 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe3 = lepu3 ;
+  dt3 = un3 - ((epd0*(un3-lat3)/lepe3) + (at*(EXP(bt*(lepd03-lepe3))))) ;
+  lfiltr3 = LECT ;
+  REPE b3 ;
+    dt_i = EXTR dt3 &b3 ;
+    SI (EGA &b3 1) ;
+      dt_p3 = dt_p1 ;
+    FINSI ;
+    ddt = dt_i - dt_p3 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr3 = lfiltr3 ET (LECT &b3) ;
+    FINSI ;
+    dt_p3 = dt_i ;
+    SI (EGA &b3 (DIME dt3)) ;
+      QUIT b3 ;
+    FINSI ;
+  FIN b3 ;
+  ltps_t3 = ENLE ltps_t3 lfiltr3 ;
+  un3     = ENLE un3     lfiltr3 ;
+  lepu3   = ENLE lepu3   lfiltr3 ;
+  dt3     = ENLE dt3     lfiltr3 ;
+  asig3 = (un3 - dt3) * you * lepu3 ;
+  an03 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'D'    dt3   ;
+  tpst3_t = IPOL end_t3 dt3 ltps_t3 ;
+  an13 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3   'SMXX' asig3 ;
+  epst3_t = IPOL tpst3_t ltps_t3 lepu3 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 3.Traction : end_t3' end_t3 ' tpst3_t' tpst3_t ' epst3_t' epst3_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+  SI ITRAC1 ;
+    DESS (ev0 ET an01 ET an02 ET an03) 'TITR' '[3D PaF] Endommagement vs Temps' 'LEGE' 'SE' tleg ;
+    DESS (ev1 ET an11 ET an12 ET an13) 'TITR' '[3D PaF] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
+    DESS ev2 'TITR' '[3D PaF] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+  FINSI ;
+* deformee
+  REPE b3 (DIME tt) ;
+    tps1 = tt . (&b3 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b3 - 1)) 33. 'ROUG' ;
+    tit1 = CHAI '[3D PaF] Deformee au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
+  FIN b3 ;
+  SI ITRAC1 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FINSI ;
+* comparaison Calcul / Reference sur la contrainte moyenne
+* 1.Traction, courbes réduites
+  lepu1_red = PROG ;
+  asig1_red = PROG ;
+  born_inf = EXTR lepu1 1 ;
+  born_sup = epst1_t ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe analytique';
+*mess '====================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup;
+  REPE b_an11 (dime lepu1) ;
+    xi = EXTR lepu1 &b_an11 ;
+    yi = EXTR asig1 &b_an11 ;
+*mess '=== Boucle b_an11, passage' &b_an11 ' xi' xi; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup)) ;
+      lepu1_red = lepu1_red et (PROG xi) ;
+      asig1_red = asig1_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+  FIN b_an11 ;
+  an11_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1_red  'SMXX' asig1_red ;
+*mess 'Courbe analytique reduite : an11_red';list an11_red;
+*opti echo 1;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe calculee';
+*mess '==================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup ' born_sup+1.E-10' (born_sup + 1.E-10) ' 0.5inst_1a' (05.*inst_1a);
+  REPE b_ev1 (dime leps) ;
+    ti = EXTR ltps &b_ev1 ;
+    xi = EXTR leps &b_ev1 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev1 ;
+*mess '=== Boucle b_ev1, passage' &b_ev1 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi (born_sup + 1.E-10)) ET (>EG dx 0) ET (<EG ti (05.*inst_1a))) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev1 ;
+  ev1_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*mess 'Courbe calculee reduite : ev1_red';list ev1_red;
+*opti echo 1;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.1.Traction : 0.5*inst_1a' (0.5*inst_1a) ' tpst1_t' tpst1_t ;
+*mess titi;
+*dess (ev1_red ET an11_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+  lsiga_red = 'IPOL' an11_red leps_red ;
+  ler1 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[3D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation en 1.Traction, max' ' ' mer1 ;
+  SI ITRAC1 ;
+    DESS eer1 'TITR' tit1 ;
+  FINSI ;
+
+* 2.Compression, courbes réduites
+  lepu2_red = PROG ;
+  asig2_red = PROG ;
+  born_inf = epsc2_t ;
+  born_sup = EXTR lepu2 (DIME lepu2) ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe analytique';
+*mess '====================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup;
+  REPE b_an12 (dime lepu2) ;
+    xi = EXTR lepu2 &b_an12 ;
+    yi = EXTR asig2 &b_an12 ;
+*mess '=== Boucle b_an12, passage' &b_an12 ' xi' xi; 
+    SI ((<EG xi born_inf) ET (>EG xi born_sup)) ;
+      lepu2_red = lepu2_red et (PROG xi) ;
+      asig2_red = asig2_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+  FIN b_an12 ;
+  an12_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2_red  'SMXX' asig2_red ;
+*mess 'Courbe analytique reduite : an12_red';list an12_red;
+*opti echo 1;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe calculee';
+*mess '==================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup ' born_sup+1.E-9' (born_sup - 1.E-10) ' dx' dx;
+  REPE b_ev2 (dime leps) ;
+    xi = EXTR leps &b_ev2 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev2 ;
+*mess '=== Boucle b_ev2, passage' &b_ev2 ' xi' xi ' dx' dx; 
+    SI ((<EG xi born_inf) ET (>EG xi (born_sup - 1.E-10)) ET (<eg dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev2 ;
+  ev2_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*mess 'Courbe calculee reduite : ev2_red';list ev2_red;
+*opti echo 1;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.2.Compression : born_inf' born_inf ' born_sup' born_sup ;
+*mess titi;
+*dess (ev2_red ET an12_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+  lsiga_red = 'IPOL' an12_red leps_red ;
+  ler2 = ABS ((lsig_red - lsiga_red) / lsiga_red) ;
+  mer2 = MAXI ler2 ;
+  eer2 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler2 ;
+  tit2 = CHAI '[3D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation en 2.Compression, max' ' ' mer2 ;
+  SI ITRAC1 ;
+    DESS eer2 'TITR' tit2 ;
+  FINSI ;
+  
+* 3.Traction, courbes réduites
+  lepu3_red = PROG ;
+  asig3_red = PROG ;
+  born_inf = EXTR lepu3 1 ;
+  born_sup = 1.E3 ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' end_t3' end_t3;
+  REPE b_an13 (dime lepu3) ;
+    di = EXTR dt3 &b_an13 ;
+    xi = EXTR lepu3 &b_an13 ;
+    yi = EXTR asig3 &b_an13 ;
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG di end_t3)) ;
+      lepu3_red = lepu3_red et (PROG xi) ;
+      asig3_red = asig3_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an13 ;
+  an13_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3_red  'SMXX' asig3_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+  REPE b_ev3 (dime leps) ;
+    ti = EXTR ltps &b_ev3 ;
+    xi = EXTR leps &b_ev3 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev3 ;
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (>EG ti tpst3_t)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+    FINSI ;
+    xp = xi ;
+  FIN b_ev3 ;
+  ev3_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.3.Traction : tpst3_t' tpst3_t ' end_t3' end_t3 ;
+*mess titi;
+*dess (ev3_red ET an13_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+  lsiga_red = 'IPOL' an13_red leps_red ;
+  ler3 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer3 = MAXI ler3 ;
+  eer3 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler3 ;
+  tit3 = CHAI '[3D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation en 3.Traction, max' ' ' mer3 ;
+  SI ITRAC1 ;
+    DESS eer3 'TITR' tit3 ;
+  FINSI ;
+
+  tdes1 = 'TABLE' ;
+  tdes1.'TITRE' = 'TABLE' ;
+  tdes1 . 1 = MOT 'MARQ CROI' ;
+  tdes1 . 'TITRE' . 1 = MOT '1.Traction' ;
+  tdes1 . 2 = MOT 'MARQ PLUS' ;
+  tdes1 . 'TITRE' . 2 = MOT '2.Compression' ;
+  tdes1 . 3 = MOT 'MARQ S CROI' ;
+  tdes1 . 'TITRE' . 3 = MOT '3.Traction' ;
+  tit1 = CHAI '[3D PaF] Ec.rel.Cal./Ref. Cont.-Defo. en 1.Trac.(max' mer1 ') 2.Compr.(max' mer2 ') 3.Trac.(max' mer3 ')' ;
+  SI ITRAC1 ;
+    DESS (eer1 et eer2 et eer3) 'LEGE' 'NE' tdes1 'TITR' tit1 ;
+  FINSI ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' *********** C A S  #2  :  3 D   P O U T R E   A   F I B R E ************';
+  SAUT 1 LIGN ;
+  SI ((MAXI mer1 mer2 mer3) < 1.E-8) ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-08 => OK' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-08 => OK' ;
+    SAUT 1 LIGN ;
+  SINO ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-08 => ECHEC' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-08 => ECHEC' ;
+    IERR = VRAI ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
+FINSI ;
+
+
+
+
+
+******* C A S  #3  :  2 D   C O N T R A I N T E S   P L A N E S ********
+SI (EXIS lcas 3) ;
+
+** Options generales
+  OPTI 'DIME' 2 'MODE' 'PLAN' 'CONT' 'ELEM' 'QUA4' ;
+
+** Maillage
+  p1      = 0. 0. ;
+  p2      = 0. long ;
+  sgauche = DROI 1 p1 p2 ;
+  mail    = sgauche TRAN 1 (long 0.) ;
+  sdroite = mail COTE 3 ;
+  p3      = sdroite POIN 'PROC' (long 0.) ;
+  mes1    = MESU mail ;
+*nh145313
+cadr1 = COUL ((0. 1.05) ET (1.05 1.05)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
+FINSI ;
+
+** Modele et caracteristiques materiau
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'DIM3' epai ;
+
+** Blocages
+  blgauche = BLOQ 'UX' sgauche ;
+  bldroite = BLOQ 'UX' sdroite ;
+  blrig    = BLOQ 'UY' p1 ;
+  bl       = blgauche ET bldroite ET blrig ;
+
+** Chargements
+  didroite = DEPI bldroite 1. ;
+  ec1      = EVOL 'MANU' (PROG 0. (0.5*inst_1a) inst_1a   0.666   inst_2a     1. )
+                         (PROG 0.    u1max         0.     u2max      0.     u3max) ;
+  cha      = CHAR 'DIMP' didroite ec1 ;
+
+** Tracé des blocages et du chargement
+  re0 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) ;
+  mor = MODE re0 'MECANIQUE' 'BARR' ;
+  mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
+  rir = RIGI mor mar ;
+  vf = VECT didroite 'FLX' ' ' 'ROUG' ;
+  SI ITRAC1 ;
+    TRAC ((RIGI mo ma) ET blgauche ET blrig ET rir) vf 'NOLE' 'TITR' '[2D Plan cont.] Blocages et chargement' ;
+  FINSI ;
+
+** Resolution
+  t                               = TABL ;
+  t . 'MODELE'                    = mo ;
+  t . 'CARACTERISTIQUES'          = ma ;
+  t . 'BLOCAGES_MECANIQUES'       = bl ;
+  t . 'CHARGEMENT'                = cha ;
+  t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 3.E-3 (0.5*inst_1a)
+                                            'PAS' 3.E-3 inst_1a
+                                            'PAS' 1.E-2 0.666
+                                            'PAS' 1.E-2 inst_2a
+                                            'PAS' 1.E-2 0.9629
+                                            'PAS' 3.E-3 1. ;
+  t . 'MOVA'                      = MOT 'D' ;
+  t . 'MES_SAUVEGARDES'           = TABL ;
+  t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t ;
+
+** Post traitement
+* courbes : endommagement moyen vs temps
+*           contrainte moyenne vs deformation moyenne
+*           force de reaction vs deplacement impose
+  tt = t . 'TEMPS' ;
+  tc = t . 'CONTRAINTES' ;
+  te = t . 'DEFORMATIONS' ;
+  tv = t . 'VARIABLES_INTERNES' ;
+  tu = t . 'DEPLACEMENTS' ;
+  tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
+  ltps    = PROG ;
+  ltps_t1 = PROG ;
+  ltps_c2 = PROG ;
+  ltps_t3 = PROG ;
+  lend = PROG ;
+  lsig = PROG ;
+  leps = PROG ;
+  ldep = PROG ;
+  lrea = PROG ;
+  REPE b0 (DIME tt) ;
+    tps1 = tt . (&b0 - 1) ;
+*   Liste des instants : globale (ltps)
+*               de 1.traction    (ltps_t1)
+*               de 2.compression (ltps_c2)
+*               de 3.traction    (ltps_t3)
+    ltps = ltps ET tps1 ;
+    SI (<EG tps1 inst_1a) ;
+      ltps_t1 = ltps_t1 ET tps1 ;
+    SINON ;
+      SI (<EG tps1 inst_2a) ;
+        ltps_c2 = ltps_c2 ET tps1 ;
+      SINON ;
+        ltps_t3 = ltps_t3 ET tps1 ;
+      FINSI ;
+    FINSI ;
+    end1 = (INTG mo (tv . (&b0 - 1)) 'D')    / mes1 ;
+    sig1 = (INTG mo (tc . (&b0 - 1)) 'SMXX') / mes1 ;
+    eps1 = (INTG mo (te . (&b0 - 1)) 'EPXX') / mes1 ;
+    u1   = EXTR (tu . (&b0 - 1)) 'UX' p3 ;
+    rea1 = 0. ;
+    SI (NEG &b0 1) ;
+      rea1 = @TOTAL (tr . (&b0 - 1)) sgauche 'FX' ;
+    FINSI ;
+    lend = lend ET end1 ;
+    lsig = lsig ET sig1 ;
+    leps = leps ET eps1 ;
+    ldep = ldep ET u1 ;
+    lrea = lrea ET rea1 ;
+  FIN b0 ;
+  ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
+  ev1 = EVOL 'ROUG' 'MANU' 'EPXX'  leps 'SMXX' lsig ;
+  ev2 = EVOL 'ROUG' 'MANU' 'UX'    ldep 'FX'   lrea ;
+*   Instant de transition 1.Traction-2.Compression tpst1_t
+    tpst1_t = 0.5*inst_1a ;
+*   Endommagement de transition 1.Traction-2.Compression end_t1
+    end_t1 = IPOL tpst1_t ltps lend ;
+*   Instant de transition 2.Compression-3.Traction tpst3_t
+    tpst3_t = 0.666 ;
+*   Endommagement de transition 2.Compression-3.Traction end_t3
+    end_t3 = IPOL tpst3_t ltps lend ;
+*nh145313
+** Sol.Ana. 1.Traction
+  ltps_t1 =  ENLE (ENLE ltps_t1 (DIME ltps_t1)) 1 ;
+  nb1 = DIME ltps_t1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd01 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+* defo.unidim.
+  lepu1 = (IPOL ltps_t1 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe1 = lepu1 ;
+  dt1 = un1 - ((epd0*(un1-lat1)/lepe1) + (at*(EXP(bt*(lepd01-lepe1))))) ;
+  lfiltr1 = LECT ;
+  REPE b1 ;
+    dt_i = EXTR dt1 &b1 ;
+    SI (EGA &b1 1) ;
+      dt_p1 = 0. ;
+    FINSI ;
+    ddt = dt_i - dt_p1 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr1 = lfiltr1 ET (LECT &b1) ;
+    FINSI ;
+    dt_p1 = dt_i ;
+    SI (EGA &b1 (DIME dt1)) ;
+      QUIT b1 ;
+    FINSI ;
+  FIN b1 ;
+  ltps_t1 = ENLE ltps_t1 lfiltr1 ;
+  un1     = ENLE un1     lfiltr1 ;
+  lepu1   = ENLE lepu1   lfiltr1 ;
+  dt1     = ENLE dt1     lfiltr1 ;
+  lsig1 = (un1 - dt1) * you * lepu1 ;
+  an01 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'D'    dt1   ;
+  an11 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1   'SMXX' lsig1 ;
+  epst1_t = IPOL tpst1_t ltps_t1 lepu1 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 1.Traction : end_t1' end_t1 ' tpst1_t' tpst1_t ' epst1_t' epst1_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 2.Compression
+  ltps_c2 = ENLE ltps_c2 (DIME ltps_c2) ;
+  nb2 = DIME ltps_c2 ;
+  un2 = PROG nb2 * 1.D0 ;
+  lepd02 = PROG nb2 * epd0 ;
+  lac2 = PROG nb2 * ac ;
+* defo.unidim.
+  lepu2 = (IPOL ltps_c2 ec1) / long ;
+* defo.eq.Mazars (eps.tild) compression = racine(2)*nu*|defo.unidim.|
+  lepe2 = (2.**0.5) * nu * (ABS lepu2) ;
+  dc2 = un2 - ((epd0*(un2-lac2)/lepe2) + (ac*(EXP(bc*(lepd02-lepe2))))) ;
+  lfiltr2 = LECT ;
+  dc_m = 0. ;
+  REPE b2 ;
+    dc_i = EXTR dc2 &b2 ;
+    SI (EGA &b2 1) ;
+      dc_p = 1. ;
+    FINSI ;
+    ddc = dc_i - dc_p ;
+*mess '=== Boucle b2 , passage' ' ' &b2 ;
+*mess '    dom.max  ' ' ' dc_m;
+*mess '    dom.prec.' ' ' dc_p ;
+*mess '    dom.cour.' ' ' dc_i ;
+*mess '    incr.dom.' ' ' ddc  ;
+    SI ((ddc < 0.) OU (dc_i < 0.) OU (dc_i > 1.)) ;
+      lfiltr2 = lfiltr2 ET (LECT &b2) ;
+*mess '    => on filtre';
+    SINON ;
+*mess '    a garder si le dommage augmente...';
+      dc_m = MAXI dc_m dc_i ;
+      SI (dc_i < dc_m) ;
+*mess '    ... NON => on ne garde pas';
+        lfiltr2 = lfiltr2 ET (LECT &b2) ;
+      SINON ;
+*mess '    ... OUI => on garde';
+      FINSI ;
+    FINSI ;
+    dc_p = dc_i ;
+    SI (EGA &b2 (DIME dc2)) ;
+      QUIT b2 ;
+    FINSI ;
+  FIN b2 ;
+  ltps_c2 = ENLE ltps_c2 lfiltr2 ;
+  un2     = ENLE un2     lfiltr2 ;
+  lepu2   = ENLE lepu2   lfiltr2 ;
+  dc2     = ENLE dc2     lfiltr2 ;
+  lsig2 = (un2 - dc2) * you * lepu2 ;
+  an02 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'D'    dc2   ;
+  tpsc2_t = IPOL end_t1 dc2 ltps_c2 ;
+  an12 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2   'SMXX' lsig2 ;
+  epsc2_t = IPOL tpsc2_t ltps_c2 lepu2 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 2.Compression : end_t1' end_t1 ' tpsc2_t' tpsc2_t ' epsc2_t' epsc2_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 3.Traction
+  ltps_t3 =  ENLE ltps_t3 1 ;
+  nb3 = DIME ltps_t3 ;
+  un3 = PROG nb3 * 1.D0 ;
+  lepd03 = PROG nb3 * epd0 ;
+  lat3 = PROG nb3 * at ;
+* defo.unidim.
+  lepu3 = (IPOL ltps_t3 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe3 = lepu3 ;
+  dt3 = un3 - ((epd0*(un3-lat3)/lepe3) + (at*(EXP(bt*(lepd03-lepe3))))) ;
+  lfiltr3 = LECT ;
+  REPE b3 ;
+    dt_i = EXTR dt3 &b3 ;
+    SI (EGA &b3 1) ;
+      dt_p3 = dt_p1 ;
+    FINSI ;
+    ddt = dt_i - dt_p3 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr3 = lfiltr3 ET (LECT &b3) ;
+    FINSI ;
+    dt_p3 = dt_i ;
+    SI (EGA &b3 (DIME dt3)) ;
+      QUIT b3 ;
+    FINSI ;
+  FIN b3 ;
+  ltps_t3 = ENLE ltps_t3 lfiltr3 ;
+  un3     = ENLE un3     lfiltr3 ;
+  lepu3   = ENLE lepu3   lfiltr3 ;
+  dt3     = ENLE dt3     lfiltr3 ;
+  lsig3 = (un3 - dt3) * you * lepu3 ;
+  an03 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'D'    dt3   ;
+  tpst3_t = IPOL end_t3 dt3 ltps_t3 ;
+  an13 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3   'SMXX' lsig3 ;
+  epst3_t = IPOL tpst3_t ltps_t3 lepu3 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 3.Traction : end_t3' end_t3 ' tpst3_t' tpst3_t ' epst3_t' epst3_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+  SI ITRAC1 ;
+    DESS (ev0 ET an01 ET an02 ET an03) 'TITR' '[2D Plan cont.] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
+    DESS (ev1 ET an11 ET an12 ET an13) 'TITR' '[2D Plan cont.] Contrainte vs Deformation' 'LEGE' 'NO' tdess ;
+    DESS ev2 'TITR' '[2D Plan cont.] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+  FINSI ;
+* evolutions temporelles a tous les points de Gauss
+  ng = 4 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
+  FIN b ;
+* endommagement
+  evend = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
+  FIN b ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI REGU' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Ref_1.Traction' ;
+  tleg . (ng+2) = MOT 'MARQ PLUS REGU' ;
+  tleg . 'TITRE' . (ng+2) = MOT 'Ref_2.Compression' ;
+  tleg . (ng+3) = MOT 'MARQ S CROI REGU' ;
+  tleg . 'TITRE' . (ng+3) = MOT 'Ref_3.Traction' ;
+  SI ITRAC1 ;
+    DESS (evend ET an01 ET an02 ET an03) 'LEGE' 'SE' tleg 'TITR' '[2D Plan cont.] D vs Temps' ;
+  FINSI ;
+* contrainte
+  evsmxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMXX' 1 1 &b) ;
+  FIN b ;
+*nh145313
+  ansmxx1 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'SMXX' lsig1 ;
+  ansmxx2 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'SMXX' lsig2 ;
+  ansmxx3 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'SMXX' lsig3 ;
+  SI ITRAC1 ;
+    DESS (evsmxx ET ansmxx1 ET ansmxx2 ET ansmxx3) 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMXX vs Temps' ;
+  FINSI ;
+* deformation
+  evepxx = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepxx = evepxx ET (EVOL 'TURQ' 'TEMP' t 'DEFORMATIONS' 'EPXX' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepxx 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] EPXX vs Temps' ;
+  FINSI ;
+* deformee
+  REPE b3 (DIME tt) ;
+    tps1 = tt . (&b3 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b3 - 1)) 33. 'ROUG' ;
+    tit1 = CHAI '[2D Plan cont.] Deformee au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
+  FIN b3 ;
+  SI ITRAC1 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FINSI ;
+* comparaison Calcul / Reference sur la contrainte moyenne
+* 1.Traction, courbes réduites
+  lepu1_red = PROG ;
+  lsig1_red = PROG ;
+  born_inf = EXTR lepu1 1 ;
+  born_sup = epst1_t ;
+  REPE b_an11 (dime lepu1) ;
+    xi = EXTR lepu1 &b_an11 ;
+    yi = EXTR lsig1 &b_an11 ;
+    SI ((>EG xi born_inf) ET (<EG xi born_sup)) ;
+      lepu1_red = lepu1_red et (PROG xi) ;
+      lsig1_red = lsig1_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an11 ;
+  an11_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1_red  'SMXX' lsig1_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' 0.5inst_1a' (05.*inst_1a);
+  REPE b_ev1 (dime leps) ;
+    ti = EXTR ltps &b_ev1 ;
+    xi = EXTR leps &b_ev1 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev1 ;
+*mess '=== Boucle b_ev1, passage' &b_ev1 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (<EG ti (05.*inst_1a))) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev1 ;
+  ev1_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.1.Traction : 0.5*inst_1a' (0.5*inst_1a) ' tpst1_t' tpst1_t ;
+*mess titi;
+*dess (ev1_red ET an11_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+
+  lsiga_red = 'IPOL' an11_red leps_red ;
+  ler1 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[2D Plan cont.] Ecart relatif Calcul/Reference Contrainte vs Deformation en 1.Traction, max' ' ' mer1 ;
+  SI ITRAC1 ;
+    DESS eer1 'TITR' tit1 ;
+  FINSI ;
+
+* 2.Compression, courbes réduites
+  lepu2_red = PROG ;
+  lsig2_red = PROG ;
+  born_inf = epsc2_t ;
+  born_sup = EXTR lepu2 (DIME lepu2) ;
+  REPE b_an12 (dime lepu2) ;
+    xi = EXTR lepu2 &b_an12 ;
+    yi = EXTR lsig2 &b_an12 ;
+    SI ((<EG xi born_inf) ET (>EG xi born_sup)) ;
+      lepu2_red = lepu2_red et (PROG xi) ;
+      lsig2_red = lsig2_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an12 ;
+  an12_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2_red  'SMXX' lsig2_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' t(dc2max)' 0.666;
+  REPE b_ev2 (dime leps) ;
+    ti = EXTR ltps &b_ev2 ;
+    xi = EXTR leps &b_ev2 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev2 ;
+*mess '=== Boucle b_ev2, passage' &b_ev2 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((<EG xi born_inf) ET (>EG xi born_sup) ET (<eg dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev2 ;
+  ev2_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.2.Compression : tpsc2_t' tpsc2_t ;
+*mess titi;
+*dess (ev2_red ET an12_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an12_red leps_red ;
+  ler2 = ABS ((lsig_red - lsiga_red) / lsiga_red) ;
+  mer2 = MAXI ler2 ;
+  eer2 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler2 ;
+  tit2 = CHAI '[2D Plan cont.] Ecart relatif Calcul/Reference Contrainte vs Deformation en 2.Compression, max' ' ' mer2 ;
+  SI ITRAC1 ;
+    DESS eer2 'TITR' tit2 ;
+  FINSI ;
+  
+* 3.Traction, courbes réduites
+  lepu3_red = PROG ;
+  lsig3_red = PROG ;
+  born_inf = EXTR lepu3 1 ;
+  born_sup = 1.E3 ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' end_t3' end_t3;
+  REPE b_an13 (dime lepu3) ;
+    di = EXTR dt3 &b_an13 ;
+    xi = EXTR lepu3 &b_an13 ;
+    yi = EXTR lsig3 &b_an13 ;
+*mess '=== Boucle b_an13, passage' &b_an13 ' di' di ' xi' xi; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG di end_t3)) ;
+      lepu3_red = lepu3_red et (PROG xi) ;
+      lsig3_red = lsig3_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+  FIN b_an13 ;
+  an13_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3_red  'SMXX' lsig3_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' tpst3_t' tpst3_t;
+  REPE b_ev3 (dime leps) ;
+    ti = EXTR ltps &b_ev3 ;
+    xi = EXTR leps &b_ev3 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev3 ;
+*mess '=== Boucle b_ev3, passage' &b_ev3 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (>EG ti tpst3_t)) ;
+*    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev3 ;
+  ev3_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.3.Traction : tpst3_t' tpst3_t ' end_t3' end_t3 ;
+*mess titi;
+*dess (ev3_red ET an13_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an13_red leps_red ;
+  ler3 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer3 = MAXI ler3 ;
+  eer3 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler3 ;
+  tit3 = CHAI '[2D Plan cont.] Ecart relatif Calcul/Reference Contrainte vs Deformation en 3.Traction, max' ' ' mer3 ;
+  SI ITRAC1 ;
+    DESS eer3 'TITR' tit3 ;
+  FINSI ;
+
+  tdes1 = 'TABLE' ;
+  tdes1.'TITRE' = 'TABLE' ;
+  tdes1 . 1 = MOT 'MARQ CROI' ;
+  tdes1 . 'TITRE' . 1 = MOT '1.Traction' ;
+  tdes1 . 2 = MOT 'MARQ PLUS' ;
+  tdes1 . 'TITRE' . 2 = MOT '2.Compression' ;
+  tdes1 . 3 = MOT 'MARQ S CROI' ;
+  tdes1 . 'TITRE' . 3 = MOT '3.Traction' ;
+  tit1 = CHAI '[2D Plan cont.] Ec.rel.Cal./Ref. Cont-Def 1.Trac(max' mer1 ') 2.Compr(max' mer2 ') 3.Trac(max' mer3 ')' ;
+  SI ITRAC1 ;
+    DESS (eer1 et eer2 et eer3) 'LEGE' 'NE' tdes1 'TITR' tit1 ;
+  FINSI ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' ******* C A S  #3  :  2 D   C O N T R A I N T E S   P L A N E S ********';
+  SAUT 1 LIGN ;
+  SI ((MAXI mer1 mer2 mer3) < 1.E-10) ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-10 => OK' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-10 => OK' ;
+    SAUT 1 LIGN ;
+  SINO ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-10 => ECHEC' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-10 => ECHEC' ;
+    IERR = VRAI ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
+FINSI ;
+
+
+
+
+
+************ C A S  #4  :  2 D   A X I S Y M E T R I Q U E *************
+SI (EXIS lcas 4) ;
+
+** Options generales
+  OPTI 'DIME' 2 'MODE' 'AXIS' 'ELEM' 'QUA4' ;
+
+** Maillage
+  p1      = 0. 0. ;
+  p2      = long 0. ;
+  sbas    = DROI 1 p1 p2 ;
+  mail    = sbas TRAN 1 (0. long) ;
+  shaut   = mail COTE 3 ;
+  p3      = shaut POIN 'PROC' (0. long) ;
+*nh145313
+cadr1 = COUL ((0. 1.05) ET (1.05 1.05)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
+FINSI ;
+
+** Modele et caracteristiques materiau
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
+  ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+  zer = ZERO mo 'NOEUD' ;
+  un  = zer + 1. ;
+  mes1 = INTG mo un 'SCAL' ;
+
+** Blocages
+  blbas    = BLOQ 'UZ' sbas ;
+  blhaut   = BLOQ 'UZ' shaut ;
+  bl       = blbas ET blhaut ;
+
+** Chargements
+  dihaut   = DEPI blhaut 1. ;
+  ec1      = EVOL 'MANU' (PROG 0. (0.5*inst_1a) inst_1a   0.666   inst_2a     1. )
+                         (PROG 0.    u1max         0.     u2max      0.     u3max) ;
+  cha      = CHAR 'DIMP' dihaut ec1 ;
+
+** Tracé des blocages et du chargement
+  re0 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) ;
+  mor = MODE re0 'MECANIQUE' 'BARR' ;
+  mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
+  rir = RIGI mor mar ;
+  vf = VECT dihaut ' ' 'FLX' 'ROUG' ;
+  SI ITRAC1 ;
+    TRAC ((RIGI mo ma) ET blbas ET rir) vf 'NOLE' 'TITR' '[2D Axi.] Blocages et chargement' ;
+  FINSI ;
+
+** Resolution
+  t                               = TABL ;
+  t . 'MODELE'                    = mo ;
+  t . 'CARACTERISTIQUES'          = ma ;
+  t . 'BLOCAGES_MECANIQUES'       = bl ;
+  t . 'CHARGEMENT'                = cha ;
+  t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 3.E-3 (0.5*inst_1a)
+                                            'PAS' 3.E-3 inst_1a
+                                            'PAS' 1.E-2 0.666
+                                            'PAS' 1.E-2 inst_2a
+                                            'PAS' 1.E-2 0.9629
+                                            'PAS' 3.E-3 1. ;
+  t . 'MOVA'                      = MOT 'D' ;
+  t . 'MES_SAUVEGARDES'           = TABL ;
+  t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t ;
+
+** Post traitement
+* courbes : endommagement moyen vs temps
+*           contrainte moyenne vs deformation moyenne
+*           force de reaction vs deplacement impose
+  tt = t . 'TEMPS' ;
+  tc = t . 'CONTRAINTES' ;
+  te = t . 'DEFORMATIONS' ;
+  tv = t . 'VARIABLES_INTERNES' ;
+  tu = t . 'DEPLACEMENTS' ;
+  tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
+  ltps    = PROG ;
+  ltps_t1 = PROG ;
+  ltps_c2 = PROG ;
+  ltps_t3 = PROG ;
+  lend = PROG ;
+  lsig = PROG ;
+  leps = PROG ;
+  ldep = PROG ;
+  lrea = PROG ;
+  REPE b0 (DIME tt) ;
+    tps1 = tt . (&b0 - 1) ;
+*   Liste des instants : globale (ltps)
+*               de 1.traction    (ltps_t1)
+*               de 2.compression (ltps_c2)
+*               de 3.traction    (ltps_t3)
+    ltps = ltps ET tps1 ;
+    SI (<EG tps1 inst_1a) ;
+      ltps_t1 = ltps_t1 ET tps1 ;
+    SINON ;
+      SI (<EG tps1 inst_2a) ;
+        ltps_c2 = ltps_c2 ET tps1 ;
+      SINON ;
+        ltps_t3 = ltps_t3 ET tps1 ;
+      FINSI ;
+    FINSI ;
+    end1 = (INTG mo (tv . (&b0 - 1)) 'D')    / mes1 ;
+    sig1 = (INTG mo (tc . (&b0 - 1)) 'SMZZ') / mes1 ;
+    eps1 = (INTG mo (te . (&b0 - 1)) 'EPZZ') / mes1 ;
+    u1   = EXTR (tu . (&b0 - 1)) 'UZ' p3 ;
+    rea1 = 0. ;
+    SI (NEG &b0 1) ;
+      rea1 = @TOTAL (tr . (&b0 - 1)) sbas 'FZ' ;
+    FINSI ;
+    lend = lend ET end1 ;
+    lsig = lsig ET sig1 ;
+    leps = leps ET eps1 ;
+    ldep = ldep ET u1 ;
+    lrea = lrea ET rea1 ;
+  FIN b0 ;
+  ev0 = EVOL 'ROUG' 'MANU' 'Temps' ltps 'D'    lend ;
+  ev1 = EVOL 'ROUG' 'MANU' 'EPZZ'  leps 'SMZZ' lsig ;
+  ev2 = EVOL 'ROUG' 'MANU' 'UZ'    ldep 'FZ'   lrea ;
+*   Instant de transition 1.Traction-2.Compression tpst1_t
+    tpst1_t = 0.5*inst_1a ;
+*   Endommagement de transition 1.Traction-2.Compression end_t1
+    end_t1 = IPOL tpst1_t ltps lend ;
+*   Instant de transition 2.Compression-3.Traction tpst3_t
+    tpst3_t = 0.666 ;
+*   Endommagement de transition 2.Compression-3.Traction end_t3
+    end_t3 = IPOL tpst3_t ltps lend ;
+*nh145313
+** Sol.Ana. 1.Traction
+  ltps_t1 =  ENLE (ENLE ltps_t1 (DIME ltps_t1)) 1 ;
+  nb1 = DIME ltps_t1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd01 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+* defo.unidim.
+  lepu1 = (IPOL ltps_t1 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe1 = lepu1 ;
+  dt1 = un1 - ((epd0*(un1-lat1)/lepe1) + (at*(EXP(bt*(lepd01-lepe1))))) ;
+  lfiltr1 = LECT ;
+  REPE b1 ;
+    dt_i = EXTR dt1 &b1 ;
+    SI (EGA &b1 1) ;
+      dt_p1 = 0. ;
+    FINSI ;
+    ddt = dt_i - dt_p1 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr1 = lfiltr1 ET (LECT &b1) ;
+    FINSI ;
+    dt_p1 = dt_i ;
+    SI (EGA &b1 (DIME dt1)) ;
+      QUIT b1 ;
+    FINSI ;
+  FIN b1 ;
+  ltps_t1 = ENLE ltps_t1 lfiltr1 ;
+  un1     = ENLE un1     lfiltr1 ;
+  lepu1   = ENLE lepu1   lfiltr1 ;
+  dt1     = ENLE dt1     lfiltr1 ;
+  lsig1 = (un1 - dt1) * you * lepu1 ;
+  an01 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'D'    dt1   ;
+  an11 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1   'SMXX' lsig1 ;
+  epst1_t = IPOL tpst1_t ltps_t1 lepu1 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 1.Traction : end_t1' end_t1 ' tpst1_t' tpst1_t ' epst1_t' epst1_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 2.Compression
+  ltps_c2 = ENLE ltps_c2 (DIME ltps_c2) ;
+  nb2 = DIME ltps_c2 ;
+  un2 = PROG nb2 * 1.D0 ;
+  lepd02 = PROG nb2 * epd0 ;
+  lac2 = PROG nb2 * ac ;
+* defo.unidim.
+  lepu2 = (IPOL ltps_c2 ec1) / long ;
+* defo.eq.Mazars (eps.tild) compression = racine(2)*nu*|defo.unidim.|
+  lepe2 = (2.**0.5) * nu * (ABS lepu2) ;
+  dc2 = un2 - ((epd0*(un2-lac2)/lepe2) + (ac*(EXP(bc*(lepd02-lepe2))))) ;
+  lfiltr2 = LECT ;
+  dc_m = 0. ;
+  REPE b2 ;
+    dc_i = EXTR dc2 &b2 ;
+    SI (EGA &b2 1) ;
+      dc_p = 1. ;
+    FINSI ;
+    ddc = dc_i - dc_p ;
+*mess '=== Boucle b2 , passage' ' ' &b2 ;
+*mess '    dom.max  ' ' ' dc_m;
+*mess '    dom.prec.' ' ' dc_p ;
+*mess '    dom.cour.' ' ' dc_i ;
+*mess '    incr.dom.' ' ' ddc  ;
+    SI ((ddc < 0.) OU (dc_i < 0.) OU (dc_i > 1.)) ;
+      lfiltr2 = lfiltr2 ET (LECT &b2) ;
+*mess '    => on filtre';
+    SINON ;
+*mess '    a garder si le dommage augmente...';
+      dc_m = MAXI dc_m dc_i ;
+      SI (dc_i < dc_m) ;
+*mess '    ... NON => on ne garde pas';
+        lfiltr2 = lfiltr2 ET (LECT &b2) ;
+      SINON ;
+*mess '    ... OUI => on garde';
+      FINSI ;
+    FINSI ;
+    dc_p = dc_i ;
+    SI (EGA &b2 (DIME dc2)) ;
+      QUIT b2 ;
+    FINSI ;
+  FIN b2 ;
+  ltps_c2 = ENLE ltps_c2 lfiltr2 ;
+  un2     = ENLE un2     lfiltr2 ;
+  lepu2   = ENLE lepu2   lfiltr2 ;
+  dc2     = ENLE dc2     lfiltr2 ;
+  lsig2 = (un2 - dc2) * you * lepu2 ;
+  an02 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'D'    dc2   ;
+  tpsc2_t = IPOL end_t1 dc2 ltps_c2 ;
+  an12 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2   'SMXX' lsig2 ;
+  epsc2_t = IPOL tpsc2_t ltps_c2 lepu2 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 2.Compression : end_t1' end_t1 ' tpsc2_t' tpsc2_t ' epsc2_t' epsc2_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 3.Traction
+  ltps_t3 =  ENLE ltps_t3 1 ;
+  nb3 = DIME ltps_t3 ;
+  un3 = PROG nb3 * 1.D0 ;
+  lepd03 = PROG nb3 * epd0 ;
+  lat3 = PROG nb3 * at ;
+* defo.unidim.
+  lepu3 = (IPOL ltps_t3 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe3 = lepu3 ;
+  dt3 = un3 - ((epd0*(un3-lat3)/lepe3) + (at*(EXP(bt*(lepd03-lepe3))))) ;
+  lfiltr3 = LECT ;
+  REPE b3 ;
+    dt_i = EXTR dt3 &b3 ;
+    SI (EGA &b3 1) ;
+      dt_p3 = dt_p1 ;
+    FINSI ;
+    ddt = dt_i - dt_p3 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr3 = lfiltr3 ET (LECT &b3) ;
+    FINSI ;
+    dt_p3 = dt_i ;
+    SI (EGA &b3 (DIME dt3)) ;
+      QUIT b3 ;
+    FINSI ;
+  FIN b3 ;
+  ltps_t3 = ENLE ltps_t3 lfiltr3 ;
+  un3     = ENLE un3     lfiltr3 ;
+  lepu3   = ENLE lepu3   lfiltr3 ;
+  dt3     = ENLE dt3     lfiltr3 ;
+  lsig3 = (un3 - dt3) * you * lepu3 ;
+  an03 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'D'    dt3   ;
+  tpst3_t = IPOL end_t3 dt3 ltps_t3 ;
+  an13 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3   'SMXX' lsig3 ;
+  epst3_t = IPOL tpst3_t ltps_t3 lepu3 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 3.Traction : end_t3' end_t3 ' tpst3_t' tpst3_t ' epst3_t' epst3_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+  SI ITRAC1 ;
+    DESS (ev0 ET an01 ET an02 ET an03) 'TITR' '[2D Axi.] Endommagement vs Temps' 'LEGE' 'SE' tdess ;
+    DESS (ev1 ET an11 ET an12 ET an13) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NO' tdess ;
+    DESS ev2 'TITR' '[2D Axi.] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+  FINSI ;
+* evolutions temporelles a tous les points de Gauss
+  ng = 4 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
+  FIN b ;
+* endommagement
+  evend = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evend = evend ET (EVOL 'ROSE' 'TEMP' t 'VARIABLES_INTERNES' 'D' 1 1 &b) ;
+  FIN b ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI REGU' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Ref_1.Traction' ;
+  tleg . (ng+2) = MOT 'MARQ PLUS REGU' ;
+  tleg . 'TITRE' . (ng+2) = MOT 'Ref_2.Compression' ;
+  tleg . (ng+3) = MOT 'MARQ S CROI REGU' ;
+  tleg . 'TITRE' . (ng+3) = MOT 'Ref_3.Traction' ;
+  SI ITRAC1 ;
+    DESS (evend ET an01 ET an02 ET an03) 'LEGE' 'SE' tleg 'TITR' '[2D Axi.] D vs Temps' ;
+  FINSI ;
+* contrainte
+  evsmzz = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evsmzz = evsmzz ET (EVOL 'BLEU' 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 &b) ;
+  FIN b ;
+*nh145313
+  ansmzz1 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'SMZZ' lsig1 ;
+  ansmzz2 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'SMZZ' lsig2 ;
+  ansmzz3 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'SMZZ' lsig3 ;
+  SI ITRAC1 ;
+    DESS (evsmzz ET ansmzz1 ET ansmzz2 ET ansmzz3) 'LEGE' 'NE' tleg 'TITR' '[2D Axi.] SMZZ vs Temps' ;
+  FINSI ;
+* deformation
+  evepzz = VIDE 'EVOLUTIO' ;
+  REPE b ng ;
+    evepzz = evepzz ET (EVOL 'TURQ' 'TEMP' t 'DEFORMATIONS' 'EPZZ' 1 1 &b) ;
+  FIN b ;
+  SI ITRAC1 ;
+    DESS evepzz 'LEGE' 'NE' tleg 'TITR' '[2D Axi.] EPZZ vs Temps' ;
+  FINSI ;
+* deformee
+  REPE b2 (DIME tt) ;
+    tps1 = tt . (&b2 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b2 - 1)) 33. 'ROUG' ;
+    tit1 = CHAI '[2D Axi.] Deformee au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
+  FIN b2 ;
+  SI ITRAC1 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FINSI ;
+* comparaison Calcul / Reference sur la contrainte moyenne
+* 1.Traction, courbes réduites
+  lepu1_red = PROG ;
+  lsig1_red = PROG ;
+  born_inf = EXTR lepu1 1 ;
+  born_sup = epst1_t ;
+  REPE b_an11 (dime lepu1) ;
+    xi = EXTR lepu1 &b_an11 ;
+    yi = EXTR lsig1 &b_an11 ;
+    SI ((>EG xi born_inf) ET (<EG xi born_sup)) ;
+      lepu1_red = lepu1_red et (PROG xi) ;
+      lsig1_red = lsig1_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an11 ;
+  an11_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1_red  'SMXX' lsig1_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' 0.5inst_1a' (05.*inst_1a);
+  REPE b_ev1 (dime leps) ;
+    ti = EXTR ltps &b_ev1 ;
+    xi = EXTR leps &b_ev1 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev1 ;
+*mess '=== Boucle b_ev1, passage' &b_ev1 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (<EG ti (05.*inst_1a))) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev1 ;
+  ev1_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.1.Traction : 0.5*inst_1a' (0.5*inst_1a) ' tpst1_t' tpst1_t ;
+*mess titi;
+*dess (ev1_red ET an11_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an11_red leps_red ;
+  ler1 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[2D Axi.] Ecart relatif Calcul/Reference Contrainte vs Deformation en 1.Traction, max' ' ' mer1 ;
+  SI ITRAC1 ;
+    DESS eer1 'TITR' tit1 ;
+  FINSI ;
+
+* 2.Compression, courbes réduites
+  lepu2_red = PROG ;
+  lsig2_red = PROG ;
+  born_inf = epsc2_t ;
+  born_sup = EXTR lepu2 (DIME lepu2) ;
+  REPE b_an12 (dime lepu2) ;
+    xi = EXTR lepu2 &b_an12 ;
+    yi = EXTR lsig2 &b_an12 ;
+    SI ((<EG xi born_inf) ET (>EG xi born_sup)) ;
+      lepu2_red = lepu2_red et (PROG xi) ;
+      lsig2_red = lsig2_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an12 ;
+  an12_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2_red  'SMXX' lsig2_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' t(dc2max)' 0.666;
+  REPE b_ev2 (dime leps) ;
+    ti = EXTR ltps &b_ev2 ;
+    xi = EXTR leps &b_ev2 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev2 ;
+*mess '=== Boucle b_ev2, passage' &b_ev2 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((<EG xi born_inf) ET (>EG xi born_sup) ET (<eg dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev2 ;
+  ev2_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.2.Compression : tpsc2_t' tpsc2_t ;
+*mess titi;
+*dess (ev2_red ET an12_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an12_red leps_red ;
+  ler2 = ABS ((lsig_red - lsiga_red) / lsiga_red) ;
+  mer2 = MAXI ler2 ;
+  eer2 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler2 ;
+  tit2 = CHAI '[2D Axi.] Ecart relatif Calcul/Reference Contrainte vs Deformation en 2.Compression, max' ' ' mer2 ;
+  SI ITRAC1 ;
+    DESS eer2 'TITR' tit2 ;
+  FINSI ;
+  
+* 3.Traction, courbes réduites
+  lepu3_red = PROG ;
+  lsig3_red = PROG ;
+  born_inf = EXTR lepu3 1 ;
+  born_sup = 1.E3 ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' end_t3' end_t3;
+  REPE b_an13 (dime lepu3) ;
+    di = EXTR dt3 &b_an13 ;
+    xi = EXTR lepu3 &b_an13 ;
+    yi = EXTR lsig3 &b_an13 ;
+*mess '=== Boucle b_an13, passage' &b_an13 ' di' di ' xi' xi; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG di end_t3)) ;
+      lepu3_red = lepu3_red et (PROG xi) ;
+      lsig3_red = lsig3_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+  FIN b_an13 ;
+  an13_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3_red  'SMXX' lsig3_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' tpst3_t' tpst3_t;
+  REPE b_ev3 (dime leps) ;
+    ti = EXTR ltps &b_ev3 ;
+    xi = EXTR leps &b_ev3 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev3 ;
+*mess '=== Boucle b_ev3, passage' &b_ev3 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (>EG ti tpst3_t)) ;
+*    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev3 ;
+  ev3_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.3.Traction : tpst3_t' tpst3_t ' end_t3' end_t3 ;
+*mess titi;
+*dess (ev3_red ET an13_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+
+  lsiga_red = 'IPOL' an13_red leps_red ;
+  ler3 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer3 = MAXI ler3 ;
+  eer3 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler3 ;
+  tit3 = CHAI '[2D Axi.] Ecart relatif Calcul/Reference Contrainte vs Deformation en 3.Traction, max' ' ' mer3 ;
+  SI ITRAC1 ;
+    DESS eer3 'TITR' tit3 ;
+  FINSI ;
+
+  tdes1 = 'TABLE' ;
+  tdes1.'TITRE' = 'TABLE' ;
+  tdes1 . 1 = MOT 'MARQ CROI' ;
+  tdes1 . 'TITRE' . 1 = MOT '1.Traction' ;
+  tdes1 . 2 = MOT 'MARQ PLUS' ;
+  tdes1 . 'TITRE' . 2 = MOT '2.Compression' ;
+  tdes1 . 3 = MOT 'MARQ S CROI' ;
+  tdes1 . 'TITRE' . 3 = MOT '3.Traction' ;
+  tit1 = CHAI '[2D Axi.] Ec.rel.Cal./Ref. Cont-Def 1.Trac(max' mer1 ') 2.Compr(max' mer2 ') 3.Trac(max' mer3 ')' ;
+  SI ITRAC1 ;
+    DESS (eer1 et eer2 et eer3) 'LEGE' 'NE' tdes1 'TITR' tit1 ;
+  FINSI ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' ************ C A S  #4  :  2 D   A X I S Y M E T R I Q U E *************';
+  SAUT 1 LIGN ;
+  SI ((MAXI mer1 mer2 mer3) < 1.E-10) ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-10 => OK' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-10 => OK' ;
+    SAUT 1 LIGN ;
+  SINO ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-10 => ECHEC' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-10 => ECHEC' ;
+    IERR = VRAI ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
+FINSI ;
+
+
+
+
+
+*********** C A S  #5  :  2 D   P O U T R E   A   F I B R E ************
+SI (EXIS lcas 5) ;
+
+** Options generales
+  OPTI 'DIME' 2 'MODE' 'PLAN' 'ELEM' 'QUA4' ;
+
+** Maillage
+  p1s     = (-0.5 * epai) (-0.5 * epai) ;
+  p2s     = (-0.5 * epai) ( 0.5 * epai) ;
+  l12s    = DROI 1 p1s p2s ;
+  mails   = l12s TRAN 1 (epai 0.) ;
+  p1      = 0. 0. ;
+  p2      = long 0. ;
+  mail    = DROI 1 p1 p2 ;
+  mes1    = MESU mails ;
+*nh145313
+cadr1 = COUL ((-0.1 0.) ET (1.05 0.)) 'BLAN' ;
+rep1 = @REPERE (-0.2 -0.2) (PROG 0.2 0.2) 'TURQ' ;
+SI ITRAC1 ;
+  TRAC 'QUAL' (rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[2D PaF] Maillages de la Poutre et de sa Section' ;
+FINSI ;
+
+** Modele et caracteristiques materiau
+  mos = MODE mails 'MECANIQUE' 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
+  mas = MATE mos 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta
+                 'ALPY' 1. ;
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'SECTION' 'PLASTIQUE' 'SECTION' 'TIMO' ;
+  ma = MATE mo 'MODS' mos 'MATS' mas ;
+
+** Blocages
+  blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
+  bldroite = BLOQ 'UX' p2 ;
+  bl       = blgauche ET bldroite ;
+*nh145313
+  bldroit2 = BLOQ 'ROTA' p2 ;
+  bl       = bl ET bldroit2 ;
+
+** Chargements
+  didroite = DEPI bldroite 1. ;
+  ec1      = EVOL 'MANU' (PROG 0. (0.5*inst_1a) inst_1a   0.666   inst_2a     1. )
+                         (PROG 0.    u1max         0.     u2max      0.     u3max) ;
+  cha      = CHAR 'DIMP' didroite ec1 ;
+
+** Tracé des blocages et du chargement
+  re0 = @REPERE (-0.2 -0.2) (PROG 0.2 0.2) ;
+  mor = MODE re0 'MECANIQUE' 'BARR' ;
+  mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
+  rir = RIGI mor mar ;
+  vf = VECT didroite 'FLX' ' ' 'ROUG' 0.1 ;
+  SI ITRAC1 ;
+    TRAC ((RIGI mo ma) ET blgauche ET rir) vf 'NOLE' 'TITR' '[2D PaF] Blocages et chargement' ;
+  FINSI ;
+
+** Resolution
+  t                               = TABL ;
+  t . 'MODELE'                    = mo ;
+  t . 'CARACTERISTIQUES'          = ma ;
+  t . 'BLOCAGES_MECANIQUES'       = bl ;
+  t . 'CHARGEMENT'                = cha ;
+  t . 'TEMPS_CALCULES'            = PROG 0. 'PAS' 3.E-3 (0.5*inst_1a)
+                                            'PAS' 3.E-3 inst_1a
+                                            'PAS' 1.E-2 0.666
+                                            'PAS' 1.E-2 inst_2a
+                                            'PAS' 1.E-2 0.9629
+                                            'PAS' 3.E-3 1. ;
+  t . 'MES_SAUVEGARDES'           = TABL ;
+  t . 'MES_SAUVEGARDES' . 'DEFTO' = VRAI ;
+  PASAPAS t ;
+
+** Post traitement
+* courbes : endommagement moyen vs temps
+*           contrainte moyenne vs deformation moyenne
+*           force de reaction vs deplacement impose
+* evolutions temporelles a tous les points de Gauss
+  ng = 4 ;
+  tleg = TABL ;
+  tleg . 1 = MOT 'MARQ CARR NOLI' ;
+  tleg . 2 = MOT 'MARQ LOSA NOLI' ;
+  tleg . 3 = MOT 'MARQ ROND NOLI' ;
+  tleg . 4 = MOT 'MARQ ETOI NOLI' ;
+  tleg . 'TITRE' = TABL ;
+  REPE b ng ;
+    tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ;
+  FIN b ;
+*nh145313
+  tleg . (ng+1) = MOT 'MARQ CROI REGU' ;
+  tleg . 'TITRE' . (ng+1) = MOT 'Ref_1.Traction' ;
+  tleg . (ng+2) = MOT 'MARQ PLUS REGU' ;
+  tleg . 'TITRE' . (ng+2) = MOT 'Ref_2.Compression' ;
+  tleg . (ng+3) = MOT 'MARQ S CROI REGU' ;
+  tleg . 'TITRE' . (ng+3) = MOT 'Ref_3.Traction' ;
+  tt = t . 'TEMPS' ;
+  tv = t . 'VARIABLES_INTERNES' ;
+  tu = t . 'DEPLACEMENTS' ;
+  tr = t . 'REACTIONS' ;
+  def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
+  ltps    = PROG ;
+  ltps_t1 = PROG ;
+  ltps_c2 = PROG ;
+  ltps_t3 = PROG ;
+  lend1 = PROG ;
+  lend2 = PROG ;
+  lend3 = PROG ;
+  lend4 = PROG ;
+  lsig1 = PROG ;
+  lsig2 = PROG ;
+  lsig3 = PROG ;
+  lsig4 = PROG ;
+  leps1 = PROG ;
+  leps2 = PROG ;
+  leps3 = PROG ;
+  leps4 = PROG ;
+  ldep = PROG ;
+  lrea = PROG ;
+  REPE b0 (DIME tt) ;
+    tps1 = tt . (&b0 - 1) ;
+*   Liste des instants : globale (ltps)
+*               de 1.traction    (ltps_t1)
+*               de 2.compression (ltps_c2)
+*               de 3.traction    (ltps_t3)
+    ltps = ltps ET tps1 ;
+    SI (<EG tps1 inst_1a) ;
+      ltps_t1 = ltps_t1 ET tps1 ;
+    SINON ;
+      SI (<EG tps1 inst_2a) ;
+        ltps_c2 = ltps_c2 ET tps1 ;
+      SINON ;
+        ltps_t3 = ltps_t3 ET tps1 ;
+      FINSI ;
+    FINSI ;
+    SI (EGA &b0 1) ;
+      lend1 = lend1 ET 0. ;
+      lend2 = lend2 ET 0. ;
+      lend3 = lend3 ET 0. ;
+      lend4 = lend4 ET 0. ;
+      lsig1 = lsig1 ET 0. ;
+      lsig2 = lsig2 ET 0. ;
+      lsig3 = lsig3 ET 0. ;
+      lsig4 = lsig4 ET 0. ;
+      leps1 = leps1 ET 0. ;
+      leps2 = leps2 ET 0. ;
+      leps3 = leps3 ET 0. ;
+      leps4 = leps4 ET 0. ;
+    SINON ;
+      lend1 = lend1 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 1) ;
+      lend2 = lend2 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 2) ;
+      lend3 = lend3 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 3) ;
+      lend4 = lend4 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 4) ;
+      lsig1 = lsig1 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 1) ;
+      lsig2 = lsig2 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 2) ;
+      lsig3 = lsig3 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 3) ;
+      lsig4 = lsig4 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VONS' 1 1 1) 'SMXX' 1 1 4) ;
+      leps1 = leps1 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 1) ;
+      leps2 = leps2 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 2) ;
+      leps3 = leps3 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 3) ;
+      leps4 = leps4 ET (EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VISX' 1 1 4) ;
+      end1 = EXTR (EXTR (tv . (&b0 - 1)) 'VAIS' 1 1 1) 'VHNI' 1 1 1 ;
+    FINSI ;
+    u1   = EXTR (tu . (&b0 - 1)) 'UX' p2 ;
+    rea1 = EXTR (tr . (&b0 - 1)) 'FX' p1 ;
+    ldep = ldep ET u1 ;
+    lrea = lrea ET rea1 ;
+  FIN b0 ;
+  ev0 = (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend1) ET (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend2) ET
+        (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend3) ET (EVOL 'ROUG' 'MANU' 'Temps' ltps 'D' lend4) ;
+  ev1 = (EVOL 'ROUG' 'MANU' 'EPXX'  leps1 'SMXX' lsig1) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps2 'SMXX' lsig2) ET
+        (EVOL 'ROUG' 'MANU' 'EPXX'  leps3 'SMXX' lsig3) ET (EVOL 'ROUG' 'MANU' 'EPXX' leps4 'SMXX' lsig4) ;
+  ev2 = EVOL 'ROUG' 'MANU' 'UX' ldep 'FX' lrea ;
+* Moyennes des listreels en chaque pt de Gauss
+  lend = 0.25 * (lend1 + lend2 + lend3 + lend4) ;
+  lsig = 0.25 * (lsig1 + lsig2 + lsig3 + lsig4) ;
+  leps = 0.25 * (leps1 + leps2 + leps3 + leps4) ;
+  
+* Instant de transition 1.Traction-2.Compression tpst1_t
+  tpst1_t = 0.5*inst_1a ;
+* Endommagement de transition 1.Traction-2.Compression end_t1
+  end_t1 = IPOL tpst1_t ltps lend ;
+* Instant de transition 2.Compression-3.Traction tpst3_t
+  tpst3_t = 0.666 ;
+* Endommagement de transition 2.Compression-3.Traction end_t3
+  end_t3 = IPOL tpst3_t ltps lend ;
+*nh145313
+** Sol.Ana. 1.Traction
+  ltps_t1 =  ENLE (ENLE ltps_t1 (DIME ltps_t1)) 1 ;
+  nb1 = DIME ltps_t1 ;
+  un1 = PROG nb1 * 1.D0 ;
+  lepd01 = PROG nb1 * epd0 ;
+  lat1 = PROG nb1 * at ;
+* defo.unidim.
+  lepu1 = (IPOL ltps_t1 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe1 = lepu1 ;
+  dt1 = un1 - ((epd0*(un1-lat1)/lepe1) + (at*(EXP(bt*(lepd01-lepe1))))) ;
+  lfiltr1 = LECT ;
+  REPE b1 ;
+    dt_i = EXTR dt1 &b1 ;
+    SI (EGA &b1 1) ;
+      dt_p1 = 0. ;
+    FINSI ;
+    ddt = dt_i - dt_p1 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr1 = lfiltr1 ET (LECT &b1) ;
+    FINSI ;
+    dt_p1 = dt_i ;
+    SI (EGA &b1 (DIME dt1)) ;
+      QUIT b1 ;
+    FINSI ;
+  FIN b1 ;
+  ltps_t1 = ENLE ltps_t1 lfiltr1 ;
+  un1     = ENLE un1     lfiltr1 ;
+  lepu1   = ENLE lepu1   lfiltr1 ;
+  dt1     = ENLE dt1     lfiltr1 ;
+  asig1 = (un1 - dt1) * you * lepu1 ;
+  an01 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t1 'D'    dt1   ;
+  an11 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1   'SMXX' asig1 ;
+  epst1_t = IPOL tpst1_t ltps_t1 lepu1 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 1.Traction : end_t1' end_t1 ' tpst1_t' tpst1_t ' epst1_t' epst1_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 2.Compression
+  ltps_c2 = ENLE ltps_c2 (DIME ltps_c2) ;
+  nb2 = DIME ltps_c2 ;
+  un2 = PROG nb2 * 1.D0 ;
+  lepd02 = PROG nb2 * epd0 ;
+  lac2 = PROG nb2 * ac ;
+* defo.unidim.
+  lepu2 = (IPOL ltps_c2 ec1) / long ;
+* defo.eq.Mazars (eps.tild) compression = racine(2)*nu*|defo.unidim.|
+  lepe2 = (2.**0.5) * nu * (ABS lepu2) ;
+  dc2 = un2 - ((epd0*(un2-lac2)/lepe2) + (ac*(EXP(bc*(lepd02-lepe2))))) ;
+  lfiltr2 = LECT ;
+  dc_m = 0. ;
+  REPE b2 ;
+    dc_i = EXTR dc2 &b2 ;
+    SI (EGA &b2 1) ;
+      dc_p = 1. ;
+    FINSI ;
+    ddc = dc_i - dc_p ;
+*mess '=== Boucle b2 , passage' ' ' &b2 ;
+*mess '    dom.max  ' ' ' dc_m;
+*mess '    dom.prec.' ' ' dc_p ;
+*mess '    dom.cour.' ' ' dc_i ;
+*mess '    incr.dom.' ' ' ddc  ;
+    SI ((ddc < 0.) OU (dc_i < 0.) OU (dc_i > 1.)) ;
+      lfiltr2 = lfiltr2 ET (LECT &b2) ;
+*mess '    => on filtre';
+    SINON ;
+*mess '    a garder si le dommage augmente...';
+      dc_m = MAXI dc_m dc_i ;
+      SI (dc_i < dc_m) ;
+*mess '    ... NON => on ne garde pas';
+        lfiltr2 = lfiltr2 ET (LECT &b2) ;
+      SINON ;
+*mess '    ... OUI => on garde';
+      FINSI ;
+    FINSI ;
+    dc_p = dc_i ;
+    SI (EGA &b2 (DIME dc2)) ;
+      QUIT b2 ;
+    FINSI ;
+  FIN b2 ;
+  ltps_c2 = ENLE ltps_c2 lfiltr2 ;
+  un2     = ENLE un2     lfiltr2 ;
+  lepu2   = ENLE lepu2   lfiltr2 ;
+  dc2     = ENLE dc2     lfiltr2 ;
+  asig2 = (un2 - dc2) * you * lepu2 ;
+  an02 = EVOL 'TURQ' 'MANU' 'Temps' ltps_c2 'D'    dc2   ;
+  tpsc2_t = IPOL end_t1 dc2 ltps_c2 ;
+  an12 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2   'SMXX' asig2 ;
+  epsc2_t = IPOL tpsc2_t ltps_c2 lepu2 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 2.Compression : end_t1' end_t1 ' tpsc2_t' tpsc2_t ' epsc2_t' epsc2_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+** Sol.Ana. 3.Traction
+  ltps_t3 =  ENLE ltps_t3 1 ;
+  nb3 = DIME ltps_t3 ;
+  un3 = PROG nb3 * 1.D0 ;
+  lepd03 = PROG nb3 * epd0 ;
+  lat3 = PROG nb3 * at ;
+* defo.unidim.
+  lepu3 = (IPOL ltps_t3 ec1) / long ;
+* defo.eq.Mazars (eps.tild) traction = defo.unidim.
+  lepe3 = lepu3 ;
+  dt3 = un3 - ((epd0*(un3-lat3)/lepe3) + (at*(EXP(bt*(lepd03-lepe3))))) ;
+  lfiltr3 = LECT ;
+  REPE b3 ;
+    dt_i = EXTR dt3 &b3 ;
+    SI (EGA &b3 1) ;
+      dt_p3 = dt_p1 ;
+    FINSI ;
+    ddt = dt_i - dt_p3 ;
+    SI ((ddt < 0.) OU (dt_i < 0.) OU (dt_i > 1.)) ;
+      lfiltr3 = lfiltr3 ET (LECT &b3) ;
+    FINSI ;
+    dt_p3 = dt_i ;
+    SI (EGA &b3 (DIME dt3)) ;
+      QUIT b3 ;
+    FINSI ;
+  FIN b3 ;
+  ltps_t3 = ENLE ltps_t3 lfiltr3 ;
+  un3     = ENLE un3     lfiltr3 ;
+  lepu3   = ENLE lepu3   lfiltr3 ;
+  dt3     = ENLE dt3     lfiltr3 ;
+  asig3 = (un3 - dt3) * you * lepu3 ;
+  an03 = EVOL 'TURQ' 'MANU' 'Temps' ltps_t3 'D'    dt3   ;
+  tpst3_t = IPOL end_t3 dt3 ltps_t3 ;
+  an13 = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3   'SMXX' asig3 ;
+  epst3_t = IPOL tpst3_t ltps_t3 lepu3 ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Transition, données de 3.Traction : end_t3' end_t3 ' tpst3_t' tpst3_t ' epst3_t' epst3_t ;
+*mess titi ;
+*saut 1 lign ;
+*opti echo 1 ;
+
+  SI ITRAC1 ;
+    DESS (ev0 ET an01 ET an02 ET an03) 'TITR' '[2D PaF] Endommagement vs Temps' 'LEGE' 'SE' tleg ;
+    DESS (ev1 ET an11 ET an12 ET an13) 'TITR' '[2D PaF] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
+    DESS ev2 'TITR' '[2D PaF] Reaction vs Deplacement' 'LEGE' 'SE' tdess ;
+  FINSI ;
+* deformee
+  REPE b3 (DIME tt) ;
+    tps1 = tt . (&b3 - 1) ;
+*   trace de la deformee (pour controle visuel)
+    def1 = DEFO mail (tu . (&b3 - 1)) 33. 'ROUG' ;
+    tit1 = CHAI '[2D PaF] Deformee au temps' ' ' tps1 ;
+    SI ITRAC1 ;
+*      TRAC (def0 ET def1) 'TITR' tit1 ;
+    FINSI ;
+  FIN b3 ;
+  SI ITRAC1 ;
+    TRAC (def0 ET def1) 'TITR' tit1 ;
+  FINSI ;
+* comparaison Calcul / Reference sur la contrainte moyenne
+* 1.Traction, courbes réduites
+  lepu1_red = PROG ;
+  asig1_red = PROG ;
+  born_inf = EXTR lepu1 1 ;
+  born_sup = epst1_t ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe analytique';
+*mess '====================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup;
+  REPE b_an11 (dime lepu1) ;
+    xi = EXTR lepu1 &b_an11 ;
+    yi = EXTR asig1 &b_an11 ;
+*mess '=== Boucle b_an11, passage' &b_an11 ' xi' xi; 
+    SI ((>EG xi born_inf) ET (<EG xi born_sup)) ;
+      lepu1_red = lepu1_red et (PROG xi) ;
+      asig1_red = asig1_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+  FIN b_an11 ;
+  an11_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu1_red  'SMXX' asig1_red ;
+*mess 'Courbe analytique reduite : an11_red';list an11_red;
+*opti echo 1;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe calculee';
+*mess '==================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup ' born_sup+1.E-10' (born_sup + 1.E-10) ' 0.5inst_1a' (05.*inst_1a);
+  REPE b_ev1 (dime leps) ;
+    ti = EXTR ltps &b_ev1 ;
+    xi = EXTR leps &b_ev1 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev1 ;
+*mess '=== Boucle b_ev1, passage' &b_ev1 ' ti' ti ' xi' xi ' dx' dx; 
+    SI ((>EG xi born_inf) ET (<EG xi (born_sup + 1.E-10)) ET (>EG dx 0) ET (<EG ti (05.*inst_1a))) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev1 ;
+  ev1_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*mess 'Courbe calculee reduite : ev1_red';list ev1_red;
+*opti echo 1;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.1.Traction : 0.5*inst_1a' (0.5*inst_1a) ' tpst1_t' tpst1_t ;
+*mess titi;
+*dess (ev1_red ET an11_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+  lsiga_red = 'IPOL' an11_red leps_red ;
+  ler1 = ABS (lsig_red - lsiga_red) / lsiga_red ;
+  mer1 = MAXI ler1 ;
+  eer1 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler1 ;
+  tit1 = CHAI '[2D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation en 1.Traction, max' ' ' mer1 ;
+  SI ITRAC1 ;
+    DESS eer1 'TITR' tit1 ;
+  FINSI ;
+
+* 2.Compression, courbes réduites
+  lepu2_red = PROG ;
+  asig2_red = PROG ;
+  born_inf = epsc2_t ;
+  born_sup = EXTR lepu2 (DIME lepu2) ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe analytique';
+*mess '====================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup;
+  REPE b_an12 (dime lepu2) ;
+    xi = EXTR lepu2 &b_an12 ;
+    yi = EXTR asig2 &b_an12 ;
+*mess '=== Boucle b_an12, passage' &b_an12 ' xi' xi; 
+    SI ((<EG xi born_inf) ET (>EG xi born_sup)) ;
+      lepu2_red = lepu2_red et (PROG xi) ;
+      asig2_red = asig2_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+  FIN b_an12 ;
+  an12_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu2_red  'SMXX' asig2_red ;
+*mess 'Courbe analytique reduite : an12_red';list an12_red;
+*opti echo 1;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+*opti echo 0;
+*mess 'Boucle de reduction Courbe calculee';
+*mess '==================================='; 
+*mess 'born_inf' born_inf ' born_sup' born_sup ' born_sup+1.E-9' (born_sup - 1.E-10) ' dx' dx;
+  REPE b_ev2 (dime leps) ;
+    xi = EXTR leps &b_ev2 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev2 ;
+*mess '=== Boucle b_ev2, passage' &b_ev2 ' xi' xi ' dx' dx; 
+    SI ((<EG xi born_inf) ET (>EG xi (born_sup - 1.E-10)) ET (<eg dx 0)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+*mess '    => retenu';
+    FINSI ;
+    xp = xi ;
+  FIN b_ev2 ;
+  ev2_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*mess 'Courbe calculee reduite : ev2_red';list ev2_red;
+*opti echo 1;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.2.Compression : born_inf' born_inf ' born_sup' born_sup ;
+*mess titi;
+*dess (ev2_red ET an12_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+  lsiga_red = 'IPOL' an12_red leps_red ;
+  ler2 = ABS ((lsig_red - lsiga_red) / lsiga_red) ;
+  mer2 = MAXI ler2 ;
+  eer2 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler2 ;
+  tit2 = CHAI '[2D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation en 2.Compression, max' ' ' mer2 ;
+  SI ITRAC1 ;
+    DESS eer2 'TITR' tit2 ;
+  FINSI ;
+  
+* 3.Traction, courbes réduites
+  lepu3_red = PROG ;
+  asig3_red = PROG ;
+  born_inf = EXTR lepu3 1 ;
+  born_sup = 1.E3 ;
+*mess 'born_inf' born_inf ' born_sup' born_sup ' end_t3' end_t3;
+  REPE b_an13 (dime lepu3) ;
+    di = EXTR dt3 &b_an13 ;
+    xi = EXTR lepu3 &b_an13 ;
+    yi = EXTR asig3 &b_an13 ;
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG di end_t3)) ;
+      lepu3_red = lepu3_red et (PROG xi) ;
+      asig3_red = asig3_red et (PROG yi) ;
+    FINSI ;
+  FIN b_an13 ;
+  an13_red = EVOL 'TURQ' 'MANU' 'EPXX'  lepu3_red  'SMXX' asig3_red ;
+  
+  leps_red = PROG ;
+  lsig_red = PROG ;
+  xp = 0. ;
+  REPE b_ev3 (dime leps) ;
+    ti = EXTR ltps &b_ev3 ;
+    xi = EXTR leps &b_ev3 ;
+    dx = xi - xp ;
+    yi = EXTR lsig &b_ev3 ;
+    SI ((>EG xi born_inf) ET (<EG xi born_sup) ET (>EG dx 0) ET (>EG ti tpst3_t)) ;
+      leps_red = leps_red et (PROG xi) ;
+      lsig_red = lsig_red et (PROG yi) ;
+    FINSI ;
+    xp = xi ;
+  FIN b_ev3 ;
+  ev3_red = EVOL 'ROUG' 'MANU' 'EPXX'  leps_red 'SMXX' lsig_red ;
+*opti echo 0 ;
+*saut 1 lign ;
+*titi = CHAI 'Evol. Contrainte vs Deformation - Borne de reduc.3.Traction : tpst3_t' tpst3_t ' end_t3' end_t3 ;
+*mess titi;
+*dess (ev3_red ET an13_red) 'TITR' titi 'LEGE' 'NO' tdess ;
+*saut 1 lign ;
+*opti echo 1;
+  lsiga_red = 'IPOL' an13_red leps_red ;
+  ler3 = ABS (lsig_red -lsiga_red) / lsiga_red;
+  mer3 = MAXI ler3 ;
+  eer3 = EVOL 'ORAN' 'MANU' 'EPXX'  leps_red  'Ec.rel.SMXX' ler3 ;
+  tit3 = CHAI '[2D PaF] Ecart relatif Calcul/Reference Contrainte vs Deformation en 3.Traction, max' ' ' mer3 ;
+  SI ITRAC1 ;
+    DESS eer3 'TITR' tit3 ;
+  FINSI ;
+
+  tdes1 = 'TABLE' ;
+  tdes1.'TITRE' = 'TABLE' ;
+  tdes1 . 1 = MOT 'MARQ CROI' ;
+  tdes1 . 'TITRE' . 1 = MOT '1.Traction' ;
+  tdes1 . 2 = MOT 'MARQ PLUS' ;
+  tdes1 . 'TITRE' . 2 = MOT '2.Compression' ;
+  tdes1 . 3 = MOT 'MARQ S CROI' ;
+  tdes1 . 'TITRE' . 3 = MOT '3.Traction' ;
+  tit1 = CHAI '[2D PaF] Ec.rel.Cal./Ref. Cont.-Defo. en 1.Trac.(max' mer1 ') 2.Compr.(max' mer2 ') 3.Trac.(max' mer3 ')' ;
+  SI ITRAC1 ;
+    DESS (eer1 et eer2 et eer3) 'LEGE' 'NE' tdes1 'TITR' tit1 ;
+  FINSI ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' *********** C A S  #5  :  2 D   P O U T R E   A   F I B R E ************';
+  SAUT 1 LIGN ;
+  SI ((MAXI mer1 mer2 mer3) < 1.E-8) ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-08 => OK' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' < 1.E-08 => OK' ;
+    SAUT 1 LIGN ;
+  SINO ;
+*    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-08 => ECHEC' ;
+    MESS ' Val.abs. Ecart relatif max entre Calcul et Reference' ;
+    MESS ' - phase 1.Traction' ' ' mer1 ;
+    MESS ' - phase 2.Compression' ' ' mer2 ;
+    MESS ' - phase 3.Traction' ' ' mer3 ;
+    MESS ' - maximum des 3 phases' ' ' (MAXI mer1 mer2 mer3) ' > 1.E-08 => ECHEC' ;
+    IERR = VRAI ;
+    SAUT 1 LIGN ;
+  FINS ;
+  SAUT 1 LIGN ;
+  OPTI ECHO 1 ;
+FINSI ;
+
+** Sortie sur Erreur 1152 en cas de non conformite
+SI IERR ;
+  ERRE 1152 ;
+FINSI ;
+
+
+
+
+
+FIN ;
+ 
+
