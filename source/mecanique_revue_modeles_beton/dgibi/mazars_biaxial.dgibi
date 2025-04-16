@@ -60,6 +60,58 @@ DEBP PERSO1 t1*'TABLE' ;
   FINSI;
 FINP ;
 
+** Procedure EC_REL pour calculer la moyenne intergrale de la courbe écart relatif (Calc - Ref) / Ref
+DEBP EC_REL nsig ev_ref ev_cal nx ndime log_dess tcare ;
+  xref = EXTR ev_ref 'ABSC' ;
+  yref = EXTR ev_ref 'ORDO' ;
+  xcal = EXTR ev_cal 'ABSC' ;
+  ycal = EXTR ev_cal 'ORDO' ;
+  xref2 = xcal ;
+  yref2 = IPOL xref2 ev_ref ;
+*mess 'Avant suppression';
+*mess 'ycal';list ycal;
+*mess 'yref2';list yref2;
+  n_supr = 0 ;
+  REPE b_y (DIME ycal) ;
+    yy = EXTR ycal &b_y ;
+    SI (yy 'EGA' 0. 1.E-2) ;
+      n_supr = &b_y ;
+    FINSI ;
+  FIN b_y ;
+  SI (n_supr NEG 0) ;
+    ycal  = ENLE ycal  n_supr ;
+    yref2 = ENLE yref2 n_supr ;
+    xcal  = ENLE xcal  n_supr ;
+*mess 'Apres suppression du terme' ' ' n_supr ;
+*mess 'ycal';list ycal;
+*mess 'yref2';list yref2;
+  FINSI ;
+  ler1 = ABS ((ycal - yref2) / yref2) ;
+*mess 'ler1';list ler1;
+  ny = CHAI '|Ec.rel|' nsig ;
+  eer1 = EVOL 'ORAN' 'MANU' nx xcal ny ler1 ;
+  dx = (EXTR xcal (DIME xcal)) - (EXTR xcal 1) ;
+  SI (n_supr NEG 0) ;
+    mer1 = (INTG eer1) / dx ;
+  SINON ;
+    mer1 = 0. ;
+  FINSI ;
+  tit1 = CHAI ndime ' ' nsig ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs' ' ' nx ', moy.int.|Ecart|' ' ' mer1 ;
+  SI ITRAC1 ;
+    DESS (ev_cal et ev_ref) 'TITR' tit1 'LEGE' tcare ;
+    DESS eer1 'TITR' tit1 'LEGE' tcare ;
+  FINSI ;
+FINP mer1 ;
+
+** Procedure SOL_REF pour restituer la solution de référence d'une configuration géométrique donnée
+DEBP SOL_REF nom_fic ;
+  OPTI REST nom_fic ;
+  REST ;
+  ev1 = ev_ref ;
+  ev2 = evsmxx_ref ;
+  ev3 = evsmyy_ref ;
+FINP ev1 ev2 ev3;
+
 
 
 **************** C A S  #1  :  3 D   V O L U M I Q U E ****************
@@ -96,12 +148,13 @@ FINSI ;
   bl = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' sbas) ET (BLOQ 'UZ' p1) ;
 
 ** Chargements (on fait varier le rapport entre les contraintes xx et yy imposees)
-  langl  = PROG 0. 'PAS' 2.5 360. ;
+  langl  = PROG 45. 'PAS' 2.5 225. ;
   lsigxx = PROG ;
   lsigyy = PROG ;
+  langl1 = PROG ;
   lok    = LECT ;
   REPE b0 (DIME langl) ;
-*    angl1 = 330. ;
+*    angl1 = 120. ;
     angl1 = EXTR langl &b0 ;
     MESS '=== THETA' ' ' angl1 ' ===';
 *nh145313
@@ -116,7 +169,7 @@ FINSI ;
     cha    = CHAR 'MECA' (fprx ET fpry) ev1 ;
 
 ** Tracé des blocages et du chargement pour une valeur d'angle
-    SI (EGA angl1 330.) ;
+    SI (EGA angl1 120.) ;
       re0 = @REPERE (-0.55 -0.55 0.) ;
       mor = MODE re0 'MECANIQUE' 'BARR' ;
       mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
@@ -159,12 +212,11 @@ FINSI ;
     def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
     tc = t . 'CONTRAINTES' ;
     nc = DIME tc ;
-    vsmxx = (INTG mo (tc . (nc - 2)) 'SMXX') / mes1 ;
-    vsmyy = (INTG mo (tc . (nc - 2)) 'SMYY') / mes1 ;
     lsigxx = lsigxx ET ((INTG mo (tc . (nc - 2)) 'SMXX') / mes1) ;
     lsigyy = lsigyy ET ((INTG mo (tc . (nc - 2)) 'SMYY') / mes1) ;
+    langl1 = langl1 ET angl1 ;
 *nh145313
-    SI (EGA angl1 330.) ;
+    SI (EGA angl1 120.) ;
 *     Courbes Dommage D en fonction des déplacements UX et UY
 *     - D calcule au point de Gauss k de l'element j de la zone i
       vi_fi = t . 'VARIABLES_INTERNES' . ((DIME t . 'VARIABLES_INTERNES') - 1) ;
@@ -318,6 +370,9 @@ FINSI ;
 *        TRAC (def0 ET def1) 'TITR' tit1 ;
       FINSI ;
     FINSI ;
+*   Courbes calculees Contrainte avant ruine vs Angle
+    evsmxx1 = EVOL 'TURQ' 'MANU' 'Angle' langl1 'SMXX' lsigxx ;
+    evsmyy1 = EVOL 'OCEA' 'MANU' 'Angle' langl1 'SMYY' lsigyy ;
   FIN b0 ;
 * test que pour toutes les valeurs d'angle, on a atteint la ruine
   SI (EXIS lok 0) ;
@@ -326,19 +381,25 @@ FINSI ;
     MESS ;
     LIST lok ;
   FINSI ;
-  
-* Comparaison Calcul / Reference sur la courbe SMXX vs SMYY
-* - sol. calculee
-  ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx 'SMYY' lsigyy ;
-  iv1 = INTG ev1 'ABS' ;
-* - sol. de Référence (calculée) 
-  OPTI REST 'mazars_biaxial_Ref_1342.out' ;
-  REST ;
-  ev2 = ev_ref ;
-  iv2 = INTG ev2 'ABS' ;
-  evecart = iv2 - iv1 ;
-  everel = evecart / iv2 ;
-  tit1 = CHAI '[3D V] SMXX vs SMYY, Ecart.Rel. Calcul/Reference' ' ' everel ;
+
+* Solution de Reference : 
+* mazars_biaxial_Ref_1342.out issu de 08_biaxial_non_suivi/08_biaxial_Ref_1342.dgibi
+* - pas de temps = 1.E-3 s
+* - increm. angle = 1 deg.
+  fich2 = MOT 'mazars_biaxial_Ref_1342.out' ;
+  ev2 evsmxx2 evsmyy2 = SOL_REF fich2 ;
+
+* Courbes SMXX vs SMYY
+* on complete la courbe calculée sur [45 deg. ; 125deg] par sa symetrie par rapport à la bissectrice
+  nval = DIME lsigxx ;
+  lsigxx1 = lsigxx ;
+  lsigyy1 = lsigyy ;
+  REPE b_val (nval - 1) ;
+    lsigxx1 = lsigxx1 ET (PROG (EXTR lsigyy (nval - &b_val))) ;
+    lsigyy1 = lsigyy1 ET (PROG (EXTR lsigxx (nval - &b_val))) ;
+  FIN b_val ;
+  ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx1 'SMYY' lsigyy1 ;
+  tit1 = CHAI '[3D V] Diagramme des contraintes SMXX - SMYY' ;
   SI ITRAC1 ;
     DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
   FINSI ;
@@ -347,27 +408,40 @@ FINSI ;
 * - REX cas-test 2D-CP de compression uniaxiale en contrainte imposée 08_biaxial_Ref_1222c.dgibi : Fc = -25,64 MPa
   Fc = -0.2564E8 ;
 *  - normalisation
-  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx / (ABS Fc)) 'SMYY/|Fc|' (lsigyy / (ABS Fc)) ;
-  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
+  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx1 / (ABS Fc)) 'SMYY/|Fc|' (lsigyy1 / (ABS Fc)) ;
+  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev2 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev2 'ORDO') / (ABS Fc)) ;
+  tit1 = '[3D V] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' ;
   SI ITRAC1 ;
-    DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[3D V] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
+    DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
   FINSI ;
 
+* Comparaison Calcul / Reference sur les courbes SMXX vs Angle et SMYY vs Angle
+* - sol. calculee : evsmxx1 et evsmyy1
+* - sol. de Référence (calculée) : evsmxx2 et evsmyy2
+*mess 'Courbe Reference';list evsmxx2;
+*mess 'Courbe calculee';list evsmxx1;
+  merx = EC_REL 'SMXX' evsmxx2 evsmxx1 'Angle' '[3D V]' ITRAC1 tdess ;
+  mery = EC_REL 'SMYY' evsmyy2 evsmyy1 'Angle' '[3D V]' ITRAC1 tdess ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
   SAUT 1 LIGN ;
-  SI (everel < 3.E-3) ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' < 3.E-03 => OK' ;
+  SI ((MAXI merx mery) < 2.E-2) ;
+    MESS ' Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ;
+    MESS ' - Contrainte SMXX' ' ' merx ;
+    MESS ' - Contrainte SMYY' ' ' mery ;
+    MESS ' - maximum des 2 composantes' ' ' (MAXI merx mery) ' < 2.E-02 => OK' ;
     SAUT 1 LIGN ;
   SINO ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' > 3.E-03 => ECHEC' ;
+    MESS ' Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ;
+    MESS ' - Contrainte SMXX' ' ' merx ;
+    MESS ' - Contrainte SMYY' ' ' mery ;
+    MESS ' - maximum des 2 composantes' ' ' (MAXI merx mery) ' > 2.E-02 => ECHEC' ;
     IERR = VRAI ;
     SAUT 1 LIGN ;
   FINS ;
   SAUT 1 LIGN ;
   OPTI ECHO 1 ;
-
 FINSI ;
 
 
@@ -391,7 +465,7 @@ SI (EXIS lcas 2) ;
 *nh145313
   p33 = mail POIN 'PROC' (long long) ;
 *nh145313
-cadr1 = COUL ((0. 1.11) ET (1. 1.11)) 'BLAN' ;
+cadr1 = COUL ((1.11 0.) ET (1.11 1.)) 'BLAN' ;
 rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ;
 SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
@@ -405,12 +479,13 @@ FINSI ;
   bl = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' sbas) ;
 
 ** Chargements (on fait varier le rapport entre les contraintes xx et yy imposees)
-  langl  = PROG 0. 'PAS' 2.5 360. ;
+  langl  = PROG 45. 'PAS' 2.5 225. ;
   lsigxx = PROG ;
   lsigyy = PROG ;
+  langl1 = PROG ;
   lok    = LECT ;
   REPE b0 (DIME langl) ;
-*    angl1 = 330. ;
+*    angl1 = 120. ;
     angl1 = EXTR langl &b0 ;
     MESS '=== THETA' ' ' angl1 ' ===';
 *nh145313
@@ -425,7 +500,7 @@ FINSI ;
     cha    = CHAR 'MECA' (fprx ET fpry) ev1 ;
 
 ** Tracé des blocages et du chargement pour une valeur d'angle
-    SI (EGA angl1 330.) ;
+    SI (EGA angl1 120.) ;
       re0 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) ;
       mor = MODE re0 'MECANIQUE' 'BARR' ;
       mar = MATE mor 'YOUN' 1. 'NU' 1. 'SECT' 1. ;
@@ -468,12 +543,11 @@ FINSI ;
     def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ;
     tc = t . 'CONTRAINTES' ;
     nc = DIME tc ;
-    vsmxx = (INTG mo (tc . (nc - 2)) 'SMXX') / mes1 ;
-    vsmyy = (INTG mo (tc . (nc - 2)) 'SMYY') / mes1 ;
     lsigxx = lsigxx ET ((INTG mo (tc . (nc - 2)) 'SMXX') / mes1) ;
     lsigyy = lsigyy ET ((INTG mo (tc . (nc - 2)) 'SMYY') / mes1) ;
+    langl1 = langl1 ET angl1 ;
 *nh145313
-    SI (EGA angl1 330.) ;
+    SI (EGA angl1 120.) ;
 *     Courbes Dommage D en fonction des déplacements UX et UY
 *     - D calcule au point de Gauss k de l'element j de la zone i
       vi_fi = t . 'VARIABLES_INTERNES' . ((DIME t . 'VARIABLES_INTERNES') - 1) ;
@@ -627,6 +701,9 @@ FINSI ;
 *        TRAC (def0 ET def1) 'TITR' tit1 ;
       FINSI ;
     FINSI ;
+*   Courbes calculees Contrainte avant ruine vs Angle
+    evsmxx1 = EVOL 'TURQ' 'MANU' 'Angle' langl1 'SMXX' lsigxx ;
+    evsmyy1 = EVOL 'OCEA' 'MANU' 'Angle' langl1 'SMYY' lsigyy ;
   FIN b0 ;
 * test que pour toutes les valeurs d'angle, on a atteint la ruine
   SI (EXIS lok 0) ;
@@ -636,47 +713,66 @@ FINSI ;
     LIST lok ;
   FINSI ;
   
-* Comparaison Calcul / Reference sur la courbe SMXX vs SMYY
-* - sol. calculee
-  ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx 'SMYY' lsigyy ;
-  iv1 = INTG ev1 'ABS' ;
-* - sol. de Référence (calculée) 
-  OPTI REST 'mazars_biaxial_Ref_1242c.out' ;
-  REST ;
-  ev2 = ev_ref ;
-  iv2 = INTG ev2 'ABS' ;
-  evecart = iv2 - iv1 ;
-  everel = evecart / iv2 ;
-  tit1 = CHAI '[2D Plan cont.] SMXX vs SMYY, Ecart.Rel. Calcul/Reference' ' ' everel ;
+* Solution de Reference : 
+* mazars_biaxial_Ref_1242c.out issu de 08_biaxial_non_suivi/08_biaxial_Ref_1242c.dgibi
+* - pas de temps = 1.E-3 s
+* - increm. angle = 1 deg.
+  fich2 = MOT 'mazars_biaxial_Ref_1242c.out' ;
+  ev2 evsmxx2 evsmyy2 = SOL_REF fich2 ;
+
+* Courbes SMXX vs SMYY
+* on complete la courbe calculée sur [45 deg. ; 125deg] par sa symetrie par rapport à la bissectrice
+  nval = DIME lsigxx ;
+  lsigxx1 = lsigxx ;
+  lsigyy1 = lsigyy ;
+  REPE b_val (nval - 1) ;
+    lsigxx1 = lsigxx1 ET (PROG (EXTR lsigyy (nval - &b_val))) ;
+    lsigyy1 = lsigyy1 ET (PROG (EXTR lsigxx (nval - &b_val))) ;
+  FIN b_val ;
+  ev1 = EVOL 'ROUG' 'MANU' 'SMXX' lsigxx1 'SMYY' lsigyy1 ;
+  tit1 = CHAI '[2D Plan cont.] Diagramme des contraintes SMXX - SMYY' ;
   SI ITRAC1 ;
     DESS (ev1 ET ev2) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
   FINSI ;
-  
+
 * Courbes normalisées à la resistance en compression uniaxiale Fc : SMXX/|Fc| - SMYY/|Fc|
 * - REX cas-test 2D-CP de compression uniaxiale en contrainte imposée 08_biaxial_Ref_1222c.dgibi : Fc = -25,64 MPa
   Fc = -0.2564E8 ;
 *  - normalisation
-  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx / (ABS Fc)) 'SMYY/|Fc|' (lsigyy / (ABS Fc)) ;
-  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev_ref 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev_ref 'ORDO') / (ABS Fc)) ;
+  ev1sFc = EVOL 'ROUG' 'MANU' 'SMXX/|Fc|' (lsigxx1 / (ABS Fc)) 'SMYY/|Fc|' (lsigyy1 / (ABS Fc)) ;
+  ev2sFc = EVOL 'ROSE' 'MANU' 'SMXX/|Fc|' ((EXTR ev2 'ABSC') / (ABS Fc)) 'SMYY/|Fc|' ((EXTR ev2 'ORDO') / (ABS Fc)) ;
+  tit1 = '[2D Plan cont.] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' ;
   SI ITRAC1 ;
-    DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' '[2D Plan cont.] Diagramme des contraintes normalisees SMXX/|Fc| - SMYY/|Fc|' 'LEGE' tdess ;
+    DESS (ev1sFc ET ev2sFc) 'CARR' 'AXES' 'GRIL' 'POIN' 'GRIS' 'TITR' tit1 'LEGE' tdess ;
   FINSI ;
 
+* Comparaison Calcul / Reference sur les courbes SMXX vs Angle et SMYY vs Angle
+* - sol. calculee : evsmxx1 et evsmyy1
+* - sol. de Référence (calculée) : evsmxx2 et evsmyy2
+*mess 'Courbe Reference';list evsmxx2;
+*mess 'Courbe calculee';list evsmxx1;
+  merx = EC_REL 'SMXX' evsmxx2 evsmxx1 'Angle' '[2D Plan cont.]' ITRAC1 tdess ;
+  mery = EC_REL 'SMYY' evsmyy2 evsmyy1 'Angle' '[2D Plan cont.]' ITRAC1 tdess ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' ******* C A S  #2  :  2 D   C O N T R A I N T E S   P L A N E S *******';
   SAUT 1 LIGN ;
-  SI (everel < 3.E-3) ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' < 3.E-03 => OK' ;
+  SI ((MAXI merx mery) < 2.E-2) ;
+    MESS ' Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ;
+    MESS ' - Contrainte SMXX' ' ' merx ;
+    MESS ' - Contrainte SMYY' ' ' mery ;
+    MESS ' - maximum des 2 composantes' ' ' (MAXI merx mery) ' < 2.E-02 => OK' ;
     SAUT 1 LIGN ;
   SINO ;
-    MESS ' Ecart relatif entre Calcul et Reference' ' ' everel ' > 3.E-03 => ECHEC' ;
+    MESS ' Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ;
+    MESS ' - Contrainte SMXX' ' ' merx ;
+    MESS ' - Contrainte SMYY' ' ' mery ;
+    MESS ' - maximum des 2 composantes' ' ' (MAXI merx mery) ' > 2.E-02 => ECHEC' ;
     IERR = VRAI ;
     SAUT 1 LIGN ;
   FINS ;
   SAUT 1 LIGN ;
   OPTI ECHO 1 ;
-
 FINSI ;
 
 ** Sortie sur Erreur 1152 en cas de non conformite

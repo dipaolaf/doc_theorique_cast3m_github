@@ -188,33 +188,33 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 	
 		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 185-195
+			:lines: 184-194
 			:linenos:
-			:lineno-start: 185		
+			:lineno-start: 184		
 			
 	* On calcule les déformations associées aux contraintes positives :math:`\varepsilon_i^t` :
 
 		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 199-201
+			:lines: 198-200
 			:linenos:
-			:lineno-start: 199		
+			:lineno-start: 198		
 
 	* On calcule :math:`\alpha_{t}` puis on en déduit :math:`\alpha_{c}` :
 	
 		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 205-209
+			:lines: 204-208
 			:linenos:
-			:lineno-start: 205		
+			:lineno-start: 204		
 
 	* On corrige les paramètres de combinaison linéaire via le coefficient :math:`\beta > 1` pour amémiorer la réponse en cisaillement :
 		
 		.. literalinclude:: sources/cmazar.eso
 			:language: fortran
-			:lines: 223-230
+			:lines: 221-228
 			:linenos:
-			:lineno-start: 223		
+			:lineno-start: 221		
 
 - On corrige la déformation equivalente de Mazars :math:`e` par le coefficient :math:`\gamma` pour améliorer la réponse en bi ou tri-compression :
 
@@ -230,9 +230,9 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 	
 	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
-		:lines: 213-219
+		:lines: 212-217
 		:linenos:
-		:lineno-start: 213		
+		:lineno-start: 212		
 
 - Le calcul de la variable d'endommagement **D** est effectué après avoir vérifié si le seuil de dommage initial a été dépassé. Cette vérification est nécessaire car il est possible que la valeur de la déformation equivalente de Mazars ait été multipliée par :math:`\gamma`. Tandis que l'évolution du dommage en compression **DC** suit la loi de Mazars classique, trois lois d'évolution différentes du dommage en traction **DT** sont proposées selon la valeur du paramètre **ATRA** :
 
@@ -242,9 +242,9 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 
 	.. literalinclude:: sources/cmazar.eso
 		:language: fortran
-		:lines: 254-274
+		:lines: 252-272
 		:linenos:
-		:lineno-start: 254		
+		:lineno-start: 252		
 
 			
   La variable d'endommagement est ensuite bornée supérieurement à 0.99999999 afin d'éviter un trop mauvais conditionnement de la matrice de rigidité ;

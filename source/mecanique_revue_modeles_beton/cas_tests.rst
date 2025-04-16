@@ -220,9 +220,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 470-482
+      :lines: 476-488
       :linenos:
-      :lineno-start: 470
+      :lineno-start: 476
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -265,9 +265,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 650-662
+      :lines: 657-669
       :linenos:
-      :lineno-start: 650
+      :lineno-start: 657
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -387,9 +387,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction.dgibi
       :language: gibiane
-      :lines: 688-696
+      :lines: 691-699
       :linenos:
-      :lineno-start: 688
+      :lineno-start: 691
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -476,9 +476,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression.dgibi
       :language: gibiane
-      :lines: 729-737
+      :lines: 731-739
       :linenos:
-      :lineno-start: 729
+      :lineno-start: 731
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -564,9 +564,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 824-833
+      :lines: 827-836
       :linenos:
-      :lineno-start: 824
+      :lineno-start: 827
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -652,9 +652,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 851-860
+      :lines: 853-862
       :linenos:
-      :lineno-start: 851
+      :lineno-start: 853
 
 Les blocages et le chargement sont représentés sur la figure suivante.
    
@@ -740,9 +740,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 1202-1211
+      :lines: 1220-1229
       :linenos:
-      :lineno-start: 1202
+      :lineno-start: 1220
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -828,9 +828,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 1733-1742
+      :lines: 1756-1765
       :linenos:
-      :lineno-start: 1733
+      :lineno-start: 1756
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -868,7 +868,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 .. figure:: figures/mazars_trac_comp_trac_char_2daxi.png
    :width: 0%
 
-   Traction compression - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
+   Traction compression traction - Maillage initial et déformé (x333) des modèles massifs 3D, 2D plan et 2D axisymétrique.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -1000,45 +1000,45 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 99
+      :lines: 161
       :linenos:
-      :lineno-start: 99
+      :lineno-start: 161
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 103
+      :lines: 166
       :linenos:
-      :lineno-start: 103
+      :lineno-start: 166
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 105
+      :lines: 168
       :linenos:
-      :lineno-start: 105
+      :lineno-start: 168
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 111-116
+      :lines: 174-179
       :linenos:
-      :lineno-start: 111
+      :lineno-start: 174
 
 .. admonition:: Biaxial : blocages pour le cas 3D
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 95-96
+      :lines: 157-158
       :linenos:
-      :lineno-start: 95
+      :lineno-start: 157
 
 .. admonition:: Biaxial : blocages pour le cas 2D plan
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 404-405
+      :lines: 481-482
       :linenos:
-      :lineno-start: 404
+      :lineno-start: 481
 
-Les blocages et le chargement sont représentés sur la figure suivante.
+Les blocages et le chargement dans la situation de biaxialité :math:`\theta=120°` (:math:`\sigma_{xx}` : traction ; :math:`\sigma_{yy}` : compression) sont représentés sur la figure suivante.
 
 .. list-table::
    :width: 100%
@@ -1055,7 +1055,7 @@ Les blocages et le chargement sont représentés sur la figure suivante.
 .. figure:: figures/mazars_biax_char_2dplan.png
    :width: 0%
 
-   Biaxial - Blocages et chargement biaxial de contraintes imposées sur le cube (3D) et le carré (2D plan).
+   Biaxial (:math:`\theta=120°`) - Blocages et chargement biaxial de contraintes imposées sur le cube (3D) et le carré (2D plan).
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -1067,7 +1067,18 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 .. figure:: figures/mazars_biax_char_2dplan.png
    :width: 0%
 
-   Biaxial - Maillage initial et déformé (x516) des modèles volumiques 3D et 2D plan.
+   Biaxial (:math:`\theta=120°`) - Maillage initial et déformé (x516) des modèles volumiques 3D et 2D plan.
+
+A noter que le chargement en contraintes imposées est appliqué via l'opérateur ``'PRES'`` de Cast3M. Dans cette commande, une valeur négative de la pression correspond à un chargement de traction tandis qu'une valeur positive correspond à un chargement de compression. 
+
+Ainsi, dans le cas des illustrations où :math:`\theta=120°` et sachant que :math:`\sigma_{max}>0`, on a :
+
+.. math::
+   \textrm{cos}\theta=-\frac{1}{2}\textrm{, d'où }\sigma_{xx}=-\frac{1}{2}\sigma_{max}<0\textrm{ : traction}
+
+.. math::
+   \textrm{sin}\theta=\frac{\sqrt{3}}{2}\textrm{, d'où }\sigma_{yy}=\frac{\sqrt{3}}{2}\sigma_{max}>0\textrm{ : compression}
+
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -1113,79 +1124,79 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 102-108
+      :lines: 103-109
       :linenos:
-      :lineno-start: 102
+      :lineno-start: 103
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 113-116
+      :lines: 114-117
       :linenos:
-      :lineno-start: 113
+      :lineno-start: 114
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 119-123
+      :lines: 120-124
       :linenos:
-      :lineno-start: 119
+      :lineno-start: 120
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 124
+      :lines: 125
       :linenos:
-      :lineno-start: 124
+      :lineno-start: 125
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 128-129
+      :lines: 129-130
       :linenos:
-      :lineno-start: 128
+      :lineno-start: 129
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 135-139
+      :lines: 136-140
       :linenos:
-      :lineno-start: 135
+      :lineno-start: 136
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 154-155
+      :lines: 155-156
       :linenos:
-      :lineno-start: 154
+      :lineno-start: 155
 
 .. admonition:: Triaxial : blocages et chargements pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 329-335
+      :lines: 326-332
       :linenos:
-      :lineno-start: 329
+      :lineno-start: 324
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 340-343
+      :lines: 337-340
       :linenos:
-      :lineno-start: 340
+      :lineno-start: 337
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 346-349
+      :lines: 343-346
       :linenos:
-      :lineno-start: 346
+      :lineno-start: 343
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 350
+      :lines: 347
       :linenos:
-      :lineno-start: 350
+      :lineno-start: 347
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 354-355
+      :lines: 351-352
       :linenos:
-      :lineno-start: 354
+      :lineno-start: 351
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 361-365
+      :lines: 358-362
       :linenos:
-      :lineno-start: 361
+      :lineno-start: 358
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 380-381
+      :lines: 377-378
       :linenos:
-      :lineno-start: 380
+      :lineno-start: 377
 
-Les blocages et les chargements, pour la pression hydrostatique nulle (0MPa) et maximale (9 MPa), sont représentés sur les figures suivantes.
+Les blocages et les chargements, pour la pression hydrostatique nulle (0 MPa) et maximale (9 MPa), sont représentés sur les figures suivantes.
 
 .. list-table::
    :width: 100%
@@ -1221,7 +1232,7 @@ Les blocages et les chargements, pour la pression hydrostatique nulle (0MPa) et 
 
    Triaxial - Blocages et chargement triaxial de pression hydrostatique (9 MPa, en vert) et de déplacement axial (en rouge) imposés sur le parallélépipède (3D) et le cylindre (2D axisymétrique).
 
-La déformée au cours du chargement, pour la pression hydrostatique nulle (0MPa) et maximale (9 MPa), est représentée sur les figures suivantes.
+La déformée au cours du chargement, pour la pression hydrostatique nulle (0 MPa) et maximale (9 MPa), est représentée sur les figures suivantes.
 
 .. image:: figures/mazars_triaxial_0MPa_film_defo_3D_V_5.gif
    :width: 50%
@@ -1231,7 +1242,7 @@ La déformée au cours du chargement, pour la pression hydrostatique nulle (0MPa
 .. figure:: figures/mazars_triax_9MPa_char_2daxi.png
    :width: 0%
 
-   Biaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique nulle (0 MPa).
+   Triaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique nulle (0 MPa).
 
 .. image:: figures/mazars_triaxial_9MPa_film_defo_3D_V_5.gif
    :width: 50%
@@ -1241,7 +1252,7 @@ La déformée au cours du chargement, pour la pression hydrostatique nulle (0MPa
 .. figure:: figures/mazars_triax_9MPa_char_2daxi.png
    :width: 0%
 
-   Biaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique maximale (9 MPa).
+   Triaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique maximale (9 MPa).
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -1294,11 +1305,11 @@ Enfin, le paramètre **BTRA** du modèle Mazars est issu d'une communication per
 Blocages et chargement
 """"""""""""""""""""""
 
-Le test se décompose en deux phases successives. Dans la phase 1, le chargement consiste à piloter la déformation du maillage dans l'une de ses directions principales en l'augmentant progressivement jusqu'à atteindre la déformation seuil d'endommagement, l'une des deux faces dont la normale est colinéaire à cette direction étant bloquée en déplacement et libre de se contracter par effet de Poisson. Plusieurs chargements se superposent dans la phase 2 : tout d'abord, le chargement de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; ensuite, un deuxième chargement de traction orthogonale consiste à piloter la déformation du maillage dans une direction perpendiculaire à la première en l'augmentant progressivement jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin, un troisième chargement de cisaillement consiste à piloter le glissement du maillage dans les directions orthogonales des deux premiers chargements de la phase 2 en l'augmentant progressivement jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
+Le test se décompose en deux phases successives. Dans la phase 1, le chargement consiste à piloter la déformation du maillage dans l'une de ses directions principales en l'augmentant progressivement jusqu'à atteindre la déformation seuil d'endommagement, l'une des deux faces dont la normale est colinéaire à cette direction étant bloquée en déplacement et libre de se contracter par effet de Poisson. Plusieurs chargements se superposent dans la phase 2 : tout d'abord, le chargement de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; ensuite, un deuxième chargement de traction orthogonale consiste à piloter la déformation du maillage dans une direction perpendiculaire à la première en l'augmentant progressivement jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin, un troisième chargement de cisaillement consiste à piloter le glissement du maillage dans le plan défini par les directions orthogonales des deux premiers chargements de la phase 2 en l'augmentant progressivement jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
 
-En pratique dans Cast3M, on applique sur tout le maillage les deux phases du chargement de déformation imposée souhaité dans un premier calcul élastique, en tenant compte des conditions aux limites adéquates aux frontières du maillage (une face encastrée et libre en striction). Puis on récupère les champs de déplacements ainsi calculés pour les appliquer comme chargement en déplacement imposé sur tout le maillage d'un second calcul prenant en compte le comportement non linéaire endomageable du matériau. A noter que ce second calcul ne requiert pas de conditions aux limites cinématique, l'ensemble du maillage étant piloté en déplacement imposé.
+En pratique dans Cast3M, on applique sur tout le maillage les deux phases du chargement de déformation imposée souhaité dans un premier calcul élastique, en tenant compte des conditions aux limites adéquates aux frontières du maillage (une face encastrée et libre en striction). Puis on récupère les champs de déplacements ainsi calculés pour les appliquer comme chargement en déplacement imposé sur tout le maillage d'un second calcul prenant en compte le comportement non linéaire endomageable du matériau. A noter que ce second calcul ne requiert pas de conditions aux limites cinématiques, l'ensemble du maillage étant piloté en déplacement imposé.
 
-- En 3D, pour le premier calcul élastique, on pilote les déformations **EPXX**, **EPYY**, **EPZZ** et **GAXY** dans tout le maillage et on bloque le déplacement **UX** de la face "gauche" (dans le plan :math:`x=0`). Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0) ; pour le second calcul non linéaire, on utilise les champs de déplacements résultat du premier calcul pour piloter les déplacements de tout le maillage.
+- En 3D, pour le premier calcul élastique, on pilote les déformations **EPXX**, **EPYY**, **EPZZ** et **GAXY** dans tout le maillage et on bloque le déplacement **UX** de la face "gauche" (dans le plan :math:`x=0`). Le mouvement de corps rigide est empêché en bloquant les déplacements **UY** et **UZ** du coin (0 0 0) et **UZ** du coin (0 :math:`L` 0) ; pour le second calcul non linéaire, on utilise les champs de déplacements résultant du premier calcul pour piloter les déplacements de tout le maillage.
 - En 2D plan, les conditions sont similaires mais limitées aux degrés de liberté **UX** et **UY**.
 
 Les instructions Gibiane correspondantes sont :

@@ -39,7 +39,7 @@ cast-post.sh -o -t mazars_biaxial.ps mazars_biaxial.ps
 cast-post.sh -o -t mazars_triaxial.ps mazars_triaxial.ps
 cast-post.sh -o -t mazars_willam.ps mazars_willam.ps
 
-# Extraction des pages utilses
+# Extraction des pages utilisées
 echo "  --> Extraction des pages"
 psselect -q -p2    mazars_traction.ps mazars_trac_mono_char_3d.ps
 psselect -q -p3    mazars_traction.ps mazars_trac_mono_d_3d.ps
@@ -188,27 +188,27 @@ psselect -q -p25   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_2dpaf.
 psselect -q -p2    mazars_biaxial.ps  mazars_biax_char_3d.ps
 psselect -q -p6    mazars_biaxial.ps  mazars_biax_SxSy_3d.ps
 psselect -q -p7    mazars_biaxial.ps  mazars_biax_SxSysFc_3d.ps
-psselect -q -p9    mazars_biaxial.ps  mazars_biax_char_2dplan.ps
-psselect -q -p13   mazars_biaxial.ps  mazars_biax_SxSy_2dplan.ps
-psselect -q -p14   mazars_biaxial.ps  mazars_biax_SxSysFc_2dplan.ps
+psselect -q -p13   mazars_biaxial.ps  mazars_biax_char_2dplan.ps
+psselect -q -p17   mazars_biaxial.ps  mazars_biax_SxSy_2dplan.ps
+psselect -q -p18   mazars_biaxial.ps  mazars_biax_SxSysFc_2dplan.ps
 psselect -q -p5    mazars_triaxial.ps mazars_triax_0MPa_char_3d.ps
 psselect -q -p11   mazars_triaxial.ps mazars_triax_9MPa_char_3d.ps
 psselect -q -p13   mazars_triaxial.ps mazars_triax_d_3d.ps
 psselect -q -p14   mazars_triaxial.ps mazars_triax_s_3d.ps
 psselect -q -p15   mazars_triaxial.ps mazars_triax_f_3d.ps
-psselect -q -p21   mazars_triaxial.ps mazars_triax_0MPa_char_2daxi.ps
-psselect -q -p27   mazars_triaxial.ps mazars_triax_9MPa_char_2daxi.ps
-psselect -q -p29   mazars_triaxial.ps mazars_triax_d_2daxi.ps
-psselect -q -p30   mazars_triaxial.ps mazars_triax_s_2daxi.ps
-psselect -q -p31   mazars_triaxial.ps mazars_triax_f_2daxi.ps
+psselect -q -p25   mazars_triaxial.ps mazars_triax_0MPa_char_2daxi.ps
+psselect -q -p31   mazars_triaxial.ps mazars_triax_9MPa_char_2daxi.ps
+psselect -q -p33   mazars_triaxial.ps mazars_triax_d_2daxi.ps
+psselect -q -p34   mazars_triaxial.ps mazars_triax_s_2daxi.ps
+psselect -q -p35   mazars_triaxial.ps mazars_triax_f_2daxi.ps
 psselect -q -p2    mazars_willam.ps  mazars_will_d_3d.ps
 psselect -q -p10   mazars_willam.ps  mazars_will_s_3d.ps
-psselect -q -p14   mazars_willam.ps  mazars_will_char_3d.ps
-psselect -q -p15   mazars_willam.ps  mazars_will_prin_3d.ps
-psselect -q -p17   mazars_willam.ps  mazars_will_d_2dplan.ps
-psselect -q -p25   mazars_willam.ps  mazars_will_s_2dplan.ps
-psselect -q -p29   mazars_willam.ps  mazars_will_char_2dplan.ps
-psselect -q -p30   mazars_willam.ps  mazars_will_prin_2dplan.ps
+psselect -q -p17   mazars_willam.ps  mazars_will_char_3d.ps
+psselect -q -p18   mazars_willam.ps  mazars_will_prin_3d.ps
+psselect -q -p20   mazars_willam.ps  mazars_will_d_2dplan.ps
+psselect -q -p28   mazars_willam.ps  mazars_will_s_2dplan.ps
+psselect -q -p35   mazars_willam.ps  mazars_will_char_2dplan.ps
+psselect -q -p36   mazars_willam.ps  mazars_will_prin_2dplan.ps
 
 # Traitement des images
 rm mazars_traction.ps

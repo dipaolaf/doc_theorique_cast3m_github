@@ -75,6 +75,22 @@ Pour un problème en déplacement imposé (i.e. en déformation imposée dans la
 
    \boldsymbol{\sigma} = (1-D_{t}) \mathbb{E} : \boldsymbol{\varepsilon}
 
+Ecart entre résultat de calcul et solution de référence
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+L'écart entre la contrainte calculée et la solution de référence est évalué via l'aire sous la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)`, dont l'abscisse est strictement croissante et l'ordonnée est la valeur absolue de l'écart relatif en contrainte définie de la façon suivante : 
+
+.. math::
+   |Ec.rel.\sigma_{xx}| = \frac{\left|\sigma_{xx_{calc.}} - \sigma_{xx_{ref.}}\right|} {\sigma_{xx_{ref.}}}
+
+Pour chaque configuration traîtée, on fournit une valeur scalaire quantitative de l'écart qui correspond à la moyenne intégrale de la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)` définie par :
+ 
+.. math::
+   Moy.int. = \frac{1}{t_{2}-t_{1}}\sum_{t_{1}}^{^{t_{2}}}|Ec.rel.\sigma_{xx}|\Delta t
+   
+où :math:`[t_{1};t_{2}]` est l'intersection du domaine de définition temporel de la contrainte calculée et de la solution de référence.
+
+L'aire sous la courbe est calculée avec l'opérateur ``'INTG'`` de Cast3M.
+
 Résultats du cas 3D poutre à fibres
 +++++++++++++++++++++++++++++++++++
 
@@ -146,10 +162,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,18393.10^{-15} < 1.10^{-10}
+   4,70084.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -233,10 +249,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,18393.10^{-15} < 1.10^{-10}
+   4,70084.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -309,10 +325,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   5,57047.10^{-15} < 1.10^{-10}
+   1,46384.10^{-15} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -385,10 +401,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   5,74126.10^{-15} < 1.10^{-10}
+   1,15463.10^{-15} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -461,10 +477,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   5,61645.10^{-15} < 1.10^{-10}
+   1,39061.10^{-15} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -527,6 +543,22 @@ Pour un problème en déplacement imposé (i.e. en déformation imposée dans la
 .. math::
 
    \boldsymbol{\sigma} = (1-D_{t}) \mathbb{E} : \boldsymbol{\varepsilon}
+
+Ecart entre résultat de calcul et solution de référence
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+L'écart entre la contrainte calculée et la solution de référence est évalué via l'aire sous la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)`, dont l'abscisse est strictement croissante et l'ordonnée est la valeur absolue de l'écart relatif en contrainte définie de la façon suivante : 
+
+.. math::
+   |Ec.rel.\sigma_{xx}| = \left|\frac{\sigma_{xx_{calc.}} - \sigma_{xx_{ref.}}} {\sigma_{xx_{ref.}}}\right|
+
+Pour chaque configuration traîtée, on fournit une valeur scalaire quantitative de l'écart qui correspond à la moyenne intégrale de la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)` définie par :
+ 
+.. math::
+   Moy.int. = \frac{1}{t_{2}-t_{1}}\sum_{t_{1}}^{^{t_{2}}}|Ec.rel.\sigma_{xx}|\Delta t
+   
+où :math:`[t_{1};t_{2}]` est l'intersection du domaine de définition temporel de la contrainte calculée et de la solution de référence.
+
+L'aire sous la courbe est calculée avec l'opérateur ``'INTG'`` de Cast3M.
 
 Résultats du cas 3D poutre à fibres
 +++++++++++++++++++++++++++++++++++
@@ -599,10 +631,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   8,35516.10^{-9} < 1.10^{-8}
+   1,39960.10^{-9} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -686,10 +718,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   8,35516.10^{-9} < 1.10^{-8}
+   1,39960.10^{-9} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -762,10 +794,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   5,14017.10^{-9} < 1.10^{-8}
+   6,94087.10^{-10} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -838,10 +870,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1,26037.10^{-15} < 1.10^{-10}
+   5,04719.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -914,10 +946,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1,68409.10^{-15} < 1.10^{-10}
+   4,21894.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -953,6 +985,8 @@ L'analyse des résultats porte sur les courbes :
 
 Pour chaque configuration géométrique, la solution de référence est identique à celle décrite dans le chapitre :ref:`Traction monotone <sec:mazars_ana_trac>`.
 
+L'écart entre la contrainte calculée et la solution de référence est également évalué de la même façon : il s'agit de la moyenne intégrale de la courbe d'évolution temporelle de la valeur absolue de l'écart relatif entre les contraintes calculée et de référence.
+
 Résultats du cas 3D poutre à fibres
 +++++++++++++++++++++++++++++++++++
 
@@ -977,10 +1011,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,35150.10^{-15} < 1.10^{-10}
+   6,55083.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -1017,10 +1051,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,35150.10^{-15} < 1.10^{-10}
+   6,55083.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -1057,10 +1091,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   7,86303.10^{-15} < 1.10^{-10}
+   1,63380.10^{-15} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -1097,10 +1131,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   4,11873.10^{-15} < 1.10^{-10}
+   8,07811.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -1137,10 +1171,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,92767.10^{-15} < 1.10^{-10}
+   3,28864.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -1175,6 +1209,8 @@ L'analyse des résultats porte sur les courbes :
 
 Pour chaque configuration géométrique, la solution de référence est identique à celle décrite dans le chapitre :ref:`Compression monotone <sec:mazars_ana_comp>`.
 
+L'écart entre la contrainte calculée et la solution de référence est également évalué de la même façon : il s'agit de la moyenne intégrale de la courbe d'évolution temporelle de la valeur absolue de l'écart relatif entre les contraintes calculée et de référence.
+
 Résultats du cas 3D poutre à fibres
 +++++++++++++++++++++++++++++++++++
 
@@ -1199,10 +1235,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,66400.10^{-9} < 1.10^{-8}
+   3,70109.10^{-11} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -1239,10 +1275,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,66400.10^{-9} < 1.10^{-8}
+   3,70109.10^{-11} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -1279,10 +1315,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   3,29566.10^{-9} < 1.10^{-8}
+   1,11598.10^{-9} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -1319,10 +1355,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   6,59015.10^{-15} < 1.10^{-10}
+   8,30071.10^{-16} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -1359,10 +1395,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 On observe que :
 
 - La solution calculée (parties linéaires rouges) reproduit correctement la diminution à chaque cycle du module élastique prévue par la solution de référence (parties linéaires bleues) ;
-- L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+- La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1,02395.10^{-14} < 1.10^{-10}
+   1,41884.10^{-15} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -1397,6 +1433,29 @@ L'analyse des résultats porte sur les courbes :
 Solution de référence
 +++++++++++++++++++++
 La solution de référence est obtenue de manière analytique à partir des équations donnant la loi de l'évolution de l'endommagement en traction et en compression. Ces deux lois sont fonctions de la déformation équivalente selon la formulation de Mazars qui est dépendante du mode de chargement et du mode de représentation géométrique.
+
+Ecart entre résultat de calcul et solution de référence
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+L'écart entre la contrainte calculée et la solution de référence est évalué, d'une part pour la phase de traction et d'autre part pour la phase de compression, via l'aire sous la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)`, dont l'abscisse est strictement croissante et l'ordonnée est la valeur absolue de l'écart relatif en contrainte définie de la façon suivante : 
+
+- Pour la phase de traction :
+
+.. math::
+   |Ec.rel.\sigma_{xx}| = \frac{\left|\sigma_{xx_{calc.}} - \sigma_{xx_{ref.}}\right|} {\sigma_{xx_{ref.}}}
+
+- Pour la phase de compression :
+
+.. math::
+   |Ec.rel.\sigma_{xx}| = \left|\frac{\sigma_{xx_{calc.}} - \sigma_{xx_{ref.}}} {\sigma_{xx_{ref.}}}\right|
+
+Pour chaque configuration traîtée, on fournit deux valeurs scalaires quantitatives de l'écart (une pour la phase de traction et l'autre pour la phase de compression) qui correspondent à la moyenne intégrale dans chacune des deux phases de la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)` définie par :
+
+.. math::
+   Moy.int. = \frac{1}{t_{2}-t_{1}}\sum_{t_{1}}^{^{t_{2}}}|Ec.rel.\sigma_{xx}|\Delta t
+   
+où, dans chacune des deux phases, :math:`[t_{1};t_{2}]` est l'intersection du domaine de définition temporel de la contrainte calculée et de la solution de référence.
+
+L'aire sous la courbe est calculée avec l'opérateur ``'INTG'`` de Cast3M.
 
 Résultats du cas 3D poutre à fibres
 +++++++++++++++++++++++++++++++++++
@@ -1457,10 +1516,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`6,98622.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`9,55546.10^{-9} < 1.10^{-8}`.
+- dans la phase 1 de traction : :math:`4,23809.10^{-16} < 1.10^{-6}` ;
+- dans la phase 2 de compression : :math:`1,33474.10^{-9} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -1529,10 +1588,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`6,98622.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`9,55546.10^{-9} < 1.10^{-8}`.
+- en traction : :math:`4,23809.10^{-16} < 1.10^{-6}` ;
+- en compression : :math:`1,33474.10^{-9} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -1601,10 +1660,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`5,58898.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`1,45298.10^{-9} < 1.10^{-8}`.
+- en traction : :math:`2,77131.10^{-16} < 1.10^{-6}` ;
+- en compression : :math:`2,06023.10^{-10} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -1673,10 +1732,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`4,01321.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`1,64633.10^{-15} < 1.10^{-10}`.
+- en traction : :math:`1,76859.10^{-16} < 1.10^{-6}` ;
+- en compression : :math:`5,38924.10^{-16} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -1745,10 +1804,10 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`4,35418.10^{-16} < 1.10^{-10}` ;
-- en compression : :math:`1,56858.10^{-15} < 1.10^{-10}`.
+- en traction : :math:`2,20339.10^{-16} < 1.10^{-6}` ;
+- en compression : :math:`5,43269.10^{-16} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -1783,6 +1842,29 @@ L'analyse des résultats porte sur les courbes :
 Solution de référence
 +++++++++++++++++++++
 La solution de référence est obtenue de manière analytique à partir des équations donnant la loi de l'évolution de l'endommagement en traction et en compression. Ces deux lois sont fonctions de la déformation équivalente selon la formulation de Mazars qui est dépendante du mode de chargement et du mode de représentation géométrique.
+
+Ecart entre résultat de calcul et solution de référence
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+L'écart entre la contrainte calculée et la solution de référence est évalué, pour la phase 1 de traction, pour la phase 2 de compression puis pour la phase 3 de traction, via l'aire sous la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)`, dont l'abscisse est strictement croissante et l'ordonnée est la valeur absolue de l'écart relatif en contrainte définie de la façon suivante : 
+
+- Pour les phases 1 et 3 de traction :
+
+.. math::
+   |Ec.rel.\sigma_{xx}| = \frac{\left|\sigma_{xx_{calc.}} - \sigma_{xx_{ref.}}\right|} {\sigma_{xx_{ref.}}}
+
+- Pour la phase 2 de compression :
+
+.. math::
+   |Ec.rel.\sigma_{xx}| = \left|\frac{\sigma_{xx_{calc.}} - \sigma_{xx_{ref.}}} {\sigma_{xx_{ref.}}}\right|
+
+Pour chaque configuration traîtée, on fournit trois valeurs scalaires quantitatives de l'écart (une pour la phase 1 de traction, une pour la phase 2 de compression et une pour la phase 3 de traction) qui correspondent à la moyenne intégrale dans chacune des trois phases de la courbe :math:`|Ec.rel.\sigma_{xx}|=f(temps)` définie par :
+
+.. math::
+   Moy.int. = \frac{1}{t_{2}-t_{1}}\sum_{t_{1}}^{^{t_{2}}}|Ec.rel.\sigma_{xx}|\Delta t
+   
+où, dans chacune des trois phases, :math:`[t_{1};t_{2}]` est l'intersection du domaine de définition temporel de la contrainte calculée et de la solution de référence.
+
+L'aire sous la courbe est calculée avec l'opérateur ``'INTG'`` de Cast3M.
 
 Résultats du cas 3D poutre à fibres
 +++++++++++++++++++++++++++++++++++
@@ -1843,11 +1925,11 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`5,51949.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`7,42313.10^{-9} < 1.10^{-8}` ;
-- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}`.
+- dans la phase 1 de traction : :math:`2,18349.10^{-16} < 1.10^{-6}` ;
+- dans la phase 2 de compression : :math:`1,89299.10^{-9} < 1.10^{-6}` ;
+- dans la phase 3 de traction : :math:`1,89462.10^{-15} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 3D poutre à fibres sont jugés satisfaisants.
 
@@ -1916,11 +1998,11 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte en fonction de la déformation aux points de Gauss.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`5,51949.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`7,42313.10^{-9} < 1.10^{-8}` ;
-- dans la phase 3 de traction : :math:`3,35150.10^{-15} < 1.10^{-10}`.
+- dans la phase 1 de traction : :math:`2,18349.10^{-16} < 1.10^{-6}` ;
+- dans la phase 2 de compression : :math:`1,89299.10^{-9} < 1.10^{-6}` ;
+- dans la phase 3 de traction : :math:`1,89462.10^{-15} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 2D poutre à fibres sont jugés satisfaisants.
 
@@ -1989,11 +2071,11 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`8,27923.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`1,40855.10^{-9} < 1.10^{-8}` ;
-- dans la phase 3 de traction : :math:`1,18978.10^{-14} < 1.10^{-10}`.
+- dans la phase 1 de traction : :math:`3,46471.10^{-16} < 1.10^{-6}` ;
+- dans la phase 2 de compression : :math:`3,66278.10^{-10} < 1.10^{-6}` ;
+- dans la phase 3 de traction : :math:`9,92368.10^{-15} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -2062,11 +2144,11 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`3,04041.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`1,24288.10^{-15} < 1.10^{-10}` ;
-- dans la phase 3 de traction : :math:`2,84878.10^{-15} < 1.10^{-10}`.
+- dans la phase 1 de traction : :math:`1,75501.10^{-16} < 1.10^{-6}` ;
+- dans la phase 2 de compression : :math:`4,62700.10^{-16} < 1.10^{-6}` ;
+- dans la phase 3 de traction : :math:`1,92926.10^{-15} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
@@ -2135,11 +2217,11 @@ Courbe d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-L'écart relatif maximum en contrainte entre la solution calculée et la solution de référence est :
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`1,52021.10^{-16} < 1.10^{-10}` ;
-- dans la phase 2 de compression : :math:`8,04868.10^{-16} < 1.10^{-10}` ;
-- dans la phase 3 de traction : :math:`1,41478.10^{-14} < 1.10^{-10}`.
+- dans la phase 1 de traction : :math:`5,96558.10^{-17} < 1.10^{-6}` ;
+- dans la phase 2 de compression : :math:`4,04229.10^{-16} < 1.10^{-6}` ;
+- dans la phase 3 de traction : :math:`8,41499.10^{-15} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
@@ -2403,14 +2485,15 @@ avec :
    
 - Pour le mode de calcul 3D volumique : :math:`\sigma_{0}=50~MPa`
 - Pour le mode de calcul 2D contraintes planes : :math:`\sigma_{0}=5~MPa`
+- Pour les deux modes de calcul, on définit 72 points de chargement en faisant varier :math:`\theta` dans le domaine :math:`[45°;225°]` avec un pas :math:`\Delta\theta=2,5°`. Les résultats de calcul sur la deuxième moitié du domaine angulaire sont obtenus par symétrie par rapport à la bissectrice.
 
-.. figure:: figures/fig_char_biax.PNG
+.. figure:: figures/Figure_char_biaxial_180.png
    :width: 10cm
    :align: center
    
-   Chargement biaxial du mode 3D volumique pour toutes les valeurs de :math:`\theta \in [0°;360°]` (:math:`\sigma_{0}` en bleu, :math:`\sigma_{max}` en vert)
+   Chargement biaxial du mode 3D volumique pour :math:`\theta \in [45°;225°]` (:math:`\sigma_{0}` en bleu, :math:`\sigma_{max}` en vert). Les résultats de la deuxième moitié du domaine angulaire sont obtenus par symétrie par rapport à la bissectrice.
 
-Le calcul est interrompu avant d'atteindre le chargement maximal, lors de la détection de la ruine qui résulte de la combinaison de deux critères : l'un sur le nombre maximum de sous pas de convergence et l'autre sur l'incrément maximum de déformation entre deux pas de calcul. C'est au pas de calcul qui précéde cette détection que sont relevées les valeurs des contraintes maximales atteintes :math:`\sigma_{xx}` et :math:`\sigma_{yy}`.
+Pour chaque valeur de :math:`\theta`, le calcul est interrompu avant d'atteindre le chargement maximal, lors de la détection de la ruine qui résulte de la combinaison de deux critères : l'un sur le nombre maximum de sous pas de convergence et l'autre sur l'incrément maximum de déformation entre deux pas de calcul. C'est au pas de calcul qui précéde cette détection que sont relevées les valeurs des contraintes maximales atteintes :math:`\sigma_{xx}` et :math:`\sigma_{yy}`.
 
 L’objectif est de caractériser la courbe de biaxialité qui représente la surface de charge du modèle dans le plan :math:`(\sigma_{xx};\sigma_{yy})`.
 
@@ -2429,20 +2512,43 @@ Dans la courbe de biaxialité normalisée, :math:`f_{c}=-25,64~MPa` est la contr
 Solution de référence
 +++++++++++++++++++++
 
-Contrairement aux cas de chargements en déplacement imposé traîtés précédemment, dans les cas de chargement en contrainte imposée comme ici l'évolution temporelle de l'endommagement n'est pas prévisible et celle du déplacement qui en dépend ne l'est pas non plus. Or, du fait des dimensions géométriques unitaires du cas-test, la déformation est équivalente au déplacement et donc l'évolution temporelle de la déformation n'est pas définie *a priori*. En conséquence, les évolutions temporelles de l'endommagement qui dépend de celle de la déformation ainsi que l'évolution temporelle de la contrainte qui dépend de celle de l'endommagement ne sont pas définies *a priori*, ce qui ne permet pas de donner une solution analytique au problème.
+Contrairement aux cas de chargements en déplacement imposé traîtés précédemment, dans les cas de chargement en contrainte imposée comme celui-ci, l'évolution temporelle de l'endommagement n'est pas prévisible et celle du déplacement qui en dépend ne l'est pas non plus. Or, du fait des dimensions géométriques unitaires du cas-test, la déformation est équivalente au déplacement et donc l'évolution temporelle de la déformation n'est pas définie *a priori*. En conséquence, les évolutions temporelles de l'endommagement qui dépend de celle de la déformation ainsi que l'évolution temporelle de la contrainte qui dépend de celle de l'endommagement ne sont pas définies *a priori*, ce qui ne permet pas de donner une solution analytique au problème.
 
 Néanmoins, il est possible de donner une solution numérique de référence issue de résultats de calculs dans lesquels on a confiance.
 Cette solution de référence est obtenue dans les conditions de calcul suivantes qui sont comparées à celle du cas-test ``mazars_biaxial.dgibi`` dénommé "calcul standard" :
 
 - Un pas de calcul deux fois plus fin que le calcul standard (:math:`1.10^{-3}` au lieu de :math:`2.10^{-3}`) ;
-- La réalisation de 360 calculs sur le domaine :math:`\theta \in [0°;360°]`, avec un incrément d'angle :math:`\delta\theta=1°` au lieu de 144 calculs avec :math:`\delta\theta=2,5°` pour le calcul standard.
+- La réalisation de 180 calculs sur le domaine :math:`\theta \in [45°;225°]`, avec un incrément d'angle :math:`\Delta\theta=1°` au lieu de 72 calculs avec :math:`\Delta\theta=2,5°` pour le calcul standard.
 
-L'écart entre la solution calculée et la solution de référence est évalué via la surface de la courbe fermée :math:`(\sigma_{xx} ; \sigma_{yy})` :
+Ecart entre résultat de calcul et solution de référence
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+L'écart entre la contrainte calculée et la solution de référence est évalué indépendamment pour chacune des deux composantes de contrainte, via l'aire sous les courbes :math:`|Ec.rel.\sigma_{xx}|=f(\theta)` et :math:`|Ec.rel.\sigma_{yy}|=f(\theta)`. L'abscisse des courbes est strictement croissante et leur ordonnée est la valeur absolue de l'écart relatif en contrainte définie de la façon suivante :
+
+- Pour la composante :math:`\sigma_{xx}` :
 
 .. math::
-   Ecart_{relatif} = \frac{Surface_{calc.} - Surface_{ref.}} {Surface_{ref.}}
+   |Ec.rel.\sigma_{xx}| = \left|\frac{\sigma_{xx_{calc.}} - \sigma_{xx_{ref.}}} {\sigma_{xx_{ref.}}}\right|
 
-La surface de la courbe est calculée avec l'opérateur ``'INTG'``, option ``'ABS'`` de Cast3M. Cette commande permet de calculer séparément les surfaces des parties de la courbe d'abscisse négative et celles d'abscisse positive et de les additionner.
+- Pour la composante :math:`\sigma_{yy}` :
+
+.. math::
+   |Ec.rel.\sigma_{yy}| = \left|\frac{\sigma_{yy_{calc.}} - \sigma_{yy_{ref.}}} {\sigma_{yy_{ref.}}}\right|
+
+Pour chacune des composantes, dans chaque configuration géométrique traîtée, on fournit une valeur scalaire quantitative de l'écart qui correspond à la moyenne intégrale de la courbe :math:`|Ec.rel.\sigma_{xx/yy}|=f(\theta)` définie par :
+
+- Pour la composante :math:`\sigma_{xx}` :
+ 
+.. math::
+   Moy.int. = \frac{1}{\theta_{2}-\theta_{1}}\sum_{\theta_{1}}^{^{\theta_{2}}}|Ec.rel.\sigma_{xx}|\Delta\theta
+
+- Pour la composante :math:`\sigma_{yy}` :
+
+ .. math::
+   Moy.int. = \frac{1}{\theta_{2}-\theta_{1}}\sum_{\theta_{1}}^{^{\theta_{2}}}|Ec.rel.\sigma_{yy}|\Delta\theta
+   
+où :math:`[\theta_{1};\theta_{2}]` est l'intersection du domaine de définition angulaire de la contrainte calculée et de la solution de référence.
+
+L'aire sous les courbes est calculée avec l'opérateur ``'INTG'`` de Cast3M.
 
 Par ailleurs, la qualité de la solution calculée est jugée sur la capacité de la courbe de biaxialité normalisée à couper les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
 
@@ -2458,7 +2564,10 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    
    Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 
-L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.70981.10^{-3} < 3.10^{-3}`.
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
+
+- Pour la composante :math:`\sigma_{xx}` : :math:`1,10829.10^{-2} < 2.10^{-2}` ;
+- Pour la composante :math:`\sigma_{yy}` : :math:`1,10758.10^{-2} < 2.10^{-2}`.
 
 Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2485,7 +2594,10 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    
    Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
 
-L'écart relatif sur la surface de la courbe entre la solution calculée et la solution de référence est : :math:`2.44110.10^{-3} < 3.10^{-3}`.
+La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
+
+- Pour la composante :math:`\sigma_{xx}` : :math:`1,09173.10^{-2} < 2.10^{-2}` ;
+- Pour la composante :math:`\sigma_{yy}` : :math:`1,10653.10^{-2} < 2.10^{-2}`.
 
 Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2523,10 +2635,22 @@ Solution de référence
 
 On dispose, pour les quatre valeurs de pression hydrostatique, de résultats expérimentaux en termes de contrainte moyenne et déformation moyenne auxquels les courbes calculées d'évolution de la contrainte en fonction de la déformation peuvent être comparées. 
 
-L'écart entre la courbe calculée et la courbe expérimentale de référence est évalué via l'aire sous les courbes, jusqu'à l'abscisse maximale de l'une ou l'autre des courbes :
+Ecart entre résultat de calcul et solution de référence
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+L'écart entre la contrainte calculée et la solution de référence est évalué via l'aire sous la courbe :math:`|Ec.rel.\sigma_{zz}|=f(|\epsilon_{zz}|)`.
+L'abscisse :math:`|\epsilon_{zz}|` est stictement croissante et l'ordonnée est la valeur absolue de l'écart relatif en contrainte définie de la façon suivante : 
 
 .. math::
-   Ecart_{relatif} = \frac{Surface_{calc.} - Surface_{ref.}} {Surface_{ref.}}
+   |Ec.rel.\sigma_{zz}| = \left|\frac{\sigma_{zz_{calc.}} - \sigma_{zz_{ref.}}} {\sigma_{zz_{ref.}}}\right|
+
+Pour chaque configuration traîtée, on fournit une valeur scalaire quantitative de l'écart qui correspond à la moyenne intégrale de la courbe :math:`|Ec.rel.\sigma_{zz}|=f(|\epsilon_{zz}|)` définie par :
+ 
+.. math::
+   Moy.int. = \frac{1}{|\epsilon_{zz_{2}}-\epsilon_{zz_{1}}|}\sum_{|\epsilon_{zz_{1}}|}^{^{|\epsilon_{zz_{2}}|}}|Ec.rel.\sigma_{zz}||\Delta\epsilon_{zz}|
+   
+où :math:`[\epsilon_{zz_{1}};\epsilon_{zz_{2}}]` est l'intersection du domaine de définition en déformation de la contrainte calculée et de la solution de référence.
+
+L'aire sous la courbe est calculée avec l'opérateur ``'INTG'`` de Cast3M.
 
 Résultats du cas 3D volumique
 +++++++++++++++++++++++++++++
@@ -2549,12 +2673,12 @@ Courbes d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-Pour les quatre valeurs de pression hydrostatique, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe expérimentale de référence est :
+Pour les quatre valeurs de pression hydrostatique, la moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la courbe calculée et la courbe expérimentale de référence est :
 
-- Pour P = 0 MPa   : :math:`Ecart_{relatif} = -1.08171.10^{-1}` ;
-- Pour P = 1,5 MPa : :math:`Ecart_{relatif} = -7.35369.10^{-3}` ;
-- Pour P = 4,5 MPa : :math:`Ecart_{relatif} = 8.54961.10^{-2}` ;
-- Pour P = 9 MPa   : :math:`Ecart_{relatif} = 1.68086.10^{-1}`.
+- Pour P = 0,0 MPa : :math:`1,08653.10^{-1}` ;
+- Pour P = 1,5 MPa : :math:`8,44621.10^{-2}` ;
+- Pour P = 4,5 MPa : :math:`9,07996.10^{-2}` ;
+- Pour P = 9,0 MPa : :math:`1,78290.10^{-1}`.
 
 Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul.
 En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.
@@ -2589,12 +2713,12 @@ Courbes d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-Pour les quatre valeurs de pression hydrostatique, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe expérimentale de référence est :
+Pour les quatre valeurs de pression hydrostatique, la moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la courbe calculée et la courbe expérimentale de référence est :
 
-- Pour P = 0 MPa   : :math:`Ecart_{relatif} = -1.08171.10^{-1}` ;
-- Pour P = 1,5 MPa : :math:`Ecart_{relatif} = -7.37534.10^{-3}` ;
-- Pour P = 4,5 MPa : :math:`Ecart_{relatif} = 8.55150.10^{-2}` ;
-- Pour P = 9 MPa   : :math:`Ecart_{relatif} = 1.68078.10^{-1}`.
+- Pour P = 0,0 MPa : :math:`1,08653.10^{-1}` ;
+- Pour P = 1,5 MPa : :math:`8,44693.10^{-2}` ;
+- Pour P = 4,5 MPa : :math:`9,08254.10^{-2}` ;
+- Pour P = 9,0 MPa : :math:`1,78272.10^{-1}`.
 
 Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul.
 En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
@@ -2623,17 +2747,29 @@ L'objectif est d'évaluer l'influence de la rotation du repère de chargement (r
 L'analyse des résultats porte sur les courbes :
 
 - d'endomagemment en chaque point de Gauss des modèles massifs en fonction du temps ;
-- de la contrainte moyenne en fonction de la déformation moyenne.
+- des différentes composantes de contrainte moyenne en fonction de la déformation moyenne.
 
 Solution de référence
 +++++++++++++++++++++
 
-On dispose de résultats numériques de référence obtenus par une équipe participant au benchmark du projet MECA [2] avec un modèle d'endommagement isotrope du même type que le modèle Mazars de Cast3M. Il s'agit de courbes contraintes-déformation, nommées **4a. LGCNSN Iso** dans [2] et notées **Ref_xxxx** dans les figures suivantes, auxquelles les courbes calculées d'évolution de la contrainte en fonction de la déformation peuvent être comparées. 
+On a choisi des résultats numériques de référence : ceux obtenus par l'équipe LGCNSN (R&DO - Ecole Centrale de Nantes) participant au benchmark du projet MECA [2] avec un modèle d'endommagement isotrope du même type que le modèle Mazars de Cast3M. Il s'agit de courbes contrainte-déformation pour les trois composantes de contrainte activées, nommées **4a. LGCNSN Iso** dans [2] et notées **Ref_SMXX**, **Ref_SMYY** et **Ref_SMXY** dans les figures suivantes, auxquelles les courbes calculées d'évolution de ces trois composantes de contrainte en fonction de la déformation peuvent être comparées. 
 
-L'écart entre la courbe calculée et la courbe de référence est évalué via l'aire sous les courbes, jusqu'à l'abscisse maximale de l'une ou l'autre des courbes :
+Ecart entre résultat de calcul et solution de référence
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Pour chacune des trois composantes de contrainte :math:`\sigma_{ij}=\sigma_{xx},\sigma_{yy},\sigma_{xy}`, l'écart entre la contrainte calculée et la solution de référence est évalué via l'aire sous la courbe :math:`|Ec.rel.\sigma_{ij}|=f(\epsilon_{xx})`.
+L'abscisse :math:`\epsilon_{xx}` est strictement croissante et l'ordonnée est la valeur absolue de l'écart relatif en contrainte définie de la façon suivante : 
 
 .. math::
-   Ecart_{relatif} = \frac{Surface_{calc.} - Surface_{ref.}} {Surface_{ref.}}
+   |Ec.rel.\sigma_{ij}| = \left|\frac{\sigma_{ij_{calc.}} - \sigma_{ij_{ref.}}} {\sigma_{ij_{ref.}}}\right|
+
+Pour chaque configuration traîtée, on fournit une valeur scalaire quantitative de l'écart qui correspond à la moyenne intégrale de la courbe :math:`|Ec.rel.\sigma_{ij}|=f(\epsilon_{xx})` définie par :
+ 
+.. math::
+   Moy.int. = \frac{1}{\epsilon_{xx_{2}}-\epsilon_{xx_{1}}}\sum_{\epsilon_{xx_{1}}}^{^{\epsilon_{xx_{2}}}}|Ec.rel.\sigma_{ij}|\Delta\epsilon_{xx}
+   
+où :math:`[\epsilon_{xx_{1}};\epsilon_{xx_{2}}]` est l'intersection du domaine de définition en déformation de la contrainte calculée et de la solution de référence.
+
+L'aire sous la courbe est calculée avec l'opérateur ``'INTG'`` de Cast3M.
 
 Résultats du cas 3D volumique
 +++++++++++++++++++++++++++++
@@ -2656,12 +2792,13 @@ Courbes d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-Pour les trois composantes de contrainte, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe de référence est :
+Pour les trois composantes de contrainte, la moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la courbe calculée et la courbe numérique de référence est :
 
-- Pour ``SMXX`` : :math:`Ecart_{relatif} = -1.74385.10^{-2}` ;
-- Pour ``SMYY`` : :math:`Ecart_{relatif} = -5.88999.10^{-2}` ;
-- Pour ``SMXY`` : :math:`Ecart_{relatif} = -8.87497.10^{-2}` ;
+- Pour :math:`\sigma_{xx}` : :math:`2,57516.10^{-1}` ;
+- Pour :math:`\sigma_{yy}` : :math:`3,95094.10^{-1}` ;
+- Pour :math:`\sigma_{xy}` : :math:`1,47488` ;
 
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes numériques de référence est qualitativement reproduite par le calcul.
 En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Résultats du cas 2D contraintes planes
@@ -2685,11 +2822,12 @@ Courbes d'évolution de la contrainte en fonction de la déformation
    
    Contrainte moyenne en fonction de la déformation moyenne.
 
-Pour les trois composantes de contrainte, l'écart relatif sur l'aire sous la courbe entre la courbe calculée et la courbe de référence est :
+Pour les trois composantes de contrainte, la moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la courbe calculée et la courbe numérique de référence est :
 
-- Pour ``SMXX`` : :math:`Ecart_{relatif} = -3.84282.10^{-2}` ;
-- Pour ``SMYY`` : :math:`Ecart_{relatif} = -1.42927.10^{-1}` ;
-- Pour ``SMXY`` : :math:`Ecart_{relatif} = -8.87497.10^{-2}` ;
+- Pour :math:`\sigma_{xx}` : :math:`2,76686.10^{-1}` ;
+- Pour :math:`\sigma_{yy}` : :math:`3,94409.10^{-1}` ;
+- Pour :math:`\sigma_{xy}` : :math:`1,47488` ;
 
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes numériques de référence est qualitativement reproduite par le calcul.
 En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 
