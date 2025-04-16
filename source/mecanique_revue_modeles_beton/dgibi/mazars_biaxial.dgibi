@@ -17,7 +17,7 @@ SI IPSC1 ;
   OPTI 'TRAC' 'PSC' ;
 FINSI ;
 
-** Sortie sur Erreur 1152 "Solution calculee non conforme par rapport a la solution de reference"
+** Initialisation sortie sur Erreur 1152 "Solution calculee non conforme par rapport a la solution de reference"
 IERR = FAUX ;
 
 ** Liste des modes de calcul a traiter
