@@ -1000,43 +1000,37 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 161
+      :lines: 151
       :linenos:
-      :lineno-start: 161
+      :lineno-start: 151
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 166
+      :lines: 156-158
       :linenos:
-      :lineno-start: 166
+      :lineno-start: 156
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 168
+      :lines: 164-169
       :linenos:
-      :lineno-start: 168
-
-   .. literalinclude:: dgibi/mazars_biaxial.dgibi
-      :language: gibiane
-      :lines: 174-179
-      :linenos:
-      :lineno-start: 174
+      :lineno-start: 164
 
 .. admonition:: Biaxial : blocages pour le cas 3D
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 157-158
+      :lines: 147-148
       :linenos:
-      :lineno-start: 157
+      :lineno-start: 147
 
 .. admonition:: Biaxial : blocages pour le cas 2D plan
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 481-482
+      :lines: 478-479
       :linenos:
-      :lineno-start: 481
+      :lineno-start: 478
 
 Les blocages et le chargement dans la situation de biaxialité :math:`\theta=120°` (:math:`\sigma_{xx}` : traction ; :math:`\sigma_{yy}` : compression) sont représentés sur la figure suivante.
 
@@ -1162,39 +1156,39 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 326-332
+      :lines: 324-330
       :linenos:
       :lineno-start: 324
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 337-340
+      :lines: 335-338
       :linenos:
-      :lineno-start: 337
+      :lineno-start: 335
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 343-346
+      :lines: 341-344
       :linenos:
-      :lineno-start: 343
+      :lineno-start: 341
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 347
+      :lines: 345
       :linenos:
-      :lineno-start: 347
+      :lineno-start: 345
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 351-352
+      :lines: 349-350
       :linenos:
-      :lineno-start: 351
+      :lineno-start: 349
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 358-362
+      :lines: 356-360
       :linenos:
-      :lineno-start: 358
+      :lineno-start: 356
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 377-378
+      :lines: 375-376
       :linenos:
-      :lineno-start: 377
+      :lineno-start: 375
 
 Les blocages et les chargements, pour la pression hydrostatique nulle (0 MPa) et maximale (9 MPa), sont représentés sur les figures suivantes.
 
