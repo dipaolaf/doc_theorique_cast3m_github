@@ -10,6 +10,11 @@
 * IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
 ************************************************************************
 
+DIVERS = 'VENV' 'CASTEM_DIVERS' ;
+FIC1   = 'CHAI' DIVERS '/mazars_biaxial_Ref_1342.out';
+FIC2   = 'CHAI' DIVERS '/mazars_biaxial_Ref_1242c.out';
+
+
 ** Options pour les traces
 ITRAC1 = VRAI ;
 IPSC1  = VRAI ;
@@ -383,11 +388,10 @@ FINSI ;
   FINSI ;
 
 * Solution de Reference : 
-* mazars_biaxial_Ref_1342.out issu de 08_biaxial_non_suivi/08_biaxial_Ref_1342.dgibi
+* FIC1 : mazars_biaxial_Ref_1342.out issu de 08_biaxial_non_suivi/08_biaxial_Ref_1342.dgibi
 * - pas de temps = 1.E-3 s
 * - increm. angle = 1 deg.
-  fich2 = MOT 'mazars_biaxial_Ref_1342.out' ;
-  ev2 evsmxx2 evsmyy2 = SOL_REF fich2 ;
+  ev2 evsmxx2 evsmyy2 = SOL_REF FIC1 ;
 
 * Courbes SMXX vs SMYY
 * on complete la courbe calculée sur [45 deg. ; 125deg] par sa symetrie par rapport à la bissectrice
@@ -714,11 +718,10 @@ FINSI ;
   FINSI ;
   
 * Solution de Reference : 
-* mazars_biaxial_Ref_1242c.out issu de 08_biaxial_non_suivi/08_biaxial_Ref_1242c.dgibi
+* FIC2 : mazars_biaxial_Ref_1242c.out issu de 08_biaxial_non_suivi/08_biaxial_Ref_1242c.dgibi
 * - pas de temps = 1.E-3 s
 * - increm. angle = 1 deg.
-  fich2 = MOT 'mazars_biaxial_Ref_1242c.out' ;
-  ev2 evsmxx2 evsmyy2 = SOL_REF fich2 ;
+  ev2 evsmxx2 evsmyy2 = SOL_REF FIC2 ;
 
 * Courbes SMXX vs SMYY
 * on complete la courbe calculée sur [45 deg. ; 125deg] par sa symetrie par rapport à la bissectrice
@@ -778,6 +781,7 @@ FINSI ;
 ** Sortie sur Erreur 1152 en cas de non conformite
 SI IERR ;
   ERRE 1152 ;
+  ERRE 5 ;
 FINSI ;
 
 
@@ -785,3 +789,5 @@ FINSI ;
 
 
 FIN ;
+ 
+

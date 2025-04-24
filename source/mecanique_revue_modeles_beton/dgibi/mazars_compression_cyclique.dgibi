@@ -1320,6 +1320,7 @@ FINSI ;
 ** Sortie sur Erreur 1152 en cas de non conformite
 SI IERR ;
   ERRE 1152 ;
+  ERRE 5 ;
 FINSI ;
 
 
@@ -1327,5 +1328,7 @@ FINSI ;
 
 
 FIN ;
+ 
+
  
 

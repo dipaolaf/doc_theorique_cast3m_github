@@ -3,7 +3,7 @@
 Spécification des cas tests
 ===========================
 
-Ce chapitre présente l'ensembe des cas de chargement appliqués pour effectuer les tests des lois de comportement pour
+Ce chapitre présente l'ensemble des cas de chargement appliqués pour effectuer les tests des lois de comportement pour
 le béton disponibles dans Cast3M. Il se limite à la seule description des chargements et des phénomènes étudiés.
 
 D'autres chapitres sont dédiés à la :ref:`vérification <sec:modeles_beton_verif>` et à la :ref:`validation <sec:modeles_beton_valid>`.
