@@ -1000,37 +1000,37 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 151
-      :linenos:
-      :lineno-start: 151
-
-   .. literalinclude:: dgibi/mazars_biaxial.dgibi
-      :language: gibiane
-      :lines: 156-158
+      :lines: 156
       :linenos:
       :lineno-start: 156
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 164-169
+      :lines: 161-163
       :linenos:
-      :lineno-start: 164
+      :lineno-start: 161
+
+   .. literalinclude:: dgibi/mazars_biaxial.dgibi
+      :language: gibiane
+      :lines: 169-174
+      :linenos:
+      :lineno-start: 169
 
 .. admonition:: Biaxial : blocages pour le cas 3D
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 147-148
+      :lines: 152-153
       :linenos:
-      :lineno-start: 147
+      :lineno-start: 152
 
 .. admonition:: Biaxial : blocages pour le cas 2D plan
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 478-479
+      :lines: 482-483
       :linenos:
-      :lineno-start: 478
+      :lineno-start: 482
 
 Les blocages et le chargement dans la situation de biaxialité :math:`\theta=120°` (:math:`\sigma_{xx}` : traction ; :math:`\sigma_{yy}` : compression) sont représentés sur la figure suivante.
 
