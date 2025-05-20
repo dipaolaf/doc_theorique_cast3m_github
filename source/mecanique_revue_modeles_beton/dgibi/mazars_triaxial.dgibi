@@ -13,6 +13,11 @@
 *   1) 3D volumique                                                    *
 *   2) 2D axisymetrique                                                *
 *                                                                      *
+* Selon deux modes d'integration du comportement                       *
+* realises successivement dans la boucle BCALC :                       *
+*   passage 1 : Cast3M                                                 *
+*   passage 2 : MFront                                                 *
+*                                                                      *
 * ITRAC1 : VRAI => affichage resultats                                 *
 * IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
 ************************************************************************
@@ -23,11 +28,17 @@ FIC2   = 'CHAI' DIVERS '/mazars_triaxial_1.5MPa_courbe0.csv';
 FIC3   = 'CHAI' DIVERS '/mazars_triaxial_4.5MPa_courbe0.csv';
 FIC4   = 'CHAI' DIVERS '/mazars_triaxial_9MPa_courbe0.csv';
 
-** Options pour les traces
+** Options
+** - pour les traces
 ITRAC1 = VRAI ;
 IPSC1  = VRAI ;
 SI IPSC1 ;
   OPTI 'TRAC' 'PSC' ;
+FINSI ;
+** - pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
+ISAUV = VRAI ;
+SI ISAUV ;
+  str1 = 'mazars_triaxial_' ;
 FINSI ;
 
 ** Liste des modes de calcul a traiter
@@ -64,6 +75,20 @@ tleg . 'TITRE' = TABL ;
 resexp = vrai ;
 
 
+REPE BCALC 2 ;
+*======= A ENLEVER lorsque l'implémentation MFront sera faite =======
+SI (NEG &BCALC 1) ;
+  QUIT BCALC;
+FINSI ;
+*========================== fin A ENLEVER ===========================
+** Pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
+SI ISAUV ;
+  SI (EGA &BCALC 1) ;
+    str3 = '_Cast3M' ;
+  SINO ;
+    str3 = '_MFront' ;
+  FINSI ;
+FINSI ;
 
 
 **************** C A S  #1  :  3 D   V O L U M I Q U E ****************
@@ -96,9 +121,14 @@ SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+SINO ;
+* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
 
 ** Blocages
   blhaut = BLOQ 'UZ' shaut ;
@@ -248,6 +278,15 @@ fins;
     FINSI ;
     DESS evtot2 'TITR' '[3D V] Reaction vs Deplacement'   'LEGE' tleg ;
   FINSI ;
+
+** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
+  SI ISAUV ;
+    str2 = '3D_V' ;
+    fic5 = CHAI str1 str2 str3 '.csv' ;
+    OPTI SORT fic5 ;
+    SORT 'EXCE' evtot1 ;
+  FINSI ;
+  
 *nh145313
 ** Comparaison Calcul / Reference sur l'aire sous la courbe Valeur absolue de l'Ecart relatif en Contrainte vs Deformation
 si (resexp);
@@ -314,9 +353,14 @@ SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+SINO ;
+* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
   zer = ZERO mo 'NOEUD' ;
   un  = zer + 1. ;
   mes1 = INTG mo un 'SCAL' ;
@@ -468,6 +512,15 @@ fins;
     FINSI ;
     DESS evtot2 'TITR' '[2D Axi.] Reaction vs Deplacement'   'LEGE' tleg ;
   FINSI ;
+
+** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
+  SI ISAUV ;
+    str2 = '2D_axi' ;
+    fic5 = CHAI str1 str2 str3 '.csv' ;
+    OPTI SORT fic5 ;
+    SORT 'EXCE' evtot1 ;
+  FINSI ;
+  
 *nh145313
 ** Comparaison Calcul / Reference sur l'aire sous la courbe Valeur absolue de l'Ecart relatif en Contrainte vs Deformation
 si (resexp);
@@ -512,6 +565,7 @@ fins;
 FINSI ;
 
 
+FIN BCALC ;
 
 
 FIN ;

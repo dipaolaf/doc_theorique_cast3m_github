@@ -1,5 +1,5 @@
 
- *** PPP CAST3M *** 31 CPU *** VERSION COURANTE DU sam.  12  avril  2025                            
+ *** PPP CAST3M *** 31 CPU *** VERSION COURANTE DU jeu.  15  mai  2025                              
 
  *** GEMAT MT  2.0  MAI 23 ***  ESOPE=121436 (Mo)  LIBRE=  6549 (Mo)
                                 NTRK =300000       LTRK =  4096 (Ko)
@@ -52,6 +52,11 @@
  $  * *   1) 3D volumique                                                    * 
  $  * *   2) 2D contraintes planes                                           * 
  $  * *                                                                      * 
+ $  * * Selon deux modes d'integration du comportement                       * 
+ $  * * realises successivement dans la boucle BCALC :                       * 
+ $  * *   passage 1 : Cast3M                                                 * 
+ $  * *   passage 2 : MFront                                                 * 
+ $  * *                                                                      * 
  $  * * ITRAC1 : VRAI => affichage resultats                                 * 
  $  * * IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      * 
  $  * ************************************************************************ 
@@ -61,11 +66,17 @@
  $  * FIC2   = 'CHAI' DIVERS '/mazars_willam_LGCNSNiso_smyy.csv' ; 
  $  * FIC3   = 'CHAI' DIVERS '/mazars_willam_LGCNSNiso_smxy.csv' ; 
  $  *   
- $  * ** Options pour les traces 
+ $  * ** Options 
+ $  * ** - pour les traces 
  $  * ITRAC1 = VRAI ; 
  $  * IPSC1  = VRAI ; 
  $  * SI IPSC1 ; 
  $  *   OPTI 'TRAC' 'PSC' ; 
+ $  * FINSI ; 
+ $  * ** - pour la sauvegarde des résultats de calcul Cast3M et/ou MFront 
+ $  * ISAUV = VRAI ; 
+ $  * SI ISAUV ; 
+ $  *   str1 = 'mazars_willam_' ; 
  $  * FINSI ; 
  $  *   
  $  * ** Liste des modes de calcul a traiter 
@@ -130,6 +141,22 @@ Coef. chargement Phase 2
 
 
  $  * *opti donn 5; 
+ $  *   
+ $  *   
+ $  * REPE BCALC 2 ; 
+ $  * *======= A ENLEVER lorsque l'implémentation MFront sera faite ======= 
+ $  * SI (NEG &BCALC 1) ; 
+ $  *   QUIT BCALC; 
+ $  * FINSI ; 
+ $  * *========================== fin A ENLEVER =========================== 
+ $  * ** Pour la sauvegarde des résultats de calcul Cast3M et/ou MFront 
+ $  * SI ISAUV ; 
+ $  *   SI (EGA &BCALC 1) ; 
+ $  *     str3 = '_Cast3M' ; 
+ $  *   SINO ; 
+ $  *     str3 = '_MFront' ; 
+ $  *   FINSI ; 
+ $  * FINSI ; 
  $  *   
  $  *   
  $  * **************** C A S  #1  :  3 D   V O L U M I Q U E **************** 
@@ -216,17 +243,17 @@ Calcul MECANIQUE
 
 
  Numero du pas :1  Indice d evolution :2 -> temps : 5.00000E-01
- Taille de la matrice: 153 Facteur: 3.5002     Conditionnement: 2.5714     Performance (Gflop/s): 1.63200E-03
+ Taille de la matrice: 153 Facteur: 3.5002     Conditionnement: 3.6836     Performance (Gflop/s): 1.63200E-03
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
-            1            0  6.89214E-17  9.37500E-05  9.37500E-05  6.89214E-17
+            1            0  1.21942E-16  9.37500E-05  9.37500E-05  1.21942E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
 
  Numero du pas :2  Indice d evolution :3 -> temps : 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
-            1            0  7.62414E-17  9.37500E-04  9.37500E-04  7.62414E-17
-            2            0  1.02860E-16  9.37500E-04  9.37500E-04  1.02860E-16
+            1            0  9.11597E-17  9.37500E-04  9.37500E-04  9.11597E-17
+            2            0  1.06912E-16  9.37500E-04  9.37500E-04  1.06912E-16
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
  
@@ -237,9 +264,14 @@ Calcul MECANIQUE
  $  * ** Calcul 2 
  $  * *  la cinematique issue du résultat du calcul 1 est imposee au modele non lineaire 
  $  *   
- $  * ** Modele et caracteristiques materiau non lineaire 
+ $  * ** Modele et caracteristiques materiau non lineaire (&BCALC : 1->Cast3M, 2->MFront) 
+ $  * SI (EGA &BCALC 1) ; 
  $  *   mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ; 
  $  *   ma2 = MATE mo2 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ; 
+ $  * SINO ; 
+ $  * * Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle... 
+ $  *   QUIT BCALC; 
+ $  * FINSI ; 
  $  *   
  $  * ** Blocages 2 
  $  *   bl2 = BLOQ 'DEPL' mail ; 
@@ -302,7 +334,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  4.83362E-17  1.87500E-06  5.62500E-06  4.83362E-17
+            1            0  7.25044E-17  1.87500E-06  5.62500E-06  7.25044E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -311,7 +343,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  3.51536E-17  1.87500E-06  7.50000E-06  3.51536E-17
+            1            0  1.40615E-16  1.87500E-06  7.50000E-06  1.40615E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -320,7 +352,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  5.52414E-17  1.87500E-06  9.37500E-06  5.52414E-17
+            1            0  2.76207E-17  1.87500E-06  9.37500E-06  2.76207E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -329,7 +361,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  1.13732E-16  1.87500E-06  1.12500E-05  1.13732E-16
+            1            0  6.82394E-17  1.87500E-06  1.12500E-05  6.82394E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -338,7 +370,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  3.86690E-17  1.87500E-06  1.31250E-05  3.86690E-17
+            1            0  7.73380E-17  1.87500E-06  1.31250E-05  7.73380E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -347,7 +379,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  6.72504E-17  1.87500E-06  1.50000E-05  6.72504E-17
+            1            0  1.00876E-16  1.87500E-06  1.50000E-05  1.00876E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -356,7 +388,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  2.97454E-17  1.87500E-06  1.68750E-05  2.97454E-17
+            1            0  5.94908E-17  1.87500E-06  1.68750E-05  5.94908E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -365,7 +397,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  5.33365E-17  1.87500E-06  1.87500E-05  5.33365E-17
+            1            0  8.00048E-17  1.87500E-06  1.87500E-05  8.00048E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -374,7 +406,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  7.25044E-17  1.87500E-06  2.06250E-05  7.25044E-17
+            1            0  2.41681E-17  1.87500E-06  2.06250E-05  2.41681E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -383,7 +415,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  1.10483E-16  1.87500E-06  2.25000E-05  1.10483E-16
+            1            0  6.62897E-17  1.87500E-06  2.25000E-05  6.62897E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -392,7 +424,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  4.07042E-17  1.87500E-06  2.43750E-05  4.07042E-17
+            1            0  1.22113E-16  1.87500E-06  2.43750E-05  1.22113E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -401,7 +433,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  3.77258E-17  1.87500E-06  2.62500E-05  3.77258E-17
+            1            0  7.54517E-17  1.87500E-06  2.62500E-05  7.54517E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -410,7 +442,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  7.03073E-17  1.87500E-06  2.81250E-05  7.03073E-17
+            1            0  3.51536E-17  1.87500E-06  2.81250E-05  3.51536E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -419,7 +451,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  9.87293E-17  1.87500E-06  3.00000E-05  9.87293E-17
+            1            0  3.29098E-17  1.87500E-06  3.00000E-05  3.29098E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -428,7 +460,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  9.28056E-17  1.87500E-06  3.18750E-05  9.28056E-17
+            1            0  6.18704E-17  1.87500E-06  3.18750E-05  6.18704E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -437,17 +469,17 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  5.83683E-17  1.87500E-06  3.37500E-05  5.83683E-17
+            1            0  8.75524E-17  1.87500E-06  3.37500E-05  8.75524E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
 
  Numero du pas :19  Indice d evolution :20 -> temps : 1.90000E-01
- menage automatique 4 apres *    gain: 487152 actifs 537606 mots 18731 segments
+ menage automatique 4 apres ADET gain: 484956 actifs 535728 mots 18776 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  8.28621E-17  1.87500E-06  3.56250E-05  8.28621E-17
+            1            0  1.10483E-16  1.87500E-06  3.56250E-05  1.10483E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -456,7 +488,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  2.62163E-17  1.87500E-06  3.75000E-05  2.62163E-17
+            1            0  5.24325E-17  1.87500E-06  3.75000E-05  5.24325E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -483,7 +515,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  6.82394E-17  1.87500E-06  4.31250E-05  6.82394E-17
+            1            0  9.09859E-17  1.87500E-06  4.31250E-05  9.09859E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -492,7 +524,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  6.53560E-17  1.87500E-06  4.50000E-05  6.53560E-17
+            1            0  2.17853E-17  1.87500E-06  4.50000E-05  2.17853E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -519,7 +551,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  7.73380E-17  1.87500E-06  5.06250E-05  7.73380E-17
+            1            0  5.80035E-17  1.87500E-06  5.06250E-05  5.80035E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -546,7 +578,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  6.95173E-17  1.87500E-06  5.62500E-05  6.95173E-17
+            1            0  1.04276E-16  1.87500E-06  5.62500E-05  1.04276E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -555,7 +587,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  1.00876E-16  1.87500E-06  5.81250E-05  1.00876E-16
+            1            0  6.72504E-17  1.87500E-06  5.81250E-05  6.72504E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -573,7 +605,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  9.46996E-17  1.87500E-06  6.18750E-05  9.46996E-17
+            1            0  3.15665E-17  1.87500E-06  6.18750E-05  3.15665E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -582,7 +614,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  6.12578E-17  1.87500E-06  6.37500E-05  6.12578E-17
+            1            0  3.06289E-17  1.87500E-06  6.37500E-05  3.06289E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -591,7 +623,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  5.94908E-17  1.87500E-06  6.56250E-05  5.94908E-17
+            1            0  2.97454E-17  1.87500E-06  6.56250E-05  2.97454E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -600,7 +632,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  2.89114E-17  1.87500E-06  6.75000E-05  2.89114E-17
+            1            0  5.78228E-17  1.87500E-06  6.75000E-05  5.78228E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -618,7 +650,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  8.21288E-17  1.87500E-06  7.12500E-05  8.21288E-17
+            1            0  5.47526E-17  1.87500E-06  7.12500E-05  5.47526E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -627,7 +659,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  5.33365E-17  1.87500E-06  7.31250E-05  5.33365E-17
+            1            0  2.66683E-17  1.87500E-06  7.31250E-05  2.66683E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -636,7 +668,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  7.79879E-17  1.87500E-06  7.50000E-05  7.79879E-17
+            1            0  2.59960E-17  1.87500E-06  7.50000E-05  2.59960E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -681,7 +713,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  2.30860E-17  1.87500E-06  8.43750E-05  2.30860E-17
+            1            0  4.61719E-17  1.87500E-06  8.43750E-05  4.61719E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -699,7 +731,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  4.41931E-17  1.87500E-06  8.81250E-05  4.41931E-17
+            1            0  2.20966E-17  1.87500E-06  8.81250E-05  2.20966E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -717,7 +749,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  2.11885E-17  1.87500E-06  9.18750E-05  2.11885E-17
+            1            0  4.23770E-17  1.87500E-06  9.18750E-05  4.23770E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -726,7 +758,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
-            1            0  9.34284E-16  1.87500E-06  9.37500E-05  9.34284E-16
+            1            0  9.55046E-16  1.87500E-06  9.37500E-05  9.55046E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
 
@@ -859,13 +891,13 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  4.76165E-04  3.75000E-06  1.10625E-04  4.76165E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres +    gain: 1176540 actifs 1299564 mots 45209 segments
             3            8  0.00000E+00  3.75000E-06  1.10625E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
 
 
  Numero du pas :60  Indice d evolution :61 -> temps : 5.20000E-01
- menage automatique 4 apres =    gain: 1194774 actifs 1322388 mots 45594 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -1235,6 +1267,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  6.89681E-04  3.75000E-06  1.57500E-04  6.89681E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres ET   gain: 1197600 actifs 1291350 mots 45950 segments
             3            8  0.00000E+00  3.75000E-06  1.57500E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -1246,7 +1279,6 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres ADET gain: 1199592 actifs 1290348 mots 45703 segments
             1            8  1.60435E-02  3.75000E-06  1.59375E-04  1.60435E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  7.06820E-04  3.75000E-06  1.59375E-04  7.06820E-04
@@ -1614,6 +1646,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
             3            8  0.00000E+00  3.75000E-06  2.21250E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
+ menage automatique 4 apres REAC gain: 1194456 actifs 1288776 mots 46007 segments
 
 
  Numero du pas :110  Indice d evolution :111 -> temps : 6.20000E-01
@@ -1625,7 +1658,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
             1            8  1.53871E-02  3.75000E-06  2.25000E-04  1.53871E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  8.77333E-04  3.75000E-06  2.25000E-04  8.77333E-04
- menage automatique 4 apres -    gain: 1201470 actifs 1292364 mots 45885 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            8  0.00000E+00  3.75000E-06  2.25000E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
@@ -1998,6 +2030,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres RESO gain: 1176006 actifs 1278612 mots 46155 segments
             1            8  1.15062E-02  3.75000E-06  3.18750E-04  1.15062E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  6.82609E-04  3.75000E-06  3.18750E-04  6.82609E-04
@@ -2008,7 +2041,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :136  Indice d evolution :137 -> temps : 6.72000E-01
- menage automatique 4 apres ET   gain: 1197522 actifs 1297578 mots 46168 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -2376,6 +2408,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  5.48613E-03  3.75000E-06  4.12500E-04  5.48613E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres -    gain: 1162320 actifs 1253364 mots 45796 segments
             2            8  2.83674E-04  3.75000E-06  4.12500E-04  2.83674E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            8  0.00000E+00  3.75000E-06  4.12500E-04  0.00000E+00
@@ -2391,7 +2424,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  5.28843E-03  3.75000E-06  4.16250E-04  5.28843E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres HOOK gain: 1194510 actifs 1284930 mots 45748 segments
             2            8  2.70284E-04  3.75000E-06  4.16250E-04  2.70284E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            8  0.00000E+00  3.75000E-06  4.16250E-04  0.00000E+00
@@ -2774,6 +2806,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :188  Indice d evolution :189 -> temps : 7.76000E-01
+ menage automatique 4 apres ADET gain: 1162866 actifs 1270956 mots 46238 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -2791,7 +2824,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
- menage automatique 4 apres +    gain: 1192692 actifs 1297584 mots 46063 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  2.11039E-03  3.75000E-06  5.21250E-04  2.11039E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -3211,6 +3243,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  1.27987E-03  3.75000E-06  6.41250E-04  1.27987E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres RESO gain: 1165866 actifs 1276032 mots 45482 segments
             2            8  1.19061E-05  3.75000E-06  6.41250E-04  1.19061E-05
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
@@ -3230,7 +3263,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :223  Indice d evolution :224 -> temps : 8.46000E-01
- menage automatique 4 apres HOOK gain: 1187592 actifs 1303836 mots 45794 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -3650,6 +3682,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
+ menage automatique 4 apres +    gain: 1166700 actifs 1287930 mots 45887 segments
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  1.02679E-03  3.75000E-06  7.68750E-04  1.02679E-03
@@ -3673,7 +3706,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :257  Indice d evolution :258 -> temps : 9.14000E-01
- menage automatique 4 apres ADET gain: 1185516 actifs 1303854 mots 45800 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -4084,6 +4116,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  8.87400E-04  3.75000E-06  8.92500E-04  8.87400E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres -    gain: 1164924 actifs 1274922 mots 45552 segments
             2            8  3.52327E-06  3.75000E-06  8.92500E-04  3.52327E-06
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
@@ -4111,7 +4144,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
             1            8  8.80334E-04  3.75000E-06  9.00000E-04  8.80334E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  3.45954E-06  3.75000E-06  9.00000E-04  3.45954E-06
- menage automatique 4 apres -    gain: 1181352 actifs 1290498 mots 45454 segments
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
 
@@ -4369,6 +4401,14 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' tleg 'TITR' '[3D V] Contraintes vs Deformation' ; 
  $  *   FINSI ; 
  $  *   
+ $  * ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv 
+ $  *   SI ISAUV ; 
+ $  *     str2 = '3D_V' ; 
+ $  *     fic4 = CHAI str1 str2 str3 '.csv' ; 
+ $  *     OPTI SORT fic4 ; 
+ $  *     SORT 'EXCE' (evxx ET evyy ET evxy) ; 
+ $  *   FINSI ; 
+ $  *   
  $  * * comparaison calcul / reference sur l'aire sous la courbe Contraintes vs Deformation EPXX 
  $  *   tsig = TABL ; 
  $  *   tbid = TABL ; 
@@ -4531,9 +4571,14 @@ Calcul MECANIQUE
  $  * ** Calcul 2 
  $  * *  la cinematique issue du résultat du calcul 1 est imposee au modele non lineaire 
  $  *   
- $  * ** Modele et caracteristiques materiau non lineaire 
+ $  * ** Modele et caracteristiques materiau non lineaire (&BCALC : 1->Cast3M, 2->MFront) 
+ $  * SI (EGA &BCALC 1) ; 
  $  *   mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ; 
  $  *   ma2 = MATE mo2 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ; 
+ $  * SINO ; 
+ $  * * Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle... 
+ $  *   QUIT BCALC; 
+ $  * FINSI ; 
  $  *   
  $  * ** Blocages 2 
  $  *   bl2 = BLOQ 'DEPL' mail ; 
@@ -4593,6 +4638,7 @@ Calcul MECANIQUE
 
 
  Numero du pas :3  Indice d evolution :4 -> temps : 3.00000E-02
+ menage automatique 4 apres REDU gain: 1349184 actifs 1308546 mots 49000 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -4622,7 +4668,6 @@ Calcul MECANIQUE
  Numero du pas :6  Indice d evolution :7 -> temps : 6.00000E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
- menage automatique 4 apres *    gain: 1381176 actifs 1337880 mots 48816 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            0  7.87441E-17  1.87500E-06  1.12500E-05  7.87441E-17
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
@@ -5063,6 +5108,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  6.29889E-04  3.75000E-06  9.93750E-05  6.29889E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres /    gain: 1042740 actifs 1152936 mots 45182 segments
             3            4  0.00000E+00  3.75000E-06  9.93750E-05  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -5093,7 +5139,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  5.94411E-04  3.75000E-06  1.03125E-04  5.94411E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres RESO gain: 1052634 actifs 1162908 mots 45358 segments
             3            4  0.00000E+00  3.75000E-06  1.03125E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -5475,6 +5520,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :81  Indice d evolution :82 -> temps : 5.62000E-01
+ menage automatique 4 apres -    gain: 1056930 actifs 1140666 mots 46214 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -5512,7 +5558,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  2.19022E-02  3.75000E-06  1.55625E-04  2.19022E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres ADET gain: 1041984 actifs 1122732 mots 45997 segments
             2            4  9.32130E-04  3.75000E-06  1.55625E-04  9.32130E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            4  0.00000E+00  3.75000E-06  1.55625E-04  0.00000E+00
@@ -5888,6 +5933,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  2.15961E-02  3.75000E-06  2.17500E-04  2.15961E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres -    gain: 1025214 actifs 1100274 mots 45799 segments
             2            4  1.22536E-03  3.75000E-06  2.17500E-04  1.22536E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            4  0.00000E+00  3.75000E-06  2.17500E-04  0.00000E+00
@@ -5933,7 +5979,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  2.12926E-02  3.75000E-06  2.28750E-04  2.12926E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres *    gain: 1059282 actifs 1140726 mots 46021 segments
             2            4  1.22417E-03  3.75000E-06  2.28750E-04  1.22417E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            4  0.00000E+00  3.75000E-06  2.28750E-04  0.00000E+00
@@ -6305,6 +6350,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
+ menage automatique 4 apres +    gain: 1051086 actifs 1135674 mots 46177 segments
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  1.57778E-02  3.75000E-06  3.22500E-04  1.57778E-02
@@ -6354,7 +6400,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  1.47704E-02  3.75000E-06  3.33750E-04  1.47704E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres +    gain: 1029648 actifs 1111692 mots 46005 segments
             2            4  8.72246E-04  3.75000E-06  3.33750E-04  8.72246E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            4  0.00000E+00  3.75000E-06  3.33750E-04  0.00000E+00
@@ -6717,6 +6762,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  3.44517E-04  3.75000E-06  4.23750E-04  3.44517E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres ADET gain: 1015098 actifs 1091256 mots 45852 segments
             3            4  0.00000E+00  3.75000E-06  4.23750E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -6775,7 +6821,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  5.95328E-03  3.75000E-06  4.38750E-04  5.95328E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres +    gain: 1041324 actifs 1123152 mots 45993 segments
             2            4  2.80359E-04  3.75000E-06  4.38750E-04  2.80359E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            4  0.00000E+00  3.75000E-06  4.38750E-04  0.00000E+00
@@ -7145,6 +7190,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :193  Indice d evolution :194 -> temps : 7.86000E-01
+ menage automatique 4 apres =    gain: 1003578 actifs 1101096 mots 46230 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -7215,7 +7261,6 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres COMP gain: 1001976 actifs 1097994 mots 45977 segments
             1            4  2.43460E-03  3.75000E-06  5.55000E-04  2.43460E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  4.86563E-05  3.75000E-06  5.55000E-04  4.86563E-05
@@ -7619,6 +7664,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres COMP gain: 999102 actifs 1099872 mots 45617 segments
             1            4  1.67957E-03  3.75000E-06  6.71250E-04  1.67957E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  1.27509E-05  3.75000E-06  6.71250E-04  1.27509E-05
@@ -7697,7 +7743,6 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres +    gain: 1019568 actifs 1117578 mots 45830 segments
             1            4  1.61039E-03  3.75000E-06  6.93750E-04  1.61039E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  1.07705E-05  3.75000E-06  6.93750E-04  1.07705E-05
@@ -8093,6 +8138,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
             2            4  6.29268E-06  3.75000E-06  8.06250E-04  6.29268E-06
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
+ menage automatique 4 apres =    gain: 1032168 actifs 1133004 mots 46057 segments
 
 
  Numero du pas :266  Indice d evolution :267 -> temps : 9.32000E-01
@@ -8178,7 +8224,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
- menage automatique 4 apres -    gain: 1021176 actifs 1119084 mots 45825 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  1.32759E-03  3.75000E-06  8.32500E-04  1.32759E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -8633,6 +8678,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   REPE b1 (DIME tt) ; 
  $  *     tprin . 'CONTRAINTES' . (&b1 - 1) = PRIN mo2 (t2 . 'CONTRAINTES' . (&b1 - 1)) ; 
  $  *   FIN b1 ; 
+ menage automatique 4 apres PRIN gain: 1115694 actifs 1258164 mots 50602 segments
  $  * * angle direction principale 1 
  $  *   evcos11 = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
@@ -8668,6 +8714,14 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tleg . 'TITRE' . 6  = 'Ref_SMXY' ; 
  $  *   SI ITRAC1 ; 
  $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' tleg 'TITR' '[2D Plan cont.] Contraintes vs Deformation' ; 
+ $  *   FINSI ; 
+ $  *   
+ $  * ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv 
+ $  *   SI ISAUV ; 
+ $  *     str2 = '2D_CP' ; 
+ $  *     fic4 = CHAI str1 str2 str3 '.csv' ; 
+ $  *     OPTI SORT fic4 ; 
+ $  *     SORT 'EXCE' (evxx ET evyy ET evxy) ; 
  $  *   FINSI ; 
  $  *   
  $  * * comparaison calcul / reference sur l'aire sous la courbe Contraintes vs Deformation EPXX 
@@ -8708,7 +8762,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  * *      TRAC (def0 ET def1) 'TITR' tit1 ; 
  $  *     FINSI ; 
  $  *   FIN b1 ; 
- menage automatique 4 apres DEFO gain: 1181868 actifs 1235784 mots 47792 segments
  $  *   SI ITRAC1 ; 
  $  *     TRAC (def0 ET def1) 'TITR' tit1 ; 
  $  *   FINSI ; 
@@ -8730,7 +8783,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  * FINSI ; 
  $  *   
  $  *   
- $  *   
+ $  * FIN BCALC ; 
  $  *   
  $  *   
  $  * FIN ; 

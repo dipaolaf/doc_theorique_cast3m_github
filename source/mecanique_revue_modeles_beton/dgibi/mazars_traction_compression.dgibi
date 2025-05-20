@@ -10,18 +10,29 @@
 *   4) 2D axisymetrique                                                *
 *   5) 2D poutre a fibre                                               *
 *                                                                      *
+* Selon deux modes d'integration du comportement                       *
+* realises successivement dans la boucle BCALC :                       *
+*   passage 1 : Cast3M                                                 *
+*   passage 2 : MFront                                                 *
+*                                                                      *
 * ITRAC1 : VRAI => affichage resultats                                 *
 * IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
 ************************************************************************
 
-** Options pour les traces
+** Options
+** - pour les traces
 ITRAC1 = VRAI ;
 IPSC1  = VRAI ;
 SI IPSC1 ;
   OPTI 'TRAC' 'PSC' ;
 FINSI ;
+** - pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
+ISAUV = VRAI ;
+SI ISAUV ;
+  str1 = 'mazars_traction_compression_' ;
+FINSI ;
 
-** Sortie sur Erreur 1152 "Solution calculee non conforme par rapport a la solution de reference"
+** Initialisation sortie sur Erreur 1152 "Solution calculee non conforme par rapport a la solution de reference"
 IERR = FAUX ;
 
 ** Liste des modes de calcul a traiter
@@ -64,8 +75,20 @@ inst_a = utmax / (utmax + (0.5*(ABS ucmax))) ;
   tdess . 'TITRE' . 3 = MOT 'Ref_Compression' ;
 
 
-
-
+REPE BCALC 2 ;
+*======= A ENLEVER lorsque l'implémentation MFront sera faite =======
+SI (NEG &BCALC 1) ;
+  QUIT BCALC;
+FINSI ;
+*========================== fin A ENLEVER ===========================
+** Pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
+SI ISAUV ;
+  SI (EGA &BCALC 1) ;
+    str3 = '_Cast3M' ;
+  SINO ;
+    str3 = '_MFront' ;
+  FINSI ;
+FINSI ;
 
 
 **************** C A S  #1  :  3 D   V O L U M I Q U E ****************
@@ -90,9 +113,14 @@ SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+SINO ;
+* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
 
 ** Blocages
   blgauche = BLOQ 'UX' sgauche ;
@@ -417,6 +445,15 @@ FINSI ;
   SI ITRAC1 ;
     DESS (eer1 et eer2) 'LEGE' 'NO' tdes1 'TITR' tit1 ;
   FINSI ;
+
+** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
+  SI ISAUV ;
+    str2 = '3D_V' ;
+    fic1 = CHAI str1 str2 str3 '.csv' ;
+    OPTI SORT fic1 ;
+    SORT 'EXCE' ev1 ;
+  FINSI ;
+  
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
@@ -466,12 +503,17 @@ SI ITRAC1 ;
 FINSI ;
 
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mos = MODE mails 'MECANIQUE' 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
   mas = MATE mos 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta
                  'ALPY' 1. 'ALPZ' 1. ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'SECTION' 'PLASTIQUE' 'SECTION' 'TIMO' ;
   ma = MATE mo 'MODS' mos 'MATS' mas 'VECT' (0. 1. 0.) ;
+SINO ;
+* Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
 
 ** Blocages
   blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
@@ -842,9 +884,14 @@ SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'DIM3' epai ;
+SINO ;
+* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
 
 ** Blocages
   blgauche = BLOQ 'UX' sgauche ;
@@ -1164,6 +1211,15 @@ FINSI ;
   SI ITRAC1 ;
     DESS (eer1 et eer2) 'LEGE' 'NE' tdes1 'TITR' tit1 ;
   FINSI ;
+
+** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
+  SI ISAUV ;
+    str2 = '2D_CP' ;
+    fic1 = CHAI str1 str2 str3 '.csv' ;
+    OPTI SORT fic1 ;
+    SORT 'EXCE' ev1 ;
+  FINSI ;
+  
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' ******* C A S  #3  :  2 D   C O N T R A I N T E S   P L A N E S ********';
@@ -1210,9 +1266,14 @@ SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+SINO ;
+* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
   zer = ZERO mo 'NOEUD' ;
   un  = zer + 1. ;
   mes1 = INTG mo un 'SCAL' ;
@@ -1535,6 +1596,15 @@ FINSI ;
   SI ITRAC1 ;
     DESS (eer1 et eer2) 'LEGE' 'NE' tdes1 'TITR' tit1 ;
   FINSI ;
+
+** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
+  SI ISAUV ;
+    str2 = '2D_axi' ;
+    fic1 = CHAI str1 str2 str3 '.csv' ;
+    OPTI SORT fic1 ;
+    SORT 'EXCE' ev1 ;
+  FINSI ;
+  
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' ************ C A S  #4  :  2 D   A X I S Y M E T R I Q U E *************';
@@ -1583,12 +1653,17 @@ SI ITRAC1 ;
   TRAC 'QUAL' (rep1 ET (mails COUL 'VERT') ET (mail COUL 'ROUG')) 'TITR' '[2D PaF] Maillages de la Poutre et de sa Section' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mos = MODE mails 'MECANIQUE' 'ELASTIQUE' 'PLASTIQUE' 'MAZARS' 'QUAS' ;
   mas = MATE mos 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta
                  'ALPY' 1. ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'SECTION' 'PLASTIQUE' 'SECTION' 'TIMO' ;
   ma = MATE mo 'MODS' mos 'MATS' mas ;
+SINO ;
+* Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
 
 ** Blocages
   blgauche = BLOQ 'DEPL' 'ROTA' p1 ;
@@ -1941,7 +2016,7 @@ SI IERR ;
 FINSI ;
 
 
-
+FIN BCALC ;
 
 
 FIN ;

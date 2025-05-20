@@ -20,7 +20,7 @@ cp ../dgibi/mazars_compression_cyclique.ps .
 cp ../dgibi/mazars_traction_compression.ps .
 cp ../dgibi/mazars_traction_compression_traction.ps .
 cp ../dgibi/mazars_cisaillement_Beta_1.06.ps .
-cp ../dgibi/mazars_cisaillement_Beta_1.ps .
+cp ../dgibi/mazars_cisaillement_Beta_1.00.ps .
 cp ../dgibi/mazars_biaxial.ps .
 cp ../dgibi/mazars_triaxial.ps .
 cp ../dgibi/mazars_willam.ps .
@@ -34,7 +34,7 @@ cast-post.sh -o -t mazars_compression_cyclique.ps mazars_compression_cyclique.ps
 cast-post.sh -o -t mazars_traction_compression.ps mazars_traction_compression.ps
 cast-post.sh -o -t mazars_traction_compression_traction.ps mazars_traction_compression_traction.ps
 cast-post.sh -o -t mazars_cisaillement_Beta_1.06.ps mazars_cisaillement_Beta_1.06.ps
-cast-post.sh -o -t mazars_cisaillement_Beta_1.ps mazars_cisaillement_Beta_1.ps
+cast-post.sh -o -t mazars_cisaillement_Beta_1.00.ps mazars_cisaillement_Beta_1.00.ps
 cast-post.sh -o -t mazars_biaxial.ps mazars_biaxial.ps
 cast-post.sh -o -t mazars_triaxial.ps mazars_triaxial.ps
 cast-post.sh -o -t mazars_willam.ps mazars_willam.ps
@@ -173,18 +173,18 @@ psselect -q -p17   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_
 psselect -q -p23   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_char_2dpaf.ps
 psselect -q -p24   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_d_2dpaf.ps
 psselect -q -p25   mazars_cisaillement_Beta_1.06.ps mazars_cisa_mono_beta1.06_s_2dpaf.ps
-psselect -q -p2    mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_3d.ps
-psselect -q -p3    mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_3d.ps
-psselect -q -p4    mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_3d.ps
-psselect -q -p10   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_3dpaf.ps
-psselect -q -p11   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_3dpaf.ps
-psselect -q -p12   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_3dpaf.ps
-psselect -q -p15   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_2dplan.ps
-psselect -q -p16   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_2dplan.ps
-psselect -q -p17   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_2dplan.ps
-psselect -q -p23   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_char_2dpaf.ps
-psselect -q -p24   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_d_2dpaf.ps
-psselect -q -p25   mazars_cisaillement_Beta_1.ps mazars_cisa_mono_beta1_s_2dpaf.ps
+psselect -q -p2    mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_char_3d.ps
+psselect -q -p3    mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_d_3d.ps
+psselect -q -p4    mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_s_3d.ps
+psselect -q -p10   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_char_3dpaf.ps
+psselect -q -p11   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_d_3dpaf.ps
+psselect -q -p12   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_s_3dpaf.ps
+psselect -q -p15   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_char_2dplan.ps
+psselect -q -p16   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_d_2dplan.ps
+psselect -q -p17   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_s_2dplan.ps
+psselect -q -p23   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_char_2dpaf.ps
+psselect -q -p24   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_d_2dpaf.ps
+psselect -q -p25   mazars_cisaillement_Beta_1.00.ps mazars_cisa_mono_beta1_s_2dpaf.ps
 psselect -q -p2    mazars_biaxial.ps  mazars_biax_char_3d.ps
 psselect -q -p6    mazars_biaxial.ps  mazars_biax_SxSy_3d.ps
 psselect -q -p7    mazars_biaxial.ps  mazars_biax_SxSysFc_3d.ps
@@ -218,7 +218,7 @@ rm mazars_compression_cyclique.ps
 rm mazars_traction_compression.ps
 rm mazars_traction_compression_traction.ps
 rm mazars_cisaillement_Beta_1.06.ps
-rm mazars_cisaillement_Beta_1.ps
+rm mazars_cisaillement_Beta_1.00.ps
 rm mazars_biaxial.ps
 rm mazars_triaxial.ps
 rm mazars_willam.ps

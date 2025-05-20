@@ -1,3 +1,4 @@
+* fichier : mazars_biaxial.dgibi
 ************************************************************************
 *      Cas test elementaire pour la loi d'endommagement de Mazars      *
 *          Essai biaxial de traction ou compression monotones          *
@@ -5,6 +6,11 @@
 * Le test est realise avec plusieurs modes de calcul :                 *
 *   1) 3D volumique                                                    *
 *   2) 2D contraintes planes                                           *
+*                                                                      *
+* Selon deux modes d'integration du comportement                       *
+* realises successivement dans la boucle BCALC :                       *
+*   passage 1 : Cast3M                                                 *
+*   passage 2 : MFront                                                 *
 *                                                                      *
 * ITRAC1 : VRAI => affichage resultats                                 *
 * IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
@@ -14,12 +20,17 @@ DIVERS = 'VENV' 'CASTEM_DIVERS' ;
 FIC1   = 'CHAI' DIVERS '/mazars_biaxial_Ref_1342.out';
 FIC2   = 'CHAI' DIVERS '/mazars_biaxial_Ref_1242c.out';
 
-
-** Options pour les traces
+** Options
+** - pour les traces
 ITRAC1 = VRAI ;
 IPSC1  = VRAI ;
 SI IPSC1 ;
   OPTI 'TRAC' 'PSC' ;
+FINSI ;
+** - pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
+ISAUV = VRAI ;
+SI ISAUV ;
+  str1 = 'mazars_biaxial_' ;
 FINSI ;
 
 ** Initialisation sortie sur Erreur 1152 "Solution calculee non conforme par rapport a la solution de reference"
@@ -118,6 +129,21 @@ DEBP SOL_REF nom_fic ;
 FINP ev1 ev2 ev3;
 
 
+REPE BCALC 2 ;
+*======= A ENLEVER lorsque l'implémentation MFront sera faite =======
+SI (NEG &BCALC 1) ;
+  QUIT BCALC;
+FINSI ;
+*========================== fin A ENLEVER ===========================
+** Pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
+SI ISAUV ;
+  SI (EGA &BCALC 1) ;
+    str3 = '_Cast3M' ;
+  SINO ;
+    str3 = '_MFront' ;
+  FINSI ;
+FINSI ;
+
 
 **************** C A S  #1  :  3 D   V O L U M I Q U E ****************
 SI (EXIS lcas 1) ;
@@ -145,9 +171,14 @@ SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
+SINO ;
+* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
 
 ** Blocages
   bl = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' sbas) ET (BLOQ 'UZ' p1) ;
@@ -426,6 +457,15 @@ FINSI ;
 *mess 'Courbe calculee';list evsmxx1;
   merx = EC_REL 'SMXX' evsmxx2 evsmxx1 'Angle' '[3D V]' ITRAC1 tdess ;
   mery = EC_REL 'SMYY' evsmyy2 evsmyy1 'Angle' '[3D V]' ITRAC1 tdess ;
+
+** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
+  SI ISAUV ;
+    str2 = '3D_V' ;
+    fic3 = CHAI str1 str2 str3 '.csv' ;
+    OPTI SORT fic3 ;
+    SORT 'EXCE' (evsmxx1 ET evsmyy1) ;
+  FINSI ;
+  
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
@@ -475,9 +515,14 @@ SI ITRAC1 ;
   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas) COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Plan cont.] Maillage' ;
 FINSI ;
 
-** Modele et caracteristiques materiau
+** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
+SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'DIM3' epai ;
+SINO ;
+* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
+  QUIT BCALC;
+FINSI ;
 
 ** Blocages
   bl = (BLOQ 'UX' sgauche) ET (BLOQ 'UY' sbas) ;
@@ -756,6 +801,15 @@ FINSI ;
 *mess 'Courbe calculee';list evsmxx1;
   merx = EC_REL 'SMXX' evsmxx2 evsmxx1 'Angle' '[2D Plan cont.]' ITRAC1 tdess ;
   mery = EC_REL 'SMYY' evsmyy2 evsmyy1 'Angle' '[2D Plan cont.]' ITRAC1 tdess ;
+
+** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
+  SI ISAUV ;
+    str2 = '2D_CP' ;
+    fic3 = CHAI str1 str2 str3 '.csv' ;
+    OPTI SORT fic3 ;
+    SORT 'EXCE' (evsmxx1 ET evsmyy1) ;
+  FINSI ;
+  
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' ******* C A S  #2  :  2 D   C O N T R A I N T E S   P L A N E S *******';
@@ -785,7 +839,7 @@ SI IERR ;
 FINSI ;
 
 
-
+FIN BCALC ;
 
 
 FIN ;
