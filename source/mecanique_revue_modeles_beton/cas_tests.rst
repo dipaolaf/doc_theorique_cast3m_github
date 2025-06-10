@@ -39,9 +39,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction.dgibi
       :language: gibiane
-      :lines: 339-350
+      :lines: 338-349
       :linenos:
-      :lineno-start: 339
+      :lineno-start: 338
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -85,9 +85,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression.dgibi
       :language: gibiane
-      :lines: 355-366
+      :lines: 354-365
       :linenos:
-      :lineno-start: 355
+      :lineno-start: 354
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -99,7 +99,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_compression.dgibi>`
 
@@ -130,9 +130,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 384-396
+      :lines: 383-395
       :linenos:
-      :lineno-start: 384
+      :lineno-start: 383
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -144,7 +144,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_cyclique.dgibi>`
 
@@ -175,9 +175,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 401-413
+      :lines: 400-412
       :linenos:
-      :lineno-start: 401
+      :lineno-start: 400
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -189,7 +189,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_compression_cyclique.dgibi>`
 
@@ -220,9 +220,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 518-530
+      :lines: 517-529
       :linenos:
-      :lineno-start: 518
+      :lineno-start: 517
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -234,7 +234,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression.dgibi>`
 
@@ -265,9 +265,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 699-711
+      :lines: 698-710
       :linenos:
-      :lineno-start: 699
+      :lineno-start: 698
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -279,7 +279,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression_traction.dgibi>`
 
@@ -310,9 +310,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_cisaillement.dgibi
       :language: gibiane
-      :lines: 312-324
+      :lines: 314-326
       :linenos:
-      :lineno-start: 312
+      :lineno-start: 314
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -335,7 +335,7 @@ En conséquence, on choisit comme pour les autres cas-tests d'appliquer l'hypoth
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_cisaillement.dgibi>`
 
@@ -379,17 +379,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction.dgibi
       :language: gibiane
-      :lines: 121-130
+      :lines: 120-129
       :linenos:
-      :lineno-start: 121
+      :lineno-start: 120
 
 .. admonition:: Traction monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction.dgibi
       :language: gibiane
-      :lines: 753-761
+      :lines: 752-760
       :linenos:
-      :lineno-start: 753
+      :lineno-start: 752
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -468,17 +468,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression.dgibi
       :language: gibiane
-      :lines: 121-130
+      :lines: 120-129
       :linenos:
-      :lineno-start: 121
+      :lineno-start: 120
 
 .. admonition:: Compression monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_compression.dgibi
       :language: gibiane
-      :lines: 793-801
+      :lines: 792-800
       :linenos:
-      :lineno-start: 793
+      :lineno-start: 792
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -520,7 +520,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_compression.dgibi>`
 
@@ -556,17 +556,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 121-131
+      :lines: 120-130
       :linenos:
-      :lineno-start: 121
+      :lineno-start: 120
 
 .. admonition:: Traction cyclique : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 889-898
+      :lines: 888-897
       :linenos:
-      :lineno-start: 889
+      :lineno-start: 888
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -608,7 +608,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_cyclique.dgibi>`
 
@@ -644,17 +644,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 121-131
+      :lines: 120-130
       :linenos:
-      :lineno-start: 121
+      :lineno-start: 120
 
 .. admonition:: Compression cyclique : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 915-924
+      :lines: 914-923
       :linenos:
-      :lineno-start: 915
+      :lineno-start: 914
 
 Les blocages et le chargement sont représentés sur la figure suivante.
    
@@ -696,7 +696,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_compression_cyclique.dgibi>`
 
@@ -732,17 +732,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 125-135
+      :lines: 124-134
       :linenos:
-      :lineno-start: 125
+      :lineno-start: 124
 
 .. admonition:: Traction compression : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 1281-1290
+      :lines: 1280-1289
       :linenos:
-      :lineno-start: 1281
+      :lineno-start: 1289
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -784,7 +784,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression.dgibi>`
 
@@ -820,17 +820,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 132-142
+      :lines: 131-141
       :linenos:
-      :lineno-start: 132
+      :lineno-start: 131
 
 .. admonition:: Traction compression traction : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 1817-1826
+      :lines: 1816-1825
       :linenos:
-      :lineno-start: 1817
+      :lineno-start: 1816
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -872,7 +872,7 @@ La déformée au cours du chargement est représentée sur la figure suivante.
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression_traction.dgibi>`
 
@@ -903,9 +903,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_cisaillement.dgibi
       :language: gibiane
-      :lines: 134-147
+      :lines: 136-149
       :linenos:
-      :lineno-start: 134
+      :lineno-start: 136
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -951,7 +951,7 @@ En conséquence, on choisit comme pour les autres cas-tests d'appliquer l'hypoth
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_cisaillement.dgibi>`
 
@@ -1000,37 +1000,37 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 187
+      :lines: 186
       :linenos:
-      :lineno-start: 187
+      :lineno-start: 186
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 192-194
+      :lines: 191-193
       :linenos:
-      :lineno-start: 194
+      :lineno-start: 191
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 200-205
+      :lines: 199-204
       :linenos:
-      :lineno-start: 200
+      :lineno-start: 199
 
 .. admonition:: Biaxial : blocages pour le cas 3D
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 183-184
+      :lines: 182-183
       :linenos:
-      :lineno-start: 183
+      :lineno-start: 182
 
 .. admonition:: Biaxial : blocages pour le cas 2D plan
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 527-528
+      :lines: 526-527
       :linenos:
-      :lineno-start: 527
+      :lineno-start: 526
 
 Les blocages et le chargement dans la situation de biaxialité :math:`\theta=120°` (:math:`\sigma_{xx}` : traction ; :math:`\sigma_{yy}` : compression) sont représentés sur la figure suivante.
 
@@ -1073,10 +1073,9 @@ Ainsi, dans le cas des illustrations où :math:`\theta=120°` et sachant que :ma
 .. math::
    \textrm{sin}\theta=\frac{\sqrt{3}}{2}\textrm{, d'où }\sigma_{yy}=\frac{\sqrt{3}}{2}\sigma_{max}>0\textrm{ : compression}
 
-
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_biaxial.dgibi>`
 
@@ -1118,77 +1117,77 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 133-139
+      :lines: 131-137
       :linenos:
-      :lineno-start: 133
+      :lineno-start: 131
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 144-147
+      :lines: 142-145
       :linenos:
-      :lineno-start: 144
+      :lineno-start: 142
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 150-154
+      :lines: 148-152
       :linenos:
-      :lineno-start: 150
+      :lineno-start: 148
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 155
+      :lines: 153
       :linenos:
-      :lineno-start: 155
+      :lineno-start: 153
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 159-160
+      :lines: 157-158
       :linenos:
-      :lineno-start: 159
+      :lineno-start: 157
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 166-170
+      :lines: 164-168
       :linenos:
-      :lineno-start: 166
+      :lineno-start: 164
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 185-186
+      :lines: 183-184
       :linenos:
-      :lineno-start: 185
+      :lineno-start: 183
 
 .. admonition:: Triaxial : blocages et chargements pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 368-374
+      :lines: 366-372
       :linenos:
-      :lineno-start: 368
+      :lineno-start: 366
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 379-382
+      :lines: 377-380
       :linenos:
-      :lineno-start: 379
+      :lineno-start: 377
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 385-388
+      :lines: 383-386
       :linenos:
-      :lineno-start: 385
+      :lineno-start: 383
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 389
+      :lines: 387
       :linenos:
-      :lineno-start: 389
+      :lineno-start: 387
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 393-394
+      :lines: 391-392
       :linenos:
-      :lineno-start: 393
+      :lineno-start: 391
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 400-404
+      :lines: 398-402
       :linenos:
-      :lineno-start: 400
+      :lineno-start: 398
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 419-420
+      :lines: 417-418
       :linenos:
-      :lineno-start: 419
+      :lineno-start: 417
 
 Les blocages et les chargements, pour la pression hydrostatique nulle (0 MPa) et maximale (9 MPa), sont représentés sur les figures suivantes.
 
@@ -1312,15 +1311,15 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_willam.dgibi
       :language: gibiane
-      :lines: 149-195
+      :lines: 147-193
       :linenos:
-      :lineno-start: 149
+      :lineno-start: 147
 
    .. literalinclude:: dgibi/mazars_willam.dgibi
       :language: gibiane
-      :lines: 197-230
+      :lines: 195-228
       :linenos:
-      :lineno-start: 197
+      :lineno-start: 195
 
 La représentation des blocages et des chargements n'étant pas suffisament explicite, on représente sur la figure suivante l'évolution de la déformée qui en résulte au cours du chargement. 
 
@@ -1348,7 +1347,7 @@ L'évolution au cours du chargement de la rotation du repère du chargement, c'e
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
-Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
+Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
 - :download:`Test pour la loi de Mazars <./dgibi/mazars_willam.dgibi>`
 

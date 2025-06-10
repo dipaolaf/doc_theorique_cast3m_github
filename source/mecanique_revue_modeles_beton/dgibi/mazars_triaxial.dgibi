@@ -36,7 +36,7 @@ SI IPSC1 ;
   OPTI 'TRAC' 'PSC' ;
 FINSI ;
 ** - pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
-ISAUV = VRAI ;
+ISAUV = FAUX ;
 SI ISAUV ;
   str1 = 'mazars_triaxial_' ;
 FINSI ;
@@ -69,7 +69,7 @@ umax  = 0.015 * haut ;
 ** Legende courbes
 tpre = TABL ;
 tleg = TABL ;
-tleg . 'TITRE' = TABL ;
+tleg.'TITRE' = TABL ;
 
 *nh145313 .csv recuperes => resext = vrai
 resexp = vrai ;
@@ -81,13 +81,11 @@ SI (NEG &BCALC 1) ;
   QUIT BCALC;
 FINSI ;
 *========================== fin A ENLEVER ===========================
-** Pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
-SI ISAUV ;
-  SI (EGA &BCALC 1) ;
-    str3 = '_Cast3M' ;
-  SINO ;
-    str3 = '_MFront' ;
-  FINSI ;
+** Distinction des résultats de calcul Cast3M et/ou MFront
+SI (EGA &BCALC 1) ;
+  str3 = '_Cast3M' ;
+SINO ;
+  str3 = '_MFront' ;
 FINSI ;
 
 
@@ -231,7 +229,7 @@ FINSI ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
     tpre . &b0 = CHAI 'FORMAT' '(F3.1)' 'P=' (pre1*1.E-6) '_MPa' ;
-    tleg . 'TITRE' . &b0 = CHAI 'Calcul_' tpre . &b0 ;
+    tleg . 'TITRE' . &b0 = CHAI 'Cal_mat' str3 '_' tpre . &b0 ;
 *   deformee
     REPE b2 (DIME t . 'TEMPS') ;
       tps1 = t . 'TEMPS' . (&b2 - 1) ;
@@ -270,13 +268,13 @@ si (resexp);
 fins;
 ** Trace des courbes pour les differents niveaux de pression
   SI ITRAC1 ;
-    DESS evtot0 'TITR' '[3D V] Endommagement vs Temps'    'LEGE' tleg ;
+    DESS evtot0 'TITR' '[3D V] Endommagement vs Temps' 'LEGE' 'NO' tleg ;
     SI RESEXP ;
-      DESS (evtot1 ET evxp0) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
+      DESS (evtot1 ET evxp0) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
     SINON ;
-      DESS evtot1 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' tleg ;
+      DESS evtot1 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
     FINSI ;
-    DESS evtot2 'TITR' '[3D V] Reaction vs Deplacement'   'LEGE' tleg ;
+    DESS evtot2 'TITR' '[3D V] Reaction vs Deplacement' 'LEGE' 'NO' tleg ;
   FINSI ;
 
 ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
@@ -293,11 +291,11 @@ si (resexp);
   tbid = TABL ;
   tbid . 'TITRE' = TABL ;
   tbid . 1 = 'MARQ PLUS' ;
-  tbid . 'TITRE' . 1 = 'Cal.init.' ;
+  tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ;
   tbid . 2 = 'MARQ ETOI' ;
   tbid . 'TITRE' . 2 = 'Ref.exp.' ;
   tbid . 3 = 'MARQ CROI' ;
-  tbid . 'TITRE' . 3 = 'Cal.ipol.' ;
+  tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
@@ -321,7 +319,7 @@ si (resexp);
       DESS eer1 'TITR' tit1 ;
     FINSI ;
     SI ITRAC1 ;
-      DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' tbid ;
+      DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' 'NO' tbid ;
     FINSI ;
     MESS ' Pres.hydrostat.:' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
     SAUT 1 LIGN ;
@@ -465,7 +463,7 @@ FINSI ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
     tpre . &b0 = CHAI 'FORMAT' '(F3.1)' 'P=' (pre1*1.E-6) '_MPa' ;
-    tleg . 'TITRE' . &b0 = CHAI 'Calcul_' tpre . &b0 ;
+    tleg . 'TITRE' . &b0 = CHAI 'Cal_mat' str3 '_' tpre . &b0 ;
 *   deformee
     REPE b2 (DIME t . 'TEMPS') ;
       tps1 = t . 'TEMPS' . (&b2 - 1) ;
@@ -504,13 +502,13 @@ si (resexp);
 fins;
 ** Trace des courbes pour les differents niveaux de pression
   SI ITRAC1 ;
-    DESS evtot0 'TITR' '[2D Axi.] Endommagement vs Temps'    'LEGE' tleg ;
+    DESS evtot0 'TITR' '[2D Axi.] Endommagement vs Temps' 'LEGE' 'NO' tleg ;
     SI RESEXP ;
-      DESS (evtot1 ET evxp0) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
+      DESS (evtot1 ET evxp0) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
     SINON ;
-      DESS evtot1 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' tleg ;
+      DESS evtot1 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
     FINSI ;
-    DESS evtot2 'TITR' '[2D Axi.] Reaction vs Deplacement'   'LEGE' tleg ;
+    DESS evtot2 'TITR' '[2D Axi.] Reaction vs Deplacement' 'LEGE' 'NO' tleg ;
   FINSI ;
 
 ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
@@ -527,11 +525,11 @@ si (resexp);
   tbid = TABL ;
   tbid . 'TITRE' = TABL ;
   tbid . 1 = 'MARQ PLUS' ;
-  tbid . 'TITRE' . 1 = 'Cal.init.' ;
+  tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ;
   tbid . 2 = 'MARQ ETOI' ;
   tbid . 'TITRE' . 2 = 'Ref.exp.' ;
   tbid . 3 = 'MARQ CROI' ;
-  tbid . 'TITRE' . 3 = 'Cal.ipol.' ;
+  tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #2  :  2 D   A X I S Y M E T R I Q U E ****************';
@@ -555,7 +553,7 @@ si (resexp);
       DESS eer1 'TITR' tit1 ;
     FINSI ;
     SI ITRAC1 ;
-      DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' tbid ;
+      DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' 'NO' tbid ;
     FINSI ;
     MESS ' Pres.hydrostat.:' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
     SAUT 1 LIGN ;

@@ -54,8 +54,8 @@ bt   = 18000.   ; COMM 'LJason';
 ac   = 1.5 ;
 bc   = 1550. ;
 *beta = 0.94;
-*beta = 1.  ;
-beta = 1.06;
+beta = 1.  ;
+*beta = 1.06;
 
 ** Paramètres chargement
 epsmax = 1.2E-2 ;

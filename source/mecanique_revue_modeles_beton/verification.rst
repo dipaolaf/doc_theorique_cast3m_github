@@ -2468,7 +2468,7 @@ Le cas-test se dénomme ``mazars_biaxial.dgibi``
 
 On n'applique le cas de chargement de traction-compression biaxial que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_biax>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
-Le chargement biaxial est en contraintes imposées croissante jusqu'à atteindre un endommagement proche de 1 (ruine complète).
+Le chargement biaxial est en contraintes imposées croissantes jusqu'à atteindre un endommagement proche de 1 (ruine complète).
 
 Pour un calcul de valeur :math:`\theta` donnée, le chargement maximal est donné par :
 
@@ -2485,7 +2485,7 @@ avec :
    
 - Pour le mode de calcul 3D volumique : :math:`\sigma_{0}=50~MPa`
 - Pour le mode de calcul 2D contraintes planes : :math:`\sigma_{0}=5~MPa`
-- Pour les deux modes de calcul, on définit 72 points de chargement en faisant varier :math:`\theta` dans le domaine :math:`[45°;225°]` avec un pas :math:`\Delta\theta=2,5°`. Les résultats de calcul sur la deuxième moitié du domaine angulaire sont obtenus par symétrie par rapport à la bissectrice.
+- Pour les deux modes de calcul, on définit 73 points de chargement en faisant varier :math:`\theta` dans le domaine :math:`[45°;225°]` avec un pas :math:`\Delta\theta=2,5°`. Les résultats de calcul sur la deuxième moitié du domaine angulaire sont obtenus par symétrie par rapport à la bissectrice.
 
 .. figure:: figures/Figure_char_biaxial_180.png
    :width: 10cm
@@ -2493,7 +2493,7 @@ avec :
    
    Chargement biaxial du mode 3D volumique pour :math:`\theta \in [45°;225°]` (:math:`\sigma_{0}` en bleu, :math:`\sigma_{max}` en vert). Les résultats de la deuxième moitié du domaine angulaire sont obtenus par symétrie par rapport à la bissectrice.
 
-Pour chaque valeur de :math:`\theta`, le calcul est interrompu avant d'atteindre le chargement maximal, lors de la détection de la ruine qui résulte de la combinaison de deux critères : l'un sur le nombre maximum de sous pas de convergence et l'autre sur l'incrément maximum de déformation entre deux pas de calcul. C'est au pas de calcul qui précéde cette détection que sont relevées les valeurs des contraintes maximales atteintes :math:`\sigma_{xx}` et :math:`\sigma_{yy}`.
+Pour chaque valeur de :math:`\theta`, le calcul est interrompu avant d'atteindre le chargement maximal, lors de la détection de la ruine qui résulte de la combinaison de deux critères : l'un sur le nombre maximum de sous pas de convergence et l'autre sur l'incrément maximum de déformation entre deux pas de calcul. C'est au pas de calcul qui précède cette détection que sont relevées les valeurs des contraintes maximales atteintes :math:`\sigma_{xx}` et :math:`\sigma_{yy}`.
 
 L’objectif est de caractériser la courbe de biaxialité qui représente la surface de charge du modèle dans le plan :math:`(\sigma_{xx};\sigma_{yy})`.
 
@@ -2738,7 +2738,7 @@ Test de Willam
 ~~~~~~~~~~~~~~
 Le cas-test se dénomme ``mazars_willam.dgibi``
 
-On n'applique le cas test de Willam que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_willam>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
+On n'applique le cas-test de Willam que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_willam>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
 Le chargement du test de Willam est consistué de deux phases successives. La phase 1 consiste en un chargement de traction simple en déformation imposée ``EPXX`` dans la direction X, jusqu'à atteindre le seuil d'endommagement en déformation. La phase 2, dans laquelle on vise l'endommagement complet proche de 1, est la combinaison de trois chargements superposés : tout d'abord le chargement de traction en déformation imposée ``EPXX`` de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; puis un deuxième chargement de traction en déformation imposée ``EPYY`` est appliqué dans la direction Y jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin un troisième chargement de cisaillement en glissement imposé ``GAXY`` est appliqué dans le plan XY jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
 

@@ -1,5 +1,5 @@
 
- *** PPP CAST3M *** 31 CPU *** VERSION COURANTE DU jeu.  15  mai  2025                              
+ *** PPP CAST3M *** 31 CPU *** VERSION COURANTE DU mer.  04  juin  2025                             
 
  *** GEMAT MT  2.0  MAI 23 ***  ESOPE=121436 (Mo)  LIBRE=  6549 (Mo)
                                 NTRK =300000       LTRK =  4096 (Ko)
@@ -74,7 +74,7 @@
  $  *   OPTI 'TRAC' 'PSC' ; 
  $  * FINSI ; 
  $  * ** - pour la sauvegarde des résultats de calcul Cast3M et/ou MFront 
- $  * ISAUV = VRAI ; 
+ $  * ISAUV = FAUX ; 
  $  * SI ISAUV ; 
  $  *   str1 = 'mazars_willam_' ; 
  $  * FINSI ; 
@@ -149,13 +149,11 @@ Coef. chargement Phase 2
  $  *   QUIT BCALC; 
  $  * FINSI ; 
  $  * *========================== fin A ENLEVER =========================== 
- $  * ** Pour la sauvegarde des résultats de calcul Cast3M et/ou MFront 
- $  * SI ISAUV ; 
- $  *   SI (EGA &BCALC 1) ; 
- $  *     str3 = '_Cast3M' ; 
- $  *   SINO ; 
- $  *     str3 = '_MFront' ; 
- $  *   FINSI ; 
+ $  * ** Distinction des résultats de calcul Cast3M et/ou MFront 
+ $  * SI (EGA &BCALC 1) ; 
+ $  *   str3 = '_Cast3M' ; 
+ $  * SINO ; 
+ $  *   str3 = '_MFront' ; 
  $  * FINSI ; 
  $  *   
  $  *   
@@ -4303,7 +4301,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tleg . 8 = MOT 'MARQ TRIR NOLI' ; 
  $  *   tleg . 'TITRE' = TABL ; 
  $  *   REPE b ng ; 
- $  *     tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ; 
+ $  *     tleg . 'TITRE' . &b = CHAI 'Cal_mat' str3 '_Pt_Gauss' ' ' &b ; 
  $  *   FIN b ; 
  $  * * endommagement 
  $  *   evd = VIDE 'EVOLUTIO' ; 
@@ -4311,7 +4309,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evd = evd ET (EVOL 'VIOL' 'TEMP' t2 'VARIABLES_INTERNES' 'D' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evd 'LEGE' tleg 'TITR' '[3D V] D vs Temps' ; 
+ $  *     DESS evd 'LEGE' 'NO' tleg 'TITR' '[3D V] D vs Temps' ; 
  $  *   FINSI ; 
  $  * * contraintes 
  $  *   evsmxx = VIDE 'EVOLUTIO' ; 
@@ -4319,21 +4317,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t2 'CONTRAINTES' 'SMXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxx 'LEGE' tleg 'TITR' '[3D V] SMXX vs Temps' ; 
+ $  *     DESS evsmxx 'LEGE' 'NE' tleg 'TITR' '[3D V] SMXX vs Temps' ; 
  $  *   FINSI ; 
  $  *   evsmyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmyy = evsmyy ET (EVOL 'VERT' 'TEMP' t2 'CONTRAINTES' 'SMYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmyy 'LEGE' tleg 'TITR' '[3D V] SMYY vs Temps' ; 
+ $  *     DESS evsmyy 'LEGE' 'NE' tleg 'TITR' '[3D V] SMYY vs Temps' ; 
  $  *   FINSI ; 
  $  *   evsmxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmxy = evsmxy ET (EVOL 'ROUG' 'TEMP' t2 'CONTRAINTES' 'SMXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxy 'LEGE' tleg 'TITR' '[3D V] SMXY vs Temps' ; 
+ $  *     DESS evsmxy 'LEGE' 'NE' tleg 'TITR' '[3D V] SMXY vs Temps' ; 
  $  *   FINSI ; 
  $  * * deformations 
  $  *   evepxx = VIDE 'EVOLUTIO' ; 
@@ -4341,21 +4339,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evepxx = evepxx ET (EVOL 'BLEU' 'TEMP' t2 'DEFORMATIONS' 'EPXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxx 'LEGE' tleg 'TITR' '[3D V] EPXX vs Temps' ; 
+ $  *     DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[3D V] EPXX vs Temps' ; 
  $  *   FINSI ; 
  $  *   evepyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepyy = evepyy ET (EVOL 'VERT' 'TEMP' t2 'DEFORMATIONS' 'EPYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepyy 'LEGE' tleg 'TITR' '[3D V] EPYY vs Temps' ; 
+ $  *     DESS evepyy 'LEGE' 'NO' tleg 'TITR' '[3D V] EPYY vs Temps' ; 
  $  *   FINSI ; 
  $  *   evepxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepxy = evepxy ET (EVOL 'ROUG' 'TEMP' t2 'DEFORMATIONS' 'GAXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxy 'LEGE' tleg 'TITR' '[3D V] GAXY vs Temps' ; 
+ $  *     DESS evepxy 'LEGE' 'NO' tleg 'TITR' '[3D V] GAXY vs Temps' ; 
  $  *   FINSI ; 
  $  * * contraintes principales 
  $  *   tprin = TABL 'PASAPAS' ; 
@@ -4371,7 +4369,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   FIN b ; 
  $  *   evang11 = ACOS evcos11 ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evang11 'LEGE' tleg 'TITR' '[3D V] Angle X ^ SI11 vs Temps' ; 
+ $  *     DESS evang11 'LEGE' 'NO' tleg 'TITR' '[3D V] Angle X ^ SI11 vs Temps' ; 
  $  *   FINSI ; 
  $  *   
  $  * * courbe Contraintes vs Deformation EPXX 
@@ -4380,9 +4378,9 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   evxy = EVOL 'ROUG' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxy 'ORDO') ; 
  $  *   tleg = TABL ; 
  $  *   tleg . 'TITRE' = TABL ; 
- $  *   tleg . 'TITRE' . 1 = 'Calc_SMXX' ; 
- $  *   tleg . 'TITRE' . 2 = 'Calc_SMYY' ; 
- $  *   tleg . 'TITRE' . 3 = 'Calc_SMXY' ; 
+ $  *   tleg . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_SMXX' ; 
+ $  *   tleg . 'TITRE' . 2 = CHAI 'Cal_mat' str3 '_SMYY' ; 
+ $  *   tleg . 'TITRE' . 3 = CHAI 'Cal_mat' str3 '_SMXY' ; 
  $  * * resultats de reference [2] Ghavamian (2003) LGCNSNiso 
  $  *   evref = VIDE 'EVOLUTIO' ; 
  $  *   tref = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ; 
@@ -4398,7 +4396,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tleg . 6   = MOT 'TIRR' ; 
  $  *   tleg . 'TITRE' . 6  = 'Ref_SMXY' ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' tleg 'TITR' '[3D V] Contraintes vs Deformation' ; 
+ $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' 'NE' tleg 'TITR' '[3D V] Contraintes vs Deformation' ; 
  $  *   FINSI ; 
  $  *   
  $  * ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv 
@@ -4414,11 +4412,11 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tbid = TABL ; 
  $  *   tbid . 'TITRE' = TABL ; 
  $  *   tbid . 1 = 'MARQ PLUS' ; 
- $  *   tbid . 'TITRE' . 1 = 'Cal.init.' ; 
+ $  *   tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ; 
  $  *   tbid . 2 = 'MARQ ETOI' ; 
  $  *   tbid . 'TITRE' . 2 = ' Ref.' ; 
  $  *   tbid . 3 = 'MARQ CROI' ; 
- $  *   tbid . 'TITRE' . 3 = 'Cal.ipol.' ; 
+ $  *   tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ; 
  $  *   OPTI ECHO 0 ; 
 
 
@@ -4638,7 +4636,7 @@ Calcul MECANIQUE
 
 
  Numero du pas :3  Indice d evolution :4 -> temps : 3.00000E-02
- menage automatique 4 apres REDU gain: 1349184 actifs 1308546 mots 49000 segments
+ menage automatique 4 apres ADET gain: 1349178 actifs 1308552 mots 49013 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -5108,7 +5106,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  6.29889E-04  3.75000E-06  9.93750E-05  6.29889E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres /    gain: 1042740 actifs 1152936 mots 45182 segments
+ menage automatique 4 apres *    gain: 1042590 actifs 1152786 mots 45179 segments
             3            4  0.00000E+00  3.75000E-06  9.93750E-05  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -5520,7 +5518,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :81  Indice d evolution :82 -> temps : 5.62000E-01
- menage automatique 4 apres -    gain: 1056930 actifs 1140666 mots 46214 segments
+ menage automatique 4 apres *    gain: 1054242 actifs 1137876 mots 46202 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -5933,7 +5931,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  2.15961E-02  3.75000E-06  2.17500E-04  2.15961E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres -    gain: 1025214 actifs 1100274 mots 45799 segments
+ menage automatique 4 apres -    gain: 1025160 actifs 1100322 mots 45802 segments
             2            4  1.22536E-03  3.75000E-06  2.17500E-04  1.22536E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            4  0.00000E+00  3.75000E-06  2.17500E-04  0.00000E+00
@@ -6350,8 +6348,8 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
- menage automatique 4 apres +    gain: 1051086 actifs 1135674 mots 46177 segments
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
+ menage automatique 4 apres TABL gain: 1050996 actifs 1135524 mots 46172 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  1.57778E-02  3.75000E-06  3.22500E-04  1.57778E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -8617,7 +8615,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tleg . 4 = MOT 'MARQ ETOI NOLI' ; 
  $  *   tleg . 'TITRE' = TABL ; 
  $  *   REPE b ng ; 
- $  *     tleg . 'TITRE' . &b = CHAI 'Calc_Pt_Gauss' ' ' &b ; 
+ $  *     tleg . 'TITRE' . &b = CHAI 'Cal_mat' str3 '_Pt_Gauss' ' ' &b ; 
  $  *   FIN b ; 
  $  * * endommagement 
  $  *   evd = VIDE 'EVOLUTIO' ; 
@@ -8625,7 +8623,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evd = evd ET (EVOL 'VIOL' 'TEMP' t2 'VARIABLES_INTERNES' 'D' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evd 'LEGE' tleg 'TITR' '[2D Plan cont.] D vs Temps' ; 
+ $  *     DESS evd 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] D vs Temps' ; 
  $  *   FINSI ; 
  $  * * contraintes 
  $  *   evsmxx = VIDE 'EVOLUTIO' ; 
@@ -8633,21 +8631,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t2 'CONTRAINTES' 'SMXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxx 'LEGE' tleg 'TITR' '[2D Plan cont.] SMXX vs Temps' ; 
+ $  *     DESS evsmxx 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMXX vs Temps' ; 
  $  *   FINSI ; 
  $  *   evsmyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmyy = evsmyy ET (EVOL 'VERT' 'TEMP' t2 'CONTRAINTES' 'SMYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmyy 'LEGE' tleg 'TITR' '[2D Plan cont.] SMYY vs Temps' ; 
+ $  *     DESS evsmyy 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMYY vs Temps' ; 
  $  *   FINSI ; 
  $  *   evsmxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmxy = evsmxy ET (EVOL 'ROUG' 'TEMP' t2 'CONTRAINTES' 'SMXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxy 'LEGE' tleg 'TITR' '[2D Plan cont.] SMXY vs Temps' ; 
+ $  *     DESS evsmxy 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMXY vs Temps' ; 
  $  *   FINSI ; 
  $  * * deformations 
  $  *   evepxx = VIDE 'EVOLUTIO' ; 
@@ -8655,21 +8653,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evepxx = evepxx ET (EVOL 'BLEU' 'TEMP' t2 'DEFORMATIONS' 'EPXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxx 'LEGE' tleg 'TITR' '[2D Plan cont.] EPXX vs Temps' ; 
+ $  *     DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] EPXX vs Temps' ; 
  $  *   FINSI ; 
  $  *   evepyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepyy = evepyy ET (EVOL 'VERT' 'TEMP' t2 'DEFORMATIONS' 'EPYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepyy 'LEGE' tleg 'TITR' '[2D Plan cont.] EPYY vs Temps' ; 
+ $  *     DESS evepyy 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] EPYY vs Temps' ; 
  $  *   FINSI ; 
  $  *   evepxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepxy = evepxy ET (EVOL 'ROUG' 'TEMP' t2 'DEFORMATIONS' 'GAXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxy 'LEGE' tleg 'TITR' '[2D Plan cont.] GAXY vs Temps' ; 
+ $  *     DESS evepxy 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] GAXY vs Temps' ; 
  $  *   FINSI ; 
  $  * * contraintes principales 
  $  *   tprin = TABL 'PASAPAS' ; 
@@ -8686,7 +8684,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   FIN b ; 
  $  *   evang11 = ACOS evcos11 ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evang11 'LEGE' tleg 'TITR' '[2D Plan cont.] Angle X ^ SI11 vs Temps' ; 
+ $  *     DESS evang11 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] Angle X ^ SI11 vs Temps' ; 
  $  *   FINSI ; 
  $  *   
  $  * * courbe Contraintes vs Deformation EPXX 
@@ -8695,9 +8693,9 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   evxy = EVOL 'ROUG' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxy 'ORDO') ; 
  $  *   tleg = TABL ; 
  $  *   tleg . 'TITRE' = TABL ; 
- $  *   tleg . 'TITRE' . 1 = 'Calc_SMXX' ; 
- $  *   tleg . 'TITRE' . 2 = 'Calc_SMYY' ; 
- $  *   tleg . 'TITRE' . 3 = 'Calc_SMXY' ; 
+ $  *   tleg . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_SMXX' ; 
+ $  *   tleg . 'TITRE' . 2 = CHAI 'Cal_mat' str3 '_SMYY' ; 
+ $  *   tleg . 'TITRE' . 3 = CHAI 'Cal_mat' str3 '_SMXY' ; 
  $  * * resultats de reference [2] Ghavamian (2003) LGCNSNiso 
  $  *   evref = VIDE 'EVOLUTIO' ; 
  $  *   tref = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ; 
@@ -8713,7 +8711,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tleg . 6   = MOT 'TIRR' ; 
  $  *   tleg . 'TITRE' . 6  = 'Ref_SMXY' ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' tleg 'TITR' '[2D Plan cont.] Contraintes vs Deformation' ; 
+ $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] Contraintes vs Deformation' ; 
  $  *   FINSI ; 
  $  *   
  $  * ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv 
@@ -8729,11 +8727,11 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tbid = TABL ; 
  $  *   tbid . 'TITRE' = TABL ; 
  $  *   tbid . 1 = 'MARQ PLUS' ; 
- $  *   tbid . 'TITRE' . 1 = 'Cal.init.' ; 
+ $  *   tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ; 
  $  *   tbid . 2 = 'MARQ ETOI' ; 
  $  *   tbid . 'TITRE' . 2 = ' Ref.' ; 
  $  *   tbid . 3 = 'MARQ CROI' ; 
- $  *   tbid . 'TITRE' . 3 = 'Cal.lim.' ; 
+ $  *   tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ; 
  $  *   OPTI ECHO 0 ; 
 
 

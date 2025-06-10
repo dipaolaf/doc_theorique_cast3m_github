@@ -28,7 +28,7 @@ SI IPSC1 ;
   OPTI 'TRAC' 'PSC' ;
 FINSI ;
 ** - pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
-ISAUV = VRAI ;
+ISAUV = FAUX ;
 SI ISAUV ;
   str1 = 'mazars_biaxial_' ;
 FINSI ;
@@ -61,7 +61,7 @@ beta  = 1. ;
   tdess = 'TABLE' ;
   tdess.'TITRE' = 'TABLE' ;
   tdess. 1 = 'MARQ LOSA' ;
-  tdess.'TITRE'. 1 = MOT 'Calcul' ;
+* tdess.'TITRE'. 1 = MOT 'Calcul' ;
   tdess. 2 = 'MARQ XS CROI' ;
   tdess.'TITRE'. 2 = MOT 'Reference' ;
 
@@ -71,8 +71,8 @@ DEBP PERSO1 t1*'TABLE' ;
 *mess 'Proc PERSO1';
 *mess '===========';
 *mess 'SOUS-PAS' ' ' T1.'WTABLE'.'ISOUSPAS' ' DPSMAX' ' ' T1.'WTABLE'.'DPSMAX' ;
-    t1 . 'ARRET' = ('>EG' T1.'WTABLE'.'ISOUSPAS' 1)
-              'OU' ('>EG' T1.'WTABLE'.'DPSMAX' 2.E-3) ;
+    t1.'WTABLE' . 'ARRET' = ('>EG' T1.'WTABLE'.'ISOUSPAS' 1)
+                       'OU' ('>EG' T1.'WTABLE'.'DPSMAX' 2.E-3) ;
   FINSI;
 FINP ;
 
@@ -114,8 +114,8 @@ DEBP EC_REL nsig ev_ref ev_cal nx ndime log_dess tcare ;
   FINSI ;
   tit1 = CHAI ndime ' ' nsig ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs' ' ' nx ', moy.int.|Ecart|' ' ' mer1 ;
   SI ITRAC1 ;
-    DESS (ev_cal et ev_ref) 'TITR' tit1 'LEGE' tcare ;
-    DESS eer1 'TITR' tit1 'LEGE' tcare ;
+    DESS (ev_cal et ev_ref) 'TITR' tit1 'LEGE' 'SE' tcare ;
+    DESS eer1 'TITR' tit1 ;
   FINSI ;
 FINP mer1 ;
 
@@ -135,14 +135,13 @@ SI (NEG &BCALC 1) ;
   QUIT BCALC;
 FINSI ;
 *========================== fin A ENLEVER ===========================
-** Pour la sauvegarde des résultats de calcul Cast3M et/ou MFront
-SI ISAUV ;
-  SI (EGA &BCALC 1) ;
-    str3 = '_Cast3M' ;
-  SINO ;
-    str3 = '_MFront' ;
-  FINSI ;
+** Distinction des résultats de calcul Cast3M et/ou MFront
+SI (EGA &BCALC 1) ;
+  str3 = '_Cast3M' ;
+SINO ;
+  str3 = '_MFront' ;
 FINSI ;
+tdess.'TITRE'. 1 = CHAI 'Cal_mat' str3 ;
 
 
 **************** C A S  #1  :  3 D   V O L U M I Q U E ****************
@@ -231,8 +230,8 @@ FINSI ;
     t . 'PROCEDURE_PERSO1'          = VRAI ;
     PASAPAS t ;
     ok = 0 ;
-    SI (EXIS t 'ARRET') ;
-      SI (t . 'ARRET') ;
+    SI (EXIS t.'WTABLE' 'ARRET') ;
+      SI (t.'WTABLE'.'ARRET') ;
         ok = 1 ;
       SINON;
         MESS '    la ruine n''a pas ete atteinte !';
@@ -291,10 +290,10 @@ FINSI ;
         iy = (DIME evdux1) + &b_evdux1 ;
         t_evd1.'COUR'.  ix = EXTR evdux1 'COUR' ix ;
         t_evd1.'MARQ'.  ix = 'MARQ LOSA' ;
-        t_evd1.'TITRE'. ix = CHAI 'Dir.X_pt.Gauss' ' ' ix ;
+        t_evd1.'TITRE'. ix = CHAI 'Cal_mat' str3 '_dir.X_pt.Gauss' ' ' ix ;
         t_evd1.'COUR'.  iy = EXTR evduy1 'COUR' ix ;
         t_evd1.'MARQ'.  iy = 'MARQ LOSA' ;
-        t_evd1.'TITRE'. iy = CHAI 'Dir.Y_pt.Gauss' ' ' ix ;
+        t_evd1.'TITRE'. iy = CHAI 'Cal_mat' str3 '_dir.Y_pt.Gauss' ' ' ix ;
         SI (EGA ix 1) ;
           evd1a = t_evd1.'COUR'. ix ;
         SINON ;
@@ -315,7 +314,7 @@ FINSI ;
       FIN b_dess1 ;
       tit1 = CHAI '[3D V] Dommage D en fn de UX et UY, angle' ' ' angl1 ' deg.';
       SI ITRAC1 ;
-        DESS evd1a 'TITR' tit1 'LEGE' tdess1 ;
+        DESS evd1a 'TITR' tit1 'LEGE' 'SE' tdess1 ;
       FINSI ;
 
 *     Courbes Contraintes en fonction des déformations : SMXX=fn(EPXX) et SMYY=fn(EPYYY)
@@ -352,11 +351,11 @@ FINSI ;
         SI (<EG &b_evse1 8) ;
           t_evse1.'COUR'.  &b_evse1 = EXTR evxx1 'COUR' &b_evse1 ;
           t_evse1.'MARQ'.  &b_evse1 = 'MARQ LOSA' ;
-          t_evse1.'TITRE'. &b_evse1 = CHAI 'Dir.X_pt.Gauss' ' ' &b_evse1 ;
+          t_evse1.'TITRE'. &b_evse1 = CHAI 'Cal_mat' str3 '_dir.X_pt.Gauss' ' ' &b_evse1 ;
         SINON ;
           t_evse1.'COUR'.  &b_evse1 = EXTR evyy1 'COUR' (&b_evse1 - 8) ;
           t_evse1.'MARQ'.  &b_evse1 = 'MARQ CARR' ;
-          t_evse1.'TITRE'. &b_evse1 = CHAI 'Dir.Y_pt.Gauss' ' ' (&b_evse1 - 8) ;
+          t_evse1.'TITRE'. &b_evse1 = CHAI 'Cal_mat' str3 '_dir.Y_pt.Gauss' ' ' (&b_evse1 - 8) ;
         FINS;
         SI (EGA &b_evse1 1) ;
           evse1a = t_evse1.'COUR'. &b_evse1 ;
@@ -373,7 +372,7 @@ FINSI ;
       FIN b_dess2 ;
       tit2 = CHAI '[3D V] SMXX=fn(EPXX) et SMYY=fn(EPYY), angle' ' ' angl1 ' deg.';
       SI ITRAC1 ;
-        DESS evse1a 'TITR' tit2 'LEGE' tdess2 ;
+        DESS evse1a 'TITR' tit2 'LEGE' 'SE' tdess2 ;
       FINSI ;
 
 *     contraintes SMXX et SMYY et deformations EPXX et EPYY a l'avant dernier instant (on retient l'etat avant dommage total)
@@ -575,8 +574,8 @@ FINSI ;
     t . 'PROCEDURE_PERSO1'          = VRAI ;
     PASAPAS t ;
     ok = 0 ;
-    SI (EXIS t 'ARRET') ;
-      SI (t . 'ARRET') ;
+    SI (EXIS t.'WTABLE' 'ARRET') ;
+      SI (t.'WTABLE'.'ARRET') ;
         ok = 1 ;
       SINON;
         MESS '    la ruine n''a pas ete atteinte !';
@@ -635,10 +634,10 @@ FINSI ;
         iy = (DIME evdux1) + &b_evdux1 ;
         t_evd1.'COUR'.  ix = EXTR evdux1 'COUR' ix ;
         t_evd1.'MARQ'.  ix = 'MARQ LOSA' ;
-        t_evd1.'TITRE'. ix = CHAI 'Dir.X_pt.Gauss' ' ' ix ;
+        t_evd1.'TITRE'. ix = CHAI 'Cal_mat' str3 '_dir.X_pt.Gauss' ' ' ix ;
         t_evd1.'COUR'.  iy = EXTR evduy1 'COUR' ix ;
         t_evd1.'MARQ'.  iy = 'MARQ LOSA' ;
-        t_evd1.'TITRE'. iy = CHAI 'Dir.Y_pt.Gauss' ' ' ix ;
+        t_evd1.'TITRE'. iy = CHAI 'Cal_mat' str3 '_dir.Y_pt.Gauss' ' ' ix ;
         SI (EGA ix 1) ;
           evd1a = t_evd1.'COUR'. ix ;
         SINON ;
@@ -659,7 +658,7 @@ FINSI ;
       FIN b_dess1 ;
       tit1 = CHAI '[2D Plan cont.] Dommage D en fn de UX et UY, angle' ' ' angl1 ' deg.';
       SI ITRAC1 ;
-        DESS evd1a 'TITR' tit1 'LEGE' tdess1 ;
+        DESS evd1a 'TITR' tit1 'LEGE' 'SE' tdess1 ;
       FINSI ;
 
 *     Courbes Contraintes en fonction des déformations : SMXX=fn(EPXX) et SMYY=fn(EPYYY)
@@ -696,11 +695,11 @@ FINSI ;
         SI (<EG &b_evse1 4) ;
           t_evse1.'COUR'.  &b_evse1 = EXTR evxx1 'COUR' &b_evse1 ;
           t_evse1.'MARQ'.  &b_evse1 = 'MARQ LOSA' ;
-          t_evse1.'TITRE'. &b_evse1 = CHAI 'Dir.X_pt.Gauss' ' ' &b_evse1 ;
+          t_evse1.'TITRE'. &b_evse1 = CHAI 'Cal_mat' str3 '_dir.X_pt.Gauss' ' ' &b_evse1 ;
         SINON ;
           t_evse1.'COUR'.  &b_evse1 = EXTR evyy1 'COUR' (&b_evse1 - 4) ;
           t_evse1.'MARQ'.  &b_evse1 = 'MARQ CARR' ;
-          t_evse1.'TITRE'. &b_evse1 = CHAI 'Dir.Y_pt.Gauss' ' ' (&b_evse1 - 4) ;
+          t_evse1.'TITRE'. &b_evse1 = CHAI 'Cal_mat' str3 '_dir.Y_pt.Gauss' ' ' (&b_evse1 - 4) ;
         FINS;
         SI (EGA &b_evse1 1) ;
           evse1a = t_evse1.'COUR'. &b_evse1 ;
@@ -717,7 +716,7 @@ FINSI ;
       FIN b_dess2 ;
       tit2 = CHAI '[2D Plan cont.] SMXX=fn(EPXX) et SMYY=fn(EPYY), angle' ' ' angl1 ' deg.';
       SI ITRAC1 ;
-        DESS evse1a 'TITR' tit2 'LEGE' tdess2 ;
+        DESS evse1a 'TITR' tit2 'LEGE' 'SE' tdess2 ;
       FINSI ;
 
 *     contraintes SMXX et SMYY et deformations EPXX et EPYY a l'avant dernier instant (on retient l'etat avant dommage total)
