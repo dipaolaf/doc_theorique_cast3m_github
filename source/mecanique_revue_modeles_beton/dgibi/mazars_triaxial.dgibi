@@ -68,6 +68,10 @@ umax  = 0.015 * haut ;
 
 ** Legende courbes
 tpre = TABL ;
+tpre . 1 = '0MPa' ;
+tpre . 2 = '1.5MPa' ;
+tpre . 3 = '4.5MPa' ;
+tpre . 4 = '9MPa' ;
 tleg = TABL ;
 tleg.'TITRE' = TABL ;
 
@@ -83,10 +87,11 @@ FINSI ;
 *========================== fin A ENLEVER ===========================
 ** Distinction des résultats de calcul Cast3M et/ou MFront
 SI (EGA &BCALC 1) ;
-  str3 = '_Cast3M' ;
+  str3 = 'Cast3M' ;
 SINO ;
-  str3 = '_MFront' ;
+  str3 = 'MFront' ;
 FINSI ;
+str4 = CHAI str3 ' :' ;
 
 
 **************** C A S  #1  :  3 D   V O L U M I Q U E ****************
@@ -113,10 +118,10 @@ SI (EXIS lcas 1) ;
 cadr1 = COUL ((0. (long + 5.E-3) (haut + 5.E-3)) ET (long (long + 5.E-3) (haut + 5.E-3))) 'BLAN' ;
 rep1 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) 'TURQ' ;
 SI ITRAC1 ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' '[3D V] Maillage - sgauche, sdroite' ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' '[3D V] Maillage - sbas, shaut' ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' '[3D V] Maillage - sdevant, sderrie' ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' '[3D V] Maillage' ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sgauche, sdroite') ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sbas, shaut') ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sdevant, sderrie') ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage') ;
 FINSI ;
 
 ** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
@@ -176,7 +181,7 @@ FINSI ;
     vpry = VECT fpry 'FORC' 'VERT' 1.2E-6 ;
     vprz = VECT fprz 'FORC' 'VERT' 1.2E-6 ;
     vdiz = VECT dihaut ' ' ' ' 'FLX' 'ROUG' 3.E-2 ;
-    tit0 = CHAI '[3D V] Blocages et chargement Uimp et Pres.imp =' pre1 ' Pa' ;
+    tit0 = CHAI str4 ' '  '[3D V] Blocages et chargements Uimp et P=' tpre . &b0 ;
     SI ITRAC1 ;
       TRAC ((RIGI mo ma) ET bl ET rir) (vprx ET vpry ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
     FINSI ;
@@ -185,9 +190,9 @@ FINSI ;
     t . 'TEMPS_CALCULES'            = PROG 0.505 'PAS' 0.005 1. ;
     PASAPAS t ;
 *    SI ITRAC1 ;
-*      tit1 = CHAI '[3D V] UZ vs Temps - P =' ' ' pre1 ;
+*      tit1 = CHAI '[3D V] UZ vs Temps, P=' tpre . &b0 ;
 *      DESS (EVOL 'TEMPE' t 'DEPLACEMENTS' 'UZ' p3) 'TITR' tit1 ;
-*      tit1 = CHAI '[3D V] SMZZ vs Temps - P =' ' ' pre1 ;
+*      tit1 = CHAI '[3D V] SMZZ vs Temps, P=' tpre . &b0 ;
 *      DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
 *    FINSI ;
 
@@ -228,14 +233,13 @@ FINSI ;
     evtot0 = evtot0 ET (EVOL (EXTR lcoul &b0) 'MANU' 'Temps' ltps 'D'    lend) ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
-    tpre . &b0 = CHAI 'FORMAT' '(F3.1)' 'P=' (pre1*1.E-6) '_MPa' ;
-    tleg . 'TITRE' . &b0 = CHAI 'Cal_mat' str3 '_' tpre . &b0 ;
+    tleg . 'TITRE' . &b0 = CHAI 'Cal_mat_' str3 '_P=' tpre . &b0 ;
 *   deformee
     REPE b2 (DIME t . 'TEMPS') ;
       tps1 = t . 'TEMPS' . (&b2 - 1) ;
 *     trace de la deformee (pour controle visuel)
       def1 = DEFO mail (tu . (&b2 - 1)) 10. 'ROUG' ;
-      tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ;
+      tit1 = CHAI str4 ' '  '[3D V] Deformee au temps' ' ' tps1 's, P=' tpre . &b0 ;
       SI ITRAC1 ;
 *        TRAC (def0 ET def1) 'TITR' tit1 ;
       FINSI ;
@@ -249,13 +253,13 @@ FINSI ;
 si (resexp);
   evxp0 = VIDE 'EVOLUTIO' ;
   tleg . (npres + 1) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 1) = CHAI 'Ref_Exp_' tpre . 1 ;
+  tleg . 'TITRE' . (npres + 1) = CHAI 'Ref_Exp_P=' tpre . 1 ;
   tleg . (npres + 2) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 2) = CHAI 'Ref_Exp_' tpre . 2 ;
+  tleg . 'TITRE' . (npres + 2) = CHAI 'Ref_Exp_P=' tpre . 2 ;
   tleg . (npres + 3) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 3) = CHAI 'Ref_Exp_' tpre . 3 ;
+  tleg . 'TITRE' . (npres + 3) = CHAI 'Ref_Exp_P=' tpre . 3 ;
   tleg . (npres + 4) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 4) = CHAI 'Ref_Exp_' tpre . 4 ;
+  tleg . 'TITRE' . (npres + 4) = CHAI 'Ref_Exp_P=' tpre . 4 ;
 * Courbes Contrainte vs Deformation  
   txp  = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
@@ -268,13 +272,13 @@ si (resexp);
 fins;
 ** Trace des courbes pour les differents niveaux de pression
   SI ITRAC1 ;
-    DESS evtot0 'TITR' '[3D V] Endommagement vs Temps' 'LEGE' 'NO' tleg ;
+    DESS evtot0 'TITR' (CHAI str4 ' '  '[3D V] Endommagement vs Temps') 'LEGE' 'NO' tleg ;
     SI RESEXP ;
-      DESS (evtot1 ET evxp0) 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
+      DESS (evtot1 ET evxp0) 'TITR' (CHAI str4 ' '  '[3D V] Contrainte vs Deformation') 'LEGE' 'NO' tleg ;
     SINON ;
-      DESS evtot1 'TITR' '[3D V] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
+      DESS evtot1 'TITR' (CHAI str4 ' '  '[3D V] Contrainte vs Deformation') 'LEGE' 'NO' tleg ;
     FINSI ;
-    DESS evtot2 'TITR' '[3D V] Reaction vs Deplacement' 'LEGE' 'NO' tleg ;
+    DESS evtot2 'TITR' (CHAI str4 ' '  '[3D V] Reaction vs Deplacement')   'LEGE' 'NO' tleg ;
   FINSI ;
 
 ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
@@ -291,11 +295,11 @@ si (resexp);
   tbid = TABL ;
   tbid . 'TITRE' = TABL ;
   tbid . 1 = 'MARQ PLUS' ;
-  tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ;
+  tbid . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_init.' ;
   tbid . 2 = 'MARQ ETOI' ;
   tbid . 'TITRE' . 2 = 'Ref.exp.' ;
   tbid . 3 = 'MARQ CROI' ;
-  tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ;
+  tbid . 'TITRE' . 3 =  CHAI 'Cal_mat_' str3 '_ipol.' ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #1  :  3 D   V O L U M I Q U E ****************';
@@ -303,30 +307,33 @@ si (resexp);
   REPE b2 (DIME evxp0) ;
     evexp = EXTR evxp0  'COUR' &b2 ;
     evcal = EXTR evtot1 'COUR' &b2 ;
+    evcou = EXTR evtot1 'COUL' &b2 ;
     xexp = ENLE (EXTR evexp 'ABSC') 1 ;
     yexp = ENLE (EXTR evexp 'ORDO') 1 ;
     xcal = ENLE (EXTR evcal 'ABSC') 1 ;
     ycal = ENLE (EXTR evcal 'ORDO') 1 ;
     xcal2 = xexp ;
     ycal2 = IPOL xcal2 evcal ;
+    evcal = EVOL evcou MANU (CHAI 'EPZZ_' tpre . &b2) xcal  (CHAI 'SMZZ_' tpre . &b2) ycal ;
     evcal2 = EVOL MANU 'EPZZ' xcal2 'SMZZ' ycal2 ;
     ler1 = ABS ((ycal2 - yexp) / yexp) ;
-    eer1 = EVOL 'ORAN' 'MANU' '|EPZZ|' (ABS xexp) '|Ec.rel|SMZZ' ler1 ;
+    eer1 = EVOL 'ORAN' 'MANU' (CHAI '|EPZZ|_' tpre . &b2) (ABS xexp) (CHAI '|Er|SMZZ_' tpre . &b2) ler1 ;
     deps = ABS ((EXTR xexp (DIME xexp)) - (EXTR xexp 1)) ;
     mer1 = (INTG eer1) / deps ;
-    tit1 = CHAI '[3D V]' ' ' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs |Defo.|, moy.int.|Ecart|' ' ' mer1 ;
+    tit1 = CHAI str4 ' '  '[3D V]' ' P=' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs |Defo.|, moy.int.|Ecart|' ' ' mer1 ;
     SI ITRAC1 ;
       DESS eer1 'TITR' tit1 ;
     FINSI ;
     SI ITRAC1 ;
       DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' 'NO' tbid ;
     FINSI ;
-    MESS ' Pres.hydrostat.:' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
+    MESS ' Pres.hydrostat.: P=' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
     SAUT 1 LIGN ;
   FIN b2 ;
   OPTI ECHO 1 ;
 fins;
 FINSI ;
+
 
 
 
@@ -348,7 +355,7 @@ SI (EXIS lcas 2) ;
 cadr1 = COUL ((0. (haut + 5.E-3)) ET (long (haut + 5.E-3))) 'BLAN' ;
 rep1 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) 'TURQ' ;
 SI ITRAC1 ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' '[2D Axi.] Maillage' ;
+  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET ((sdroite ET shaut) COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[2D Axi.] Maillage') ;
 FINSI ;
 
 ** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
@@ -410,7 +417,7 @@ FINSI ;
     vprr = VECT fprr 'FORC' 'VERT' 1.E-7 ;
     vprz = VECT fprz 'FORC' 'VERT' 1.E-7 ;
     vdiz = VECT dihaut ' ' 'FLX' 'ROUG' 3.E-2 ;
-    tit0 = CHAI '[2D Axi.] Blocages et chargement Uimp et Pres.imp =' pre1 ' Pa' ;
+    tit0 = CHAI str4 ' '  '[2D Axi.] Blocages et chargements Uimp et P=' tpre . &b0 ;
     SI ITRAC1 ;
       TRAC ((RIGI mo ma) ET bl ET rir) (vprr ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
     FINSI ;
@@ -419,9 +426,9 @@ FINSI ;
     t . 'TEMPS_CALCULES'            = PROG 0.505 'PAS' 0.005 1. ;
     PASAPAS t ;
 *    SI ITRAC1 ;
-*      tit1 = CHAI '[2D Axi.] UZ vs Temps - P =' ' ' pre1 ;
+*      tit1 = CHAI str4 ' '  '[2D Axi.] UZ vs Temps, P=' tpre . &b0 ;
 *      DESS (EVOL 'TEMPE' t 'DEPLACEMENTS' 'UZ' p3) 'TITR' tit1 ;
-*      tit1 = CHAI '[2D Axi.] SMZZ vs Temps - P =' ' ' pre1 ;
+*      tit1 = CHAI str4 ' '  '[2D Axi.] SMZZ vs Temps, P=' tpre . &b0 ;
 *      DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
 *    FINSI ;
 
@@ -462,14 +469,13 @@ FINSI ;
     evtot0 = evtot0 ET (EVOL (EXTR lcoul &b0) 'MANU' 'Temps' ltps 'D'    lend) ;
     evtot1 = evtot1 ET (EVOL (EXTR lcoul &b0) 'MANU' 'EPZZ'  leps 'SMZZ' lsig) ;
     evtot2 = evtot2 ET (EVOL (EXTR lcoul &b0) 'MANU' 'UZ'    ldep 'FZ'   lrea) ;
-    tpre . &b0 = CHAI 'FORMAT' '(F3.1)' 'P=' (pre1*1.E-6) '_MPa' ;
-    tleg . 'TITRE' . &b0 = CHAI 'Cal_mat' str3 '_' tpre . &b0 ;
+    tleg . 'TITRE' . &b0 = CHAI 'Cal_mat_' str3 '_P=' tpre . &b0 ;
 *   deformee
     REPE b2 (DIME t . 'TEMPS') ;
       tps1 = t . 'TEMPS' . (&b2 - 1) ;
 *     trace de la deformee (pour controle visuel)
       def1 = DEFO mail (tu . (&b2 - 1)) 10. 'ROUG' ;
-      tit1 = CHAI '[2D Axi.] Deformee au temps' ' ' tps1 ;
+      tit1 = CHAI str4 ' '  '[2D Axi.] Deformee au temps' ' ' tps1 's, P=' tpre . &b0 ;
       SI ITRAC1 ;
 *        TRAC (def0 ET def1) 'TITR' tit1 ;
       FINSI ;
@@ -483,13 +489,13 @@ FINSI ;
 si (resexp);
   evxp0 = VIDE 'EVOLUTIO' ;
   tleg . (npres + 1) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 1) = CHAI 'Ref_Exp_' tpre . 1 ;
+  tleg . 'TITRE' . (npres + 1) = CHAI 'Ref_Exp_P=' tpre . 1 ;
   tleg . (npres + 2) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 2) = CHAI 'Ref_Exp_' tpre . 2 ;
+  tleg . 'TITRE' . (npres + 2) = CHAI 'Ref_Exp_P=' tpre . 2 ;
   tleg . (npres + 3) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 3) = CHAI 'Ref_Exp_' tpre . 3 ;
+  tleg . 'TITRE' . (npres + 3) = CHAI 'Ref_Exp_P=' tpre . 3 ;
   tleg . (npres + 4) = MOT 'MARQ CROI NOLI' ;
-  tleg . 'TITRE' . (npres + 4) = CHAI 'Ref_Exp_' tpre . 4 ;
+  tleg . 'TITRE' . (npres + 4) = CHAI 'Ref_Exp_P=' tpre . 4 ;
 * Courbes Contrainte vs Deformation  
   txp  = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ;
   evxp0 = evxp0 ET (EVOL 'BLEU' 'MANU' 'EPZZ' (txp . 1) 'SMZZ' (txp . 2)) ;
@@ -502,13 +508,13 @@ si (resexp);
 fins;
 ** Trace des courbes pour les differents niveaux de pression
   SI ITRAC1 ;
-    DESS evtot0 'TITR' '[2D Axi.] Endommagement vs Temps' 'LEGE' 'NO' tleg ;
+    DESS evtot0 'TITR' (CHAI str4 ' ' '[2D Axi.] Endommagement vs Temps') 'LEGE' 'NO' tleg ;
     SI RESEXP ;
-      DESS (evtot1 ET evxp0) 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
+      DESS (evtot1 ET evxp0) 'TITR' (CHAI str4 ' '  '[2D Axi.] Contrainte vs Deformation') 'LEGE' 'NO' tleg ;
     SINON ;
-      DESS evtot1 'TITR' '[2D Axi.] Contrainte vs Deformation' 'LEGE' 'NO' tleg ;
+      DESS evtot1 'TITR' (CHAI str4 ' '  '[2D Axi.] Contrainte vs Deformation') 'LEGE' 'NO' tleg ;
     FINSI ;
-    DESS evtot2 'TITR' '[2D Axi.] Reaction vs Deplacement' 'LEGE' 'NO' tleg ;
+    DESS evtot2 'TITR' (CHAI str4 ' '  '[2D Axi.] Reaction vs Deplacement')   'LEGE' 'NO' tleg ;
   FINSI ;
 
 ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
@@ -525,11 +531,11 @@ si (resexp);
   tbid = TABL ;
   tbid . 'TITRE' = TABL ;
   tbid . 1 = 'MARQ PLUS' ;
-  tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ;
+  tbid . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_init.' ;
   tbid . 2 = 'MARQ ETOI' ;
   tbid . 'TITRE' . 2 = 'Ref.exp.' ;
   tbid . 3 = 'MARQ CROI' ;
-  tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ;
+  tbid . 'TITRE' . 3 =  CHAI 'Cal_mat_' str3 '_ipol.' ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
   MESS ' **************** C A S  #2  :  2 D   A X I S Y M E T R I Q U E ****************';
@@ -537,25 +543,27 @@ si (resexp);
   REPE b2 (DIME evxp0) ;
     evexp = EXTR evxp0  'COUR' &b2 ;
     evcal = EXTR evtot1 'COUR' &b2 ;
+    evcou = EXTR evtot1 'COUL' &b2 ;
     xexp = ENLE (EXTR evexp 'ABSC') 1 ;
     yexp = ENLE (EXTR evexp 'ORDO') 1 ;
     xcal = ENLE (EXTR evcal 'ABSC') 1 ;
     ycal = ENLE (EXTR evcal 'ORDO') 1 ;
     xcal2 = xexp ;
     ycal2 = IPOL xcal2 evcal ;
+    evcal = EVOL evcou MANU (CHAI 'EPZZ_' tpre . &b2) xcal  (CHAI 'SMZZ_' tpre . &b2) ycal ;
     evcal2 = EVOL MANU 'EPZZ' xcal2 'SMZZ' ycal2 ;
     ler1 = ABS ((ycal2 - yexp) / yexp) ;
-    eer1 = EVOL 'ORAN' 'MANU' '|EPZZ|' (ABS xexp) '|Ec.rel|SMZZ' ler1 ;
+    eer1 = EVOL 'ORAN' 'MANU' (CHAI '|EPZZ|_' tpre . &b2) (ABS xexp) (CHAI '|Er|SMZZ_' tpre . &b2) ler1 ;
     deps = ABS ((EXTR xexp (DIME xexp)) - (EXTR xexp 1)) ;
     mer1 = (INTG eer1) / deps ;
-    tit1 = CHAI '[3D V]' ' ' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs |Defo.|, moy.int.|Ecart|' ' ' mer1 ;
+    tit1 = CHAI str4 ' '  '[2D Axi.]' ' P=' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs |Defo.|, moy.int.|Ecart|' ' ' mer1 ;
     SI ITRAC1 ;
       DESS eer1 'TITR' tit1 ;
     FINSI ;
     SI ITRAC1 ;
       DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' 'NO' tbid ;
     FINSI ;
-    MESS ' Pres.hydrostat.:' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
+    MESS ' Pres.hydrostat.: P=' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
     SAUT 1 LIGN ;
   FIN b2 ;
   OPTI ECHO 1 ;

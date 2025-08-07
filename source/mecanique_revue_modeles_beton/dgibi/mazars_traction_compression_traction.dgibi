@@ -1665,7 +1665,6 @@ FINSI ;
 
   lsiga_red = 'IPOL' an12_red leps_red ;
   ler2 = ABS ((lsig_red - lsiga_red) / lsiga_red) ;
-  tit2 = CHAI '[2D Plan cont.] Ecart relatif Calcul/Reference Contrainte vs Deformation en 2.Compression, max' ' ' mer2 ;
   eer2 = EVOL 'ORAN' 'MANU' 'Temps'  ltps_red  '|Ec.rel|SMXX' ler2 ;
   dtps = (EXTR ltps_red (DIME ltps_red)) - (EXTR ltps_red 1) ;
   mer2 = (INTG eer2) / dtps ;

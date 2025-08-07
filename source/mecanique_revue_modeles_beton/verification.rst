@@ -328,7 +328,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1,46384.10^{-15} < 1.10^{-6}
+   1,47061.10^{-15} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -797,7 +797,7 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   6,94087.10^{-10} < 1.10^{-6}
+   4,00518.10^{-10} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -1094,7 +1094,7 @@ On observe que :
 - La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1,63380.10^{-15} < 1.10^{-6}
+   1,59801.10^{-15} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_traction_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -1318,7 +1318,7 @@ On observe que :
 - La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
 .. math::
-   1,11598.10^{-9} < 1.10^{-6}
+   4,93144.10^{-10} < 1.10^{-6}
    
 En conséquence, les résultats du cas-test ``mazars_compression_cyclique.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -1662,8 +1662,8 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- en traction : :math:`2,77131.10^{-16} < 1.10^{-6}` ;
-- en compression : :math:`2,06023.10^{-10} < 1.10^{-6}`.
+- en traction : :math:`4,24684.10^{-16} < 1.10^{-6}` ;
+- en compression : :math:`2,08621.10^{-10} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -2073,9 +2073,9 @@ Courbe d'évolution de la contrainte en fonction de la déformation
 
 La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
-- dans la phase 1 de traction : :math:`3,46471.10^{-16} < 1.10^{-6}` ;
-- dans la phase 2 de compression : :math:`3,66278.10^{-10} < 1.10^{-6}` ;
-- dans la phase 3 de traction : :math:`9,92368.10^{-15} < 1.10^{-6}`.
+- dans la phase 1 de traction : :math:`3,92372.10^{-16} < 1.10^{-6}` ;
+- dans la phase 2 de compression : :math:`2,95422.10^{-10} < 1.10^{-6}` ;
+- dans la phase 3 de traction : :math:`1,63298.10^{-14} < 1.10^{-6}`.
    
 En conséquence, les résultats du cas-test ``mazars_traction_compression_traction.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
@@ -2677,8 +2677,8 @@ Pour les quatre valeurs de pression hydrostatique, la moyenne intégrale de la v
 
 - Pour P = 0,0 MPa : :math:`1,08653.10^{-1}` ;
 - Pour P = 1,5 MPa : :math:`8,44621.10^{-2}` ;
-- Pour P = 4,5 MPa : :math:`9,07996.10^{-2}` ;
-- Pour P = 9,0 MPa : :math:`1,78290.10^{-1}`.
+- Pour P = 4,5 MPa : :math:`9,08199.10^{-2}` ;
+- Pour P = 9,0 MPa : :math:`1,78287.10^{-1}`.
 
 Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul.
 En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.

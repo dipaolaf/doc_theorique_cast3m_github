@@ -490,6 +490,7 @@ FINSI ;
 
 
 
+
 ******* C A S  #2  :  2 D   C O N T R A I N T E S   P L A N E S ********
 SI (EXIS lcas 2) ;
 

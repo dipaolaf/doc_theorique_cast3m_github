@@ -86,6 +86,7 @@ OPTI ECHO 1 ;
   tdess = 'TABLE' ;
   tdess.'TITRE' = 'TABLE' ;
 
+
 REPE BCALC 2 ;
 *======= A ENLEVER lorsque l'implémentation MFront sera faite =======
 SI (NEG &BCALC 1) ;
