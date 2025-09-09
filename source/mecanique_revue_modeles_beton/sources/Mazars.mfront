@@ -1,0 +1,169 @@
+//**********************************************************************
+
+@DSL Default;
+@Behaviour Mazars;
+@Author Elian Dussart;
+@Date 03 / 06 / 2025;
+@Description {
+  Loi de comportement de Mazars.
+}
+
+@UnitSystem SI;
+
+//**********************************************************************
+//********** Material properties to be entered in Cast3M ***************
+
+@MaterialProperty stress young;
+young.setGlossaryName("YoungModulus");
+@MaterialProperty real nu;
+nu.setGlossaryName("PoissonRatio");
+
+@MaterialProperty real acomp;
+@MaterialProperty real bcomp;
+@MaterialProperty real atrac;
+@MaterialProperty real btrac;
+@MaterialProperty real beta;
+@MaterialProperty real epsd0;
+
+//**********************************************************************
+//***************** State (internal) variables *************************
+//********(updated during calculations and outputted)*******************
+
+//@AuxiliaryStateVariable : donnée interne du modèle sauvegardée pendant le pas de temps, permettant d'utiliser la version actualisée dans le pas de temps courant.
+@AuxiliaryStateVariable real d; // Damage variable (scalar)
+d.setGlossaryName("Damage");
+@StateVariable real dcom ;
+dcom.setEntryName("EndommagementCompression") ;
+@StateVariable real dtra ;
+dtra.setEntryName("EndommagementTraction") ;
+@StateVariable real alft ;
+alft.setEntryName("ZoneTraction") ;
+@StateVariable real alfc ;
+alfc.setEntryName("ZoneCompression") ;
+
+//**********************************************************************
+//********************** Local variables *******************************
+
+@LocalVariable real epstim;
+@LocalVariable real gamma;
+@LocalVariable real eto_tild;
+@LocalVariable real Zero;
+@LocalVariable real Un;
+@LocalVariable real Deux;
+@LocalVariable real X_Petit;
+@LocalVariable real Y_Petit;
+@LocalVariable real D_Borne;             // maximum endommagement numérique utilisé
+@LocalVariable real lambda;              // constante de Lamé
+@LocalVariable real mu;                  // constante de Lamé
+@LocalVariable stensor<3, stress> sig_p; // contraintes principales
+@LocalVariable stensor<3, stress> spt;   
+@LocalVariable stensor<3, stress> spc;   
+@LocalVariable stensor<3, strain> eto_t; 
+
+//**********************************************************************
+//******** Initialization of Lamé's Constants & Initial Damage *********
+
+@InitializeLocalVariables {
+  lambda = computeLambda(young, nu);
+  mu = computeMu(young, nu);
+  D_Borne = 1. - 1.e-8;
+  Zero = 0.;
+  Un = 1.;
+  Deux = 2.;
+  X_Petit = 1.e-12;
+  Y_Petit = 1.;
+}
+
+//**********************************************************************
+//************ Constitutive model integrator (explicit) ****************
+
+@Integrator {
+
+  const auto e = eval(eto + deto);                                                        // Calcul de la déformation totale
+
+  strain e1, e2, e3;       
+  stress sp1, sp2, sp3;    
+
+  constexpr auto esolver = Stensor::FSESJACOBIEIGENSOLVER;                                //Déclaration du solver utilisé
+
+  e.template computeEigenValues<esolver>(e1, e2, e3);                                     //Calcul des déformations principales
+
+  const auto sig_tilde = eval(lambda * trace(e) * Stensor::Id() + 2 * mu * e);            //récupération des contraintes liées à la déformation calculée.
+  
+  sig_tilde.template computeEigenValues<esolver>(sp1, sp2, sp3);                          // Calcul des contraintes principales
+
+  sig_p = {sp1, sp2, sp3, stress(0), stress(0), stress(0)};                               // Définition du tenseur de contrainte
+
+  eto_tild = sqrt(pow(max(Zero, e1), 2) + pow(max(Zero, e2), 2) + pow(max(Zero, e3), 2)); // Calcul de la déformation équivalente
+  
+  eto_tild = max(X_Petit, eto_tild);
+  epstim = max(X_Petit, eto_tild);
+  // Deux variables différentes car la variable epstim peut changer pour la bi ou tri-compression																		  
+  
+  //Pour les calculs structurels, vérification de la condition de déformation (évite des calculs inutiles)
+  if (epstim >= epsd0) {
+	  // Calcul du signe des contraintes élastiques
+	  for (size_t i = 0; i != 3; i++) {
+		if (sig_p(i) < 0) {
+		  spc(i) = sig_p(i);
+		  spt(i) = Zero;
+		} else {
+		  spc(i) = Zero;
+		  spt(i) = sig_p(i);
+		}
+	  }
+	  const auto tr_spc = trace(spc);
+	  const auto tr_spt = trace(spt);
+
+	  // Calcul des deformations dues aux contraintes positives
+	  for (size_t i = 0; i != 3; i++) { // déformation traction
+		eto_t(i) = (spt(i) * (Un + nu) - tr_spt * nu) / young;
+	  }
+
+	  // Déduction alft et alfc
+	  alft = (max(Zero, e1) * eto_t(0) + max(Zero, e2) * eto_t(1) +
+			   max(Zero, e3) * eto_t(2)) /
+			  (pow(eto_tild, 2));
+	  alfc = Un - alft;
+	  
+	  // Modification pour la bi ou tri-compression
+	  if ((tr_spc < -Y_Petit) && (tr_spt < Y_Petit)) {
+		gamma = -sqrt(pow(spc(0), 2) + pow(spc(1), 2) + pow(spc(2), 2)) / tr_spc;
+		epstim *= gamma;
+	  }
+
+	  // Amélioration de la réponse en cisaillement pour beta > 1
+	  if (beta > Un) {
+		if (alft > X_Petit) {
+		  alft = pow(alft, beta);
+		}
+		if (alfc > X_Petit) {
+		  alfc = pow(alfc, beta);
+		}
+	  }
+
+	  // Calcul de dtra et dcom
+	  // Endommagement Mazars classique (at > 0)
+	  if (epstim >= epsd0) {
+		dtra = Un - epsd0 * (Un - atrac) / epstim - atrac * exp(btrac * (epsd0 - epstim));
+		dcom = Un - epsd0 * (Un - acomp) / epstim - acomp * exp(-bcomp * (epstim - epsd0));
+	  } else {
+		dtra = Zero;
+		dcom = Zero;
+	  }
+	  
+	  //Calcul de l'endommagement d
+	  if(alft * dtra + alfc * dcom > d) {
+		d = alft * dtra + alfc * dcom;
+		d = min(d, D_Borne);
+	  }
+  } else {
+	  d = max(d, Zero);
+  }
+
+  // Calcul des contraintes finales
+  sig = (1 - d) * sig_tilde;
+
+}
+
+//**********************************************************************

@@ -371,11 +371,10 @@ Le calul de l'endommagement est réalisé selon la même méthode que celle déc
 Implémentation MFront
 ~~~~~~~~~~~~~~~~~~~~~
 
-Une implémentation de la loi de Mazars a été réalisée sous MFront pour une utilisation avec des elements volumiques/surfaciques. La formulation implémentée est une version simplifiée de celle disponible dans Cast3M. En particulier, aucun correctif n'est introduit pour améliorer la réponse du modèle en cisaillement et en situation de bi ou tri-compression. 
+Une implémentation de la loi de Mazars a été réalisée sous MFront par Elian Dussart lors de son stage (2025) dans le cadre du Pôle de Compétences du SEMT. Elle s'inspire du fichier source cmazar.eso utilisé dans Cast3M et reprend la formulation originale de l'endommagement de Mazars sans régularisation mais avec les améliorations de la réponse du modèle en cisaillement et en situation de bi ou tri-compression [DUSSART-2025]_.
 
-	.. literalinclude:: sources/mazars_mfront.mfront
+	.. literalinclude:: sources/Mazars.mfront
 		:linenos:
-
 
 Hypothèses de calcul et éléments finis disponibles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

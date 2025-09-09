@@ -21,6 +21,10 @@ Références
   *A Fiber Model accounting for Transverse Shear in Castem 2000*,
   JRC Special Publication N°I.94.59, Ispra, **1994**
   
+.. [DUSSART-2025] E. Dussart, N. Hourdequin, P. Le Gaillard, L. Jason
+  *Documentation des lois de comportement du béton du Pôle de Compétences*,
+  Page html, SEMT, **2025**
+  
 **Références pour la modélisation par éléments finis :**
 
 .. [COMBESCURE-2001] D. Combescure,
