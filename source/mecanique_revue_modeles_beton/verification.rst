@@ -11,8 +11,6 @@ le béton disponibles dans Cast3M. Pour chaque loi de comportement y sont décri
 - la solution de référence ;
 - les résultats et leur comparaison à la référence.
 
-
-
 Pour les tests unitaires, c'est-à-dire portant sur un seul élément fini, la géométrie considérée est toujours :
 
 - en 3D/2D poutre à fibres : 1 élément **TIMO** avec :math:`L=1` m et 1 élément **QUAS** de section carré avec :math:`S=1` m² [nh145313 : actuellement :math:`S=10^{-2}` m²];
@@ -20,10 +18,8 @@ Pour les tests unitaires, c'est-à-dire portant sur un seul élément fini, la g
 - en 2D contraintes planes : 1 élément **QUA4** avec :math:`L=1` m et :math:`e=0,1` m (paramètre **DIM3**) ;
 - en 2D axisymétrique : 1 élément **QUA4** avec :math:`R=1` m et :math:`H=1` m.
 
-
-
-Loi MAZARS
-----------
+Modèle de Mazars
+----------------
 
 .. _sec:mazars_ana_trac:
 
@@ -40,7 +36,7 @@ L’objectif est d’évaluer la limite en traction puis le comportement post-pi
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- d'endommagement soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
 - de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
@@ -56,7 +52,7 @@ Endommagement
    
 où :
 
-- :math:`A_t` et :math:`B_t` sont les paramètres de la loi de Mazars en traction ;
+- :math:`A_t` et :math:`B_t` sont les paramètres du modèle de Mazars en traction ;
 - :math:`e_0` est le seuil d'endommagement en déformation ;
 - :math:`e` est la déformation équivalente selon la formulation proposée par Mazars :
 
@@ -96,7 +92,7 @@ Résultats du cas 3D poutre à fibres
 
 Solution de référence
 """""""""""""""""""""
-Dans la source fibmaz.eso décrivant le modèle Mazars pour la poutre à fibres, quelque soit la dimension géométrique du problème, le tenseur des déformations est défini en 3D de la façon suivante :
+Dans la source fibmaz.eso décrivant le modèle de Mazars pour la poutre à fibres, quelque soit la dimension géométrique du problème, le tenseur des déformations est défini en 3D de la façon suivante :
 
 .. math::
 
@@ -183,7 +179,7 @@ Résultats du cas 2D poutre à fibres
 
 Solution de référence
 """""""""""""""""""""
-Dans la mesure où le tenseur des déformations est défini en 3D dans le modèle Mazars pour la poutre à fibres, son expression dans le cas 2D est la même que dans le cas 3D :
+Dans la mesure où le tenseur des déformations est défini en 3D dans le modèle de Mazars pour la poutre à fibres, son expression dans le cas 2D est la même que dans le cas 3D :
 
 .. math::
 
@@ -493,8 +489,6 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-
-
 .. _sec:mazars_ana_comp:
 
 Compression monotone
@@ -509,7 +503,7 @@ L’objectif est d’évaluer la limite en compression puis le comportement post
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- d'endommagement soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
 - de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
@@ -525,7 +519,7 @@ Endommagement
    
 où :
 
-- :math:`A_c` et :math:`B_c` sont les paramètres de la loi de Mazars en compression ;
+- :math:`A_c` et :math:`B_c` sont les paramètres du modèle de Mazars en compression ;
 - :math:`e_0` est le seuil d'endommagement en déformation ;
 - :math:`e` est la déformation équivalente selon la formulation proposée par Mazars :
 
@@ -565,7 +559,7 @@ Résultats du cas 3D poutre à fibres
 
 Solution de référence
 """""""""""""""""""""
-Dans la source fibmaz.eso décrivant le modèle Mazars pour la poutre à fibres, quelque soit la dimension géométrique du problème, le tenseur des déformations est défini en 3D de la façon suivante :
+Dans la source fibmaz.eso décrivant le modèle de Mazars pour la poutre à fibres, quelque soit la dimension géométrique du problème, le tenseur des déformations est défini en 3D de la façon suivante :
 
 .. math::
 
@@ -652,7 +646,7 @@ Résultats du cas 2D poutre à fibres
 
 Solution de référence
 """""""""""""""""""""
-Dans la mesure où le tenseur des déformations est défini en 3D dans le modèle Mazars pour la poutre à fibres, son expression dans le cas 2D est la même que dans le cas 3D :
+Dans la mesure où le tenseur des déformations est défini en 3D dans le modèle de Mazars pour la poutre à fibres, son expression dans le cas 2D est la même que dans le cas 3D :
 
 .. math::
 
@@ -962,8 +956,6 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-
-
 Traction cyclique
 ~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``mazars_traction_cyclique.dgibi``
@@ -979,7 +971,7 @@ L’objectif est de vérifier la dégradation progressive des propriétés méca
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- d'endommagement soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
 - de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
@@ -1187,8 +1179,6 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-
-
 Compression cyclique
 ~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``mazars_compression_cyclique.dgibi``
@@ -1203,7 +1193,7 @@ L’objectif est de vérifier la dégradation progressive des propriétés méca
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- d'endommagement soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
 - de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
@@ -1411,8 +1401,6 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-
-
 Traction compression
 ~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``mazars_traction_compression.dgibi``
@@ -1426,7 +1414,7 @@ L’objectif est de vérifier, lorsque le chargement passe de la traction à la 
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- d'endommagement soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
 - de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
@@ -1820,8 +1808,6 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-
-
 Traction compression traction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Le cas-test se dénomme ``mazars_traction_compression_traction.dgibi``
@@ -1835,7 +1821,7 @@ L’objectif est de vérifier, lorsque le chargement passe pendant le calcul de 
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- d'endommagement soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
 - de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs ;
 - de la force de réaction globale en fonction du déplacement imposé.
 
@@ -2234,8 +2220,6 @@ Courbe d'évolution de la force de réaction en fonction du déplacement imposé
    
    Force de réaction en fonction du déplacement imposé.
 
-
-
 Cisaillement
 ~~~~~~~~~~~~
 Le cas-test se dénomme ``mazars_cisaillement.dgibi``
@@ -2249,7 +2233,7 @@ L'objectif est d'évaluer l'impact du paramètre :math:`\beta>1` introduit dans 
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
+- d'endommagement soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyen pour les modèles massifs, en fonction du temps ;
 - de la contrainte en fonction de la déformation soit en chaque point de Gauss de la section de la poutre pour les modèles poutre à fibres, soit moyennes pour les modèles massifs.
 
 On ne dispose pas de solution de référence pour ce cas-test.
@@ -2460,8 +2444,6 @@ Le fait de retouver ces deux tendances attendues permet de conclure que les rés
 
 Enfin, on constate que les résultats sont identiques d'un mode de représentation géométrique à l'autre. La cohérence des résultats entre eux confirme qu'ils sont satisfaisants dans chaque mode de représentation.
 
-
-
 Biaxial
 ~~~~~~~
 Le cas-test se dénomme ``mazars_biaxial.dgibi``
@@ -2493,7 +2475,7 @@ avec :
    
    Chargement biaxial du mode 3D volumique pour :math:`\theta \in [45°;225°]` (:math:`\sigma_{0}` en bleu, :math:`\sigma_{max}` en vert). Les résultats de la deuxième moitié du domaine angulaire sont obtenus par symétrie par rapport à la bissectrice.
 
-Pour chaque valeur de :math:`\theta`, le calcul est interrompu avant d'atteindre le chargement maximal, lors de la détection de la ruine qui résulte de la combinaison de deux critères : l'un sur le nombre maximum de sous pas de convergence et l'autre sur l'incrément maximum de déformation entre deux pas de calcul. C'est au pas de calcul qui précède cette détection que sont relevées les valeurs des contraintes maximales atteintes :math:`\sigma_{xx}` et :math:`\sigma_{yy}`.
+Pour chaque valeur de :math:`\theta`, le calcul est interrompu avant d'atteindre le chargement maximal, lors de la détection de la ruine qui résulte de la combinaison de deux critères : l'un sur le nombre maximal de sous-pas de convergence limité à 1 et l'autre sur l'incrément maximal de déformation entre 2 pas de calcul consécutifs limité à :math:`2.10^{-3}`. C'est au pas de calcul qui précède cette détection que sont relevées les valeurs des contraintes maximales atteintes :math:`\sigma_{xx}` et :math:`\sigma_{yy}`.
 
 L’objectif est de caractériser la courbe de biaxialité qui représente la surface de charge du modèle dans le plan :math:`(\sigma_{xx};\sigma_{yy})`.
 
@@ -2562,7 +2544,7 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    :width: 15cm
    :align: center
    
-   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`.
 
 La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
@@ -2576,7 +2558,7 @@ Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\s
    :width: 15cm
    :align: center
    
-   Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
+   Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`.
 
 La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
    
@@ -2592,7 +2574,7 @@ Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
    :width: 15cm
    :align: center
    
-   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`
+   Courbe de biaxialité :math:`(\sigma_{xx} ; \sigma_{yy})`.
 
 La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte entre la solution calculée et la solution de référence est :
 
@@ -2600,19 +2582,17 @@ La moyenne intégrale de la valeur absolue de l'écart relatif en contrainte ent
 - Pour la composante :math:`\sigma_{yy}` : :math:`1,10653.10^{-2} < 2.10^{-2}`.
 
 Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 .. figure:: figures/mazars_biax_SxSysFc_2dplan.png
    :width: 15cm
    :align: center
    
-   Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`
+   Courbe de biaxialité normalisée :math:`(\frac{\sigma_{xx}}{|f_{c}|} ; \frac{\sigma_{yy}}{|f_{c}|})`.
 
 La courbe calculée de biaxialité normalisée coupe les axes du repère aux deux points :math:`(-1~;~0)` et :math:`(0~;~-1)`.
    
 En conséquence de ces deux constats, les résultats du cas-test ``mazars_biaxial.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
-
-
 
 Triaxial
 ~~~~~~~~
@@ -2680,8 +2660,7 @@ Pour les quatre valeurs de pression hydrostatique, la moyenne intégrale de la v
 - Pour P = 4,5 MPa : :math:`9,08199.10^{-2}` ;
 - Pour P = 9,0 MPa : :math:`1,78287.10^{-1}`.
 
-Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul.
-En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul. En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Courbes d'évolution de la force de réaction en fonction du déplacement imposé
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2720,8 +2699,7 @@ Pour les quatre valeurs de pression hydrostatique, la moyenne intégrale de la v
 - Pour P = 4,5 MPa : :math:`9,08254.10^{-2}` ;
 - Pour P = 9,0 MPa : :math:`1,78272.10^{-1}`.
 
-Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul.
-En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes expérimentales est qualitativement reproduite par le calcul. En conséquence, les résultats du cas-test ``mazars_triaxial.dgibi`` en mode 2D axisymétrique sont jugés satisfaisants.
 
 Courbes d'évolution de la force de réaction en fonction du déplacement imposé
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2732,21 +2710,39 @@ Courbes d'évolution de la force de réaction en fonction du déplacement impos�
    
    Force de réaction en fonction du déplacement imposé.
 
-
-
 Test de Willam
 ~~~~~~~~~~~~~~
 Le cas-test se dénomme ``mazars_willam.dgibi``
 
 On n'applique le cas-test de Willam que pour la modélisation :ref:`massif <sec:modeles_beton_test_mass_willam>`. En effet, la biaxialité du chargement n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de la poutre et de cisaillement dans le plan de sa section.
 
-Le chargement du test de Willam est consistué de deux phases successives. La phase 1 consiste en un chargement de traction simple en déformation imposée ``EPXX`` dans la direction X, jusqu'à atteindre le seuil d'endommagement en déformation. La phase 2, dans laquelle on vise l'endommagement complet proche de 1, est la combinaison de trois chargements superposés : tout d'abord le chargement de traction en déformation imposée ``EPXX`` de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; puis un deuxième chargement de traction en déformation imposée ``EPYY`` est appliqué dans la direction Y jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin un troisième chargement de cisaillement en glissement imposé ``GAXY`` est appliqué dans le plan XY jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
+Le chargement du test de Willam est constitué de deux phases successives. 
+
+La phase 1 consiste en un chargement :math:`ep_1` de traction simple en déformation imposée ``EPXX`` dans la direction X, jusqu'à atteindre le seuil d'endommagement en déformation, soit :
+
+.. math::
+
+   ep_1 = e_0 = \frac{f_t}{E}
+
+avec :
+
+- :math:`E = 32.10^{9}Pa` : le module d'Young
+- :math:`f_t=3.10^{6}Pa` : la contrainte maximale en traction
+- d'où :math:`ep_1 = e_0 = 9,375.10^{-5}` ;
+
+On défini pour la phase 2 un chargement en déformation imposée :math:`ep_2` tel que :
+
+.. math::
+
+   ep_2 = 10 \times ep_1
+
+Le chargement de la phase 2, dans laquelle dans laquelle on vise l'endommagement complet proche de 1, est la combinaison de trois chargements superposés : tout d'abord le chargement de la phase 1 :math:`ep_1` de traction en déformation imposée ``EPXX`` dans la direction X est poursuivi jusqu'à atteindre la moitié de :math:`ep_2` ; puis un deuxième chargement de traction en déformation imposée ``EPYY`` est appliqué dans la direction Y jusqu'à atteindre les trois quarts de :math:`ep_2` ; enfin un troisième chargement de cisaillement en glissement imposé ``GAXY`` est appliqué dans le plan XY jusqu'à atteindre la moitié de :math:`ep_2`.
 
 L'objectif est d'évaluer l'influence de la rotation du repère de chargement (repère des contraintes principales) sur la réponse post-pic du modèle.
 
 L'analyse des résultats porte sur les courbes :
 
-- d'endomagemment en chaque point de Gauss des modèles massifs en fonction du temps ;
+- d'endommagement en chaque point de Gauss de l'élément fini des modèles massifs en fonction du temps ;
 - des différentes composantes de contrainte moyenne en fonction de la déformation moyenne.
 
 Solution de référence
@@ -2796,10 +2792,9 @@ Pour les trois composantes de contrainte, la moyenne intégrale de la valeur abs
 
 - Pour :math:`\sigma_{xx}` : :math:`2,57516.10^{-1}` ;
 - Pour :math:`\sigma_{yy}` : :math:`3,95094.10^{-1}` ;
-- Pour :math:`\sigma_{xy}` : :math:`1,47488` ;
+- Pour :math:`\sigma_{xy}` : :math:`1,47488`.
 
-Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes numériques de référence est qualitativement reproduite par le calcul.
-En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 3D volumique sont jugés satisfaisants.
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes numériques de référence est qualitativement reproduite par le calcul. En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 3D volumique sont jugés satisfaisants.
 
 Résultats du cas 2D contraintes planes
 ++++++++++++++++++++++++++++++++++++++
@@ -2826,8 +2821,7 @@ Pour les trois composantes de contrainte, la moyenne intégrale de la valeur abs
 
 - Pour :math:`\sigma_{xx}` : :math:`2,76686.10^{-1}` ;
 - Pour :math:`\sigma_{yy}` : :math:`3,94409.10^{-1}` ;
-- Pour :math:`\sigma_{xy}` : :math:`1,47488` ;
+- Pour :math:`\sigma_{xy}` : :math:`1,47488`.
 
-Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes numériques de référence est qualitativement reproduite par le calcul.
-En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
+Les écarts sont quantitativement significatifs. Cependant, la tendance des courbes numériques de référence est qualitativement reproduite par le calcul. En conséquence, les résultats du cas-test ``mazars_willam.dgibi`` en mode 2D contraintes planes sont jugés satisfaisants.
 

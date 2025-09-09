@@ -5,8 +5,8 @@ Lois de comportement pour les bétons
 
 La liste suivante concerne les lois de comportement pour le béton.
 
-Loi MAZARS
-----------
+Modèle de Mazars
+----------------
 
 'MAZARS'    : Modele d'endommagement scalaire pour le béton (bien adapté aux chargements monotones).
 
@@ -234,9 +234,9 @@ Le calul de l'endommagement est réalisé par une procédure purement explicite.
 		:linenos:
 		:lineno-start: 212		
 
-- Le calcul de la variable d'endommagement **D** est effectué après avoir vérifié si le seuil de dommage initial a été dépassé. Cette vérification est nécessaire car il est possible que la valeur de la déformation equivalente de Mazars ait été multipliée par :math:`\gamma`. Tandis que l'évolution du dommage en compression **DC** suit la loi de Mazars classique, trois lois d'évolution différentes du dommage en traction **DT** sont proposées selon la valeur du paramètre **ATRA** :
+- Le calcul de la variable d'endommagement **D** est effectué après avoir vérifié si le seuil de dommage initial a été dépassé. Cette vérification est nécessaire car il est possible que la valeur de la déformation equivalente de Mazars ait été multipliée par :math:`\gamma`. Tandis que l'évolution du dommage en compression **DC** suit le modèle de Mazars classique, trois lois d'évolution différentes du dommage en traction **DT** sont proposées selon la valeur du paramètre **ATRA** :
 
-	* **ATRA > 0** : loi de mazars classique ;
+	* **ATRA > 0** : modèle de mazars classique ;
 	* **-10 < ATRA < 0** : loi d'évolution exponentielle modifiée pour prendre en compte l'énergie de fissuration :math:`G_{f}` via le paramètre **BTRA** ;
 	* **ATRA < -10** : loi d'évolution linéaire. Le paramètre **BTRA** représente alors la déformation pour laquelle la contrainte s'annule.
 
@@ -354,7 +354,7 @@ Le calul de l'endommagement est réalisé selon la même méthode que celle déc
 
 - A noter que la correction :math:`\gamma` en cas de bi ou tri-compression n'a pas de sens avec la modélisation poutre à fibres qui ne traite que des chargements de type traction-compression dans la direction de sa fibre neutre et cisaillement dans le plan de sa section. 
 
-- Le calcul de la variable d'endommagement **D** est effectué en ayant vérifié au préalable si le seuil de dommage initial a été dépassé. L'évolution du dommage en compression **DC** comme celle du dommage en traction **DT** suivent la loi de Mazars classique :
+- Le calcul de la variable d'endommagement **D** est effectué en ayant vérifié au préalable si le seuil de dommage initial a été dépassé. L'évolution du dommage en compression **DC** comme celle du dommage en traction **DT** suivent le modèle de Mazars classique :
 
 	.. literalinclude:: sources/fibmaz.eso
 		:language: fortran
@@ -371,7 +371,7 @@ Le calul de l'endommagement est réalisé selon la même méthode que celle déc
 Implémentation MFront
 ~~~~~~~~~~~~~~~~~~~~~
 
-Une implémentation de la loi de Mazars a été réalisée sous MFront par Elian Dussart lors de son stage (2025) dans le cadre du Pôle de Compétences du SEMT. Elle s'inspire du fichier source cmazar.eso utilisé dans Cast3M et reprend la formulation originale de l'endommagement de Mazars sans régularisation mais avec les améliorations de la réponse du modèle en cisaillement et en situation de bi ou tri-compression [DUSSART-2025]_.
+Une implémentation du modèle de Mazars a été réalisée sous MFront par Elian Dussart lors de son stage (2025) dans le cadre du Pôle de Compétences du SEMT. Elle s'inspire du fichier source cmazar.eso utilisé dans Cast3M et reprend la formulation originale de l'endommagement de Mazars sans régularisation mais avec les améliorations de la réponse du modèle en cisaillement et en situation de bi ou tri-compression [DUSSART-2025]_.
 
 	.. literalinclude:: sources/Mazars.mfront
 		:linenos:
@@ -386,7 +386,7 @@ Hypothèses de calcul et éléments finis disponibles
 
 Mots clefs dans les opérateurs MODE et MATE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Exemple d'utilisation de la loi Mazars pour des éléments finis massifs 3D **CUB8** :
+Exemple d'utilisation du modèle de Mazars pour des éléments finis massifs 3D **CUB8** :
 
 .. code-block:: gibiane
 
@@ -394,7 +394,7 @@ Exemple d'utilisation de la loi Mazars pour des éléments finis massifs 3D **CU
    MATE modele 'YOUN' val_youn 'NU' val_nu ('RHO' val_rho)
                'KTR0' val_e0 'ACOM' val_ac 'BCOM' val_bc 'ATRA' val_at 'BTRA' val_bt 'BETA' val_beta ;
 
-Exemple d'utilisation de la loi Mazars pour des éléments finis poutres à fibres constituée d'éléments finis **TIMO** dont la section est constituée d'éléments finis **QUAS** :
+Exemple d'utilisation du modèle de Mazars pour des éléments finis poutres à fibres constituée d'éléments finis **TIMO** dont la section est constituée d'éléments finis **QUAS** :
 
 - pour la section :
 
@@ -445,7 +445,7 @@ Anomalies observées et limitation numérique
 Anomalie 1
 ++++++++++
 
-Une anomalie a été identifiée dans les sources fibmaz.eso (modèles poutres à fibres) et cmazar.eso (modèles massifs) concernant le mauvais calibrage du test de bicompression dans le modèle Mazars. Dans fibmaz.eso, le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple ; tandis que, dans cmazar.eso, il conduisait à mal calculer les contraintes en situation de bicompression. 
+Une anomalie a été identifiée dans les sources fibmaz.eso (modèles poutres à fibres) et cmazar.eso (modèles massifs) concernant le mauvais calibrage du test de bicompression dans le modèle de Mazars. Dans fibmaz.eso, le critère trop sévère (1.D-12) générait à tort la correction :math:`\gamma` de bicompression, même lorsqu'on est en situation de traction simple ; tandis que, dans cmazar.eso, il conduisait à mal calculer les contraintes en situation de bicompression. 
 
 En ce qui concerne la source cmazar.eso pour les modèles massif, ce test à été recalibré à 1 Pa, valeur jugée suffisamment proche de 0 selon le REX (Thèse de Martin Debuisne, 2024). 
 
@@ -463,7 +463,7 @@ Anomalie 2
 - Constatée le 13/06/2024.
 - **Anomalie #11948 corrigée dans la version 2024.1 de Cast3M.**
 
-Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazar.eso. Cette anomalie ne rend pas le modèle Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M.
+Une anomalie a été identifiée dans la source idendo.eso. Elle est datée du 21/08/2023 et cause une erreur d'initialisation du paramètre BETA dans cmazar.eso. Cette anomalie ne rend pas le modèle de Mazars inutilisable mais corrompt ses résultats avec des éléments volumiques. Elle impacte la version 2024.0 de Cast3M.
 
 Anomalie 3
 ++++++++++
@@ -487,7 +487,7 @@ Une anomalie de fonctionnement des modélisations poutre à fibres a été ident
    
    Anomalie constatée dans le cas d'une modélisation poutre à fibres soumise à un chargement uniaxial de compression en déplacement imposé à l'extrémité libre d'une poutre encastrée à son autre extrémité - Maillage et conditions aux limites, champ de dommage hétérogène dans la section en fin de calcul, évolutions anormales au cours du chargement de la contrainte moyenne en fonction de la déformation moyenne et du dommage en chaque point de Gauss de la section en fonction du temps.
 
-Cette anomalie, qui concerne donc le modèle poutre à fibres et pas le modèle Mazars, est contournée dans tous les cas rencontrés jusqu'ici en bloquant les rotations du point correspondant à l'extrémité libre soumise au chargement de la poutre à fibres (cf. figure ci-dessous).
+Cette anomalie, qui concerne donc le modèle poutre à fibres et pas le modèle de Mazars, est contournée dans tous les cas rencontrés jusqu'ici en bloquant les rotations du point correspondant à l'extrémité libre soumise au chargement de la poutre à fibres (cf. figure ci-dessous).
 
 .. image:: figures/Figure_solution3_1.png
    :width: 51%
@@ -505,12 +505,12 @@ Cette anomalie, qui concerne donc le modèle poutre à fibres et pas le modèle 
 
 Limitation numérique
 ++++++++++++++++++++
-Le modèle Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazar.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
+Le modèle de Mazars dans Cast3M, tant dans la configuration éléments volumiques (source cmazar.eso) que poutres à fibres (source fibmaz.eso), exhibe un domaine post-ruine consolidant non physique. Cet artefact numérique est dû à la limitation du dommage maximum :
 
 .. math::
    D_{max}=(1 - \epsilon)
    
-où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de ce paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
+où :math:`\epsilon` est un paramètre arbitrairement petit, défini dans les sources Cast3M du modèle de Mazars, permettant de se prémunir de l'absence complète de rigidité aux points de Gauss ayant atteint la ruine, ce qui empêcherait la poursuite du calcul. L'augmentation de la valeur de ce paramètre est favorable à la stabilité numérique mais défavorable au réalisme de la simulation.
 
 En effet, la consolidation qui en découlerait dans une zone jugée trop grande du modèle E.F. peut conduire à des résultats numériques qui ne sont pas physiquement admissibles et ainsi fausser le jugement du spécialiste du béton, ce qui est préjudiciable à la confiance accordée au modèle. 
 

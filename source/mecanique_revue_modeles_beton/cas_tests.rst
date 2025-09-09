@@ -1,6 +1,6 @@
 .. _sec:modeles_beton_tests:
 
-Spécification des cas tests
+Spécification des cas-tests
 ===========================
 
 Ce chapitre présente l'ensemble des cas de chargement appliqués pour effectuer les tests des lois de comportement pour
@@ -9,8 +9,7 @@ le béton disponibles dans Cast3M. Il se limite à la seule description des char
 D'autres chapitres sont dédiés à la :ref:`vérification <sec:modeles_beton_verif>` et à la :ref:`validation <sec:modeles_beton_valid>`.
 Ils détaillent les résultats de ces tests sur l'ensemble des lois de comportement.
 
-
-Cas tests pour les modèles poutre à fibres
+Cas-tests pour les modèles poutre à fibres
 ------------------------------------------
 
 .. _sec:modeles_beton_test_pout_trac_mono:
@@ -55,9 +54,8 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/ricbet_traction.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction.dgibi>`
+- :download:`Test pour le modèle RICBET <./dgibi/ricbet_traction.dgibi>`
 
 .. _sec:modeles_beton_test_pout_comp_mono:
 
@@ -101,8 +99,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_compression.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_compression.dgibi>`
 
 .. _sec:modeles_beton_test_pout_trac_cycl:
 
@@ -146,8 +143,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_cyclique.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction_cyclique.dgibi>`
 
 .. _sec:modeles_beton_test_pout_comp_cycl:
 
@@ -191,8 +187,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_compression_cyclique.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_compression_cyclique.dgibi>`
 
 .. _sec:modeles_beton_test_pout_trac_comp:
 
@@ -236,8 +231,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction_compression.dgibi>`
 
 .. _sec:modeles_beton_test_pout_trac_comp_trac:
 
@@ -281,8 +275,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression_traction.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction_compression_traction.dgibi>`
 
 .. _sec:modeles_beton_test_pout_cisa_mono:
 
@@ -337,15 +330,9 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_cisaillement.dgibi>`
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_cisaillement.dgibi>`
 
-
-
-
-
-
-
-Cas tests pour les modèles massifs
+Cas-tests pour les modèles massifs
 ----------------------------------
 
 .. _sec:modeles_beton_test_mass_trac_mono:
@@ -433,9 +420,8 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/ricbet_traction.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction.dgibi>`
+- :download:`Test pour le modèle RICBET <./dgibi/ricbet_traction.dgibi>`
 
 .. _sec:modeles_beton_test_mass_comp_mono:
 
@@ -522,8 +508,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_compression.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_compression.dgibi>`
 
 .. _sec:modeles_beton_test_mass_trac_cycl:
 
@@ -610,8 +595,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_cyclique.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction_cyclique.dgibi>`
 
 .. _sec:modeles_beton_test_mass_comp_cycl:
 
@@ -698,8 +682,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_compression_cyclique.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_compression_cyclique.dgibi>`
 
 .. _sec:modeles_beton_test_mass_trac_comp:
 
@@ -786,8 +769,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction_compression.dgibi>`
 
 .. _sec:modeles_beton_test_mass_trac_comp_trac:
 
@@ -874,8 +856,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_traction_compression_traction.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_traction_compression_traction.dgibi>`
 
 .. _sec:modeles_beton_test_mass_cisa_mono:
 
@@ -953,8 +934,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_cisaillement.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_cisaillement.dgibi>`
 
 .. _sec:modeles_beton_test_mass_biax:
 
@@ -984,7 +964,7 @@ Suivant la valeur de :math:`\theta`, la combinaison biaxiale :math:`(\sigma_{xx}
 
 On effectue autant de calculs que l'on souhaite de combinaisons biaxiales en faisant varier la valeur de :math:`\theta` et en imposant :math:`\sigma_{max}` suffisament grand pour atteindre la ruine. 
 
-Les calculs sont arrêtés à la detection de la ruine complète (dommage proche de 1), qui résulte d'une combinaison entre un critère sur le nombre de sous-pas de convergence limité à 1 et un critère sur l'incrément de déformation entre 2 pas de calcul consécutifs limité à :math:`2.10^{-3}`. C'est au pas de calcul précédant cet instant que sont relevées les valeurs de :math:`\sigma_{xx}` et :math:`\sigma_{yy}` qui constituent les coordonnées des points de la courbe de biaxialité.
+Les calculs sont arrêtés à la detection de la ruine complète (dommage proche de 1), qui résulte d'une combinaison entre un critère sur le nombre maximal de sous-pas de convergence et un critère sur l'incrément maximal de déformation entre 2 pas de calcul consécutifs. C'est au pas de calcul précédant cet instant que sont relevées les valeurs de :math:`\sigma_{xx}` et :math:`\sigma_{yy}` qui constituent les coordonnées des points de la courbe de biaxialité.
 
 Les critères de détection de la ruine pour arrêter le calcul sont définis dans la procédure ``PERSO1`` de Cast3M.
 
@@ -1077,8 +1057,7 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_biaxial.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_biaxial.dgibi>`
 
 .. _sec:modeles_beton_test_mass_triax:
 
@@ -1251,9 +1230,8 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Les jeux de données Gibiane correspondants à ce cas de chargement sont téléchargeables aux liens suivants :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_triaxial.dgibi>`
-- :download:`Test pour la loi de RICBET <./dgibi/ricbet_triaxial.dgibi>`
-
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_triaxial.dgibi>`
+- :download:`Test pour le modèle RICBET <./dgibi/ricbet_triaxial.dgibi>`
 
 .. _sec:modeles_beton_test_mass_willam:
 
@@ -1263,7 +1241,7 @@ Test de Willam
 Description
 """""""""""
 
-Il s'agit d'un test comprenant une première phase de chargement en traction simple, suivie d'une seconde phase combinant de la bi-traction dans la direction de la traction initiale et dans sa direction orthogonale et du cisaillement dans le plan orthogonal à la direction de traction initiale. Les dimensions dépendent de l'hypothèse de calcul retenue :
+Il s'agit d'un test comprenant une première phase de chargement en traction simple, suivie d'une seconde phase combinant de la bi-traction dans la direction de la traction initiale et dans une direction orthogonale ainsi que du cisaillement dans le plan de la bi-traction. Les dimensions dépendent de l'hypothèse de calcul retenue :
 
 - en 3D, on considère un cube d'arête :math:`L` ;
 - en 2D plan, on considère un domaine carré de côté :math:`L` et d'épaisseur :math:`e` ;
@@ -1277,7 +1255,7 @@ L'article d'origine décrivant le test de Willam est le suivant :
 
  [1] Willam, K.; Pramono, E.; Sture, S. Fundamental issues of smeared crack models. In Proc. of the SEM-RILEM Int. conf. on fracture of concrete and rock, TX USA 17-19 June 1987, Shah S.P., Swartz S.E. (eds), 1989, pp. 142-157.
 
-La géométrie du problème, les paramètres élastiques du matériau et certains paramètres du modèle de comportement, ainsi que les réultats numériques de références (courbes **4a. LGCNSN Iso**) otenues avec un modèle d'endommagement isotrope comparable au modèle Mazars implémenté dans Cast3M, sont issus de l'article suivant :
+La géométrie du problème, les paramètres élastiques du matériau et certains paramètres du modèle d'endommagement, ainsi que les résultats numériques de références (courbes **4a. LGCNSN Iso**) otenues avec un modèle d'endommagement isotrope comparable au modèle de Mazars implémenté dans Cast3M, sont issus de l'article suivant :
 
  [2] Ghavamian, S.; Carol, I.; Delaplace A. Discussions over MECA project results. Revue Française de Génie Civil. 7 (2003) pp. 543-581. doi:10.1080/127951119.2003.9692509.
 
@@ -1285,10 +1263,9 @@ Les paramètres de la seconde phase de chargement sont issus de l'article suivan
 
  [3] Wosatko, A.; Szczecina, M.; Winnicki A. Selected Concrete Models Studied Using Willam's Test. Materials 2020, 13, 4756; doi:10.3390/ma13214756.
 
-Enfin, le paramètre **BTRA** du modèle Mazars est issu d'une communication personnelle de L. Jason (CEA/DES/ISAS/DM2S/SEMT), d'après sa contribution au benchmark [2]. Le paramètre **ATRA**, qui pilote la valeur asymptotique vers laquelle tendent les contraintes lorsque l'endommagement est maximal, est choisi pour optimiser la corrélation du calcul avec les résultats numériques de référence.
+Enfin, le paramètre **BTRA** du modèle de Mazars est issu d'une communication personnelle de L. Jason (CEA/DES/ISAS/DM2S/SEMT), d'après sa contribution au benchmark [2]. Le paramètre **ATRA** du modèle de Mazars, qui pilote la valeur asymptotique vers laquelle tendent les contraintes lorsque l'endommagement est maximal, est choisi pour optimiser la corrélation du calcul avec les résultats numériques de référence.
 
-
-.. admonition:: Test de Willam : Paramètres géométrique, matériau et chargement
+.. admonition:: Test de Willam : Paramètres géométrique, matériau (dont Mazars) et chargement
 
    .. literalinclude:: dgibi/mazars_willam.ecr
       :lines: 119-140
@@ -1298,7 +1275,7 @@ Enfin, le paramètre **BTRA** du modèle Mazars est issu d'une communication per
 Blocages et chargement
 """"""""""""""""""""""
 
-Le test se décompose en deux phases successives. Dans la phase 1, le chargement consiste à piloter la déformation du maillage dans l'une de ses directions principales en l'augmentant progressivement jusqu'à atteindre la déformation seuil d'endommagement, l'une des deux faces dont la normale est colinéaire à cette direction étant bloquée en déplacement et libre de se contracter par effet de Poisson. Plusieurs chargements se superposent dans la phase 2 : tout d'abord, le chargement de la phase 1 est poursuivi avec une amplitude de la moitié de ce dernier ; ensuite, un deuxième chargement de traction orthogonale consiste à piloter la déformation du maillage dans une direction perpendiculaire à la première en l'augmentant progressivement jusqu'à atteindre les trois quarts de la déformation maximale de la phase 1 ; enfin, un troisième chargement de cisaillement consiste à piloter le glissement du maillage dans le plan défini par les directions orthogonales des deux premiers chargements de la phase 2 en l'augmentant progressivement jusqu'à atteindre la moitié de la déformation maximale de la phase 1.
+Le test se décompose en deux phases successives. Dans la phase 1, le chargement consiste à piloter la déformation en traction :math:`ep_1` dans l'une des directions principales du maillage en l'augmentant progressivement jusqu'à atteindre la déformation seuil d'endommagement, l'une des deux faces dont la normale est colinéaire à cette direction étant bloquée en déplacement et libre de se contracter par effet de Poisson. Dans la phase 2, les conditions aux limites sont conservées mais la déformation imposée dans la phase 1 est multipliée par 10 (:math:`ep_2 = 10 \times ep_1`) et plusieurs chargements se superposent : tout d'abord le chargement de traction de la phase 1 est poursuivi jusqu'à la moitié de :math:`ep_2` ; puis un deuxième chargement de déformation en traction est imposé dans une direction perpendiculaire jusqu'au trois quarts de :math:`ep_2` ; enfin un troisième chargement de cisaillement consiste à piloter le glissement du maillage dans le plan défini par les directions des deux autres chargements, en l'augmentant progressivement jusqu'à la moitié de :math:`ep_2`.
 
 En pratique dans Cast3M, on applique sur tout le maillage les deux phases du chargement de déformation imposée souhaité dans un premier calcul élastique, en tenant compte des conditions aux limites adéquates aux frontières du maillage (une face encastrée et libre en striction). Puis on récupère les champs de déplacements ainsi calculés pour les appliquer comme chargement en déplacement imposé sur tout le maillage d'un second calcul prenant en compte le comportement non linéaire endomageable du matériau. A noter que ce second calcul ne requiert pas de conditions aux limites cinématiques, l'ensemble du maillage étant piloté en déplacement imposé.
 
@@ -1349,5 +1326,5 @@ Liste des exemples dgibi
 """"""""""""""""""""""""
 Le jeu de données Gibiane correspondant à ce cas de chargement est téléchargeable au lien suivant :
 
-- :download:`Test pour la loi de Mazars <./dgibi/mazars_willam.dgibi>`
+- :download:`Test pour le modèle de Mazars <./dgibi/mazars_willam.dgibi>`
 
