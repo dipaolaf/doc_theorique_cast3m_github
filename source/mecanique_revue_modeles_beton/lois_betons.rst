@@ -49,7 +49,7 @@ Selon la formulation proposée par Mazars, la déformation équivalente est déf
    {e}=\sqrt{\langle\boldsymbol{\varepsilon}\rangle:\langle\boldsymbol{\varepsilon}\rangle} = \sqrt{\sum_{i=1}^{^{n}}\langle\epsilon_{i}\rangle^{2}}
    
 où :math:`\langle\boldsymbol{\varepsilon}\rangle` est la partie positive du tenseur des déformations, :math:`\epsilon_{i}` est la i-ème déformation
-principale, :math:`\langle\cdot\rangle_+` est l'opérateur de Macauley, et :math:`n` répresente la dimension du problème consideré. 
+principale, :math:`\langle\cdot\rangle_+` est l'opérateur de Macaulay, et :math:`n` répresente la dimension du problème consideré. 
 
 La variable d'histoire :math:`\kappa` est donc définie par :
 
@@ -111,11 +111,11 @@ Quelques commentaires
 +++++++++++++++++++++
 Grâce à sa simplicité et sa robustesse, ce modèle a été et est encore largement utilisé pour modéliser le comportement du béton. Certaines pathologies peuvent néanmoins être citées et pour lesquelles des développements sont à considérer :
 
-- Le modèle présente une fragilité excessive dans son comportement en cisaillement, et l'introduction du paramètre :math:`\beta` pour atténuer cet effet entraîne une reprise de rigidité à des niveaux de déformation élevés ;
+- Le modèle présente une fragilité excessive dans son comportement en cisaillement et l'introduction du paramètre :math:`\beta` pour atténuer cet effet entraîne une reprise de rigidité à des niveaux de déformation élevés ;
 
 - Le modèle ne prend pas en compte l'effet unilatéral, c'est-à-dire une reprise de raideur due à la refermeture des fissures expérimentalement observée. En conséquence, le modèle ne parvient pas à reproduire correctement le comportement sous chargements cycliques ;
 
-- En termes numériques, l'utilisation de l'opérateur de Macauley dans l'expression des coefficients :math:`\alpha_{t(c)}` entraîne une dérivée non définie de ceux-ci en zéro. Cela empêche ainsi l'utilisation de l'opérateur tangent dans le schéma de résolution. Par conséquent, seul l'opérateur sécant est utilisé, ce qui limite la vitesse de convergence du schéma de résolution ;
+- En termes numériques, l'utilisation de l'opérateur de Macaulay dans l'expression des coefficients :math:`\alpha_{t(c)}` entraîne une dérivée non définie de ceux-ci en zéro. Cela empêche ainsi l'utilisation de l'opérateur tangent dans le schéma de résolution. Par conséquent, seul l'opérateur sécant est utilisé, ce qui limite la vitesse de convergence du schéma de résolution ;
   
 - Le caractère isotrope de l’endommagement ne permet pas de bien suivre l’évolution des nonlinéarités pour des chargements non radiaux.
 
