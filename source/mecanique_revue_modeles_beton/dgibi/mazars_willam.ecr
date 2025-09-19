@@ -1,5 +1,5 @@
 
- *** PPP CAST3M *** 31 CPU *** VERSION COURANTE DU mer.  04  juin  2025                             
+ *** PPP CAST3M *** 31 CPU *** VERSION COURANTE DU jeu.  18  sept.  2025                            
 
  *** GEMAT MT  2.0  MAI 23 ***  ESOPE=121436 (Mo)  LIBRE=  6549 (Mo)
                                 NTRK =300000       LTRK =  4096 (Ko)
@@ -55,7 +55,7 @@
  $  * * Selon deux modes d'integration du comportement                       * 
  $  * * realises successivement dans la boucle BCALC :                       * 
  $  * *   passage 1 : Cast3M                                                 * 
- $  * *   passage 2 : MFront                                                 * 
+ $  * *   passage 2 : MFront (pas actif a date)                              * 
  $  * *                                                                      * 
  $  * * ITRAC1 : VRAI => affichage resultats                                 * 
  $  * * IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      * 
@@ -81,7 +81,6 @@
  $  *   
  $  * ** Liste des modes de calcul a traiter 
  $  * lcas = LECT 1 2 ; 
- $  * *nh145313 
  $  * *lcas = LECT 1 ; COMM '3D volumique' ; 
  $  * *lcas = LECT 2 ; COMM '2D contraintes planes' ; 
  $  *   
@@ -89,7 +88,7 @@
  $  * long = 0.56 ; 
  $  * epai = 0.1 ; 
  $  *   
- $  * ** Parametres materiau [2] Ghavamian (2003) sauf commentaire 'LJason' jdd L.Jason (2000) 
+ $  * ** Parametres materiau Mazars [2] Ghavamian (2003) sauf commentaire 'LJason' jdd L.Jason (2000) 
  $  * you = 32.E9 ; 
  $  * nu   = 0.2 ; 
  $  * ft   = 3.E6 ; 
@@ -99,6 +98,10 @@
  $  * ac   = 1.5 ; 
  $  * bc   = 1550. ; 
  $  * beta = 1.  ; 
+ $  * xrho  = 0. ; 
+ $  * xalph = 0. ; 
+ $  * xtalp = 0. ; 
+ $  * xtref = 0. ; 
  $  *   
  $  * ** Parametres chargement en deformation imposee [3] Wosatko (2020) 
  $  * *  - Phase 1 
@@ -134,7 +137,10 @@ Coef. Mazars
 - BETA : beta  1.00000E+00
 
 
+Coef. chargement Phase 1
+- défo.imp.max EPXX :  ep1  9.37500E-05
 Coef. chargement Phase 2
+- défo.imp.max EPXX :  ep2  9.37500E-04
 - fact.mult. EPXX : c2epxx  5.00000E-01
 - fact.mult. EPYY : c2epyy  7.50000E-01
 - fact.mult. GAXY : c2gaxy  5.00000E-01
@@ -142,19 +148,30 @@ Coef. chargement Phase 2
 
  $  * *opti donn 5; 
  $  *   
+ $  * ** Oeil en 3D_V (trace a conserver pour conserver l'oeil) 
+ $  *   OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ; 
+ $  *   rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ; 
+ $  *   TRAC rep1 'TITR' 'Repere 3D'; 
+ $  *   o1 = VALE OEIL ; 
+ $  *   xo1 yo1 zo1 = COOR o1 ; 
+ $  *   
  $  *   
  $  * REPE BCALC 2 ; 
- $  * *======= A ENLEVER lorsque l'implémentation MFront sera faite ======= 
+ $  * *============= A ENLEVER pour realiser le calcul MFront ============= 
  $  * SI (NEG &BCALC 1) ; 
  $  *   QUIT BCALC; 
  $  * FINSI ; 
  $  * *========================== fin A ENLEVER =========================== 
- $  * ** Distinction des résultats de calcul Cast3M et/ou MFront 
+ $  * ** Distinction des résultats de calcul Cast3M ou MFront (PostScript, sauvegarde) 
  $  * SI (EGA &BCALC 1) ; 
- $  *   str3 = '_Cast3M' ; 
- $  * SINO ; 
- $  *   str3 = '_MFront' ; 
- $  * FINSI ; 
+ $  *   str3 = 'Cast3M' ; 
+ $  *   OPTI ECHO 0 ; 
+
+
+ ===================  Comportement materiau : Cast3M  ====================
+
+
+ $  * str4 = CHAI str3 ' :' ; 
  $  *   
  $  *   
  $  * **************** C A S  #1  :  3 D   V O L U M I Q U E **************** 
@@ -162,6 +179,7 @@ Coef. chargement Phase 2
  $  *   
  $  * ** Options generales 
  $  *   OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ; 
+ $  *   o1 = xo1 yo1 zo1 ; 
  $  *   
  $  * ** Maillage 
  $  *   p1      = 0. 0. 0. ; 
@@ -169,11 +187,10 @@ Coef. chargement Phase 2
  $  *   l12     = DROI 1 p1 p2 ; 
  $  *   sgauche = l12 TRAN 1 (0. 0. long) ; 
  $  *   mail    = sgauche VOLU 'TRAN' 1 (long 0. 0.) ; 
- $  * *nh145313 
  $  * cadr1 = COUL ((0. 0.9 0.6) ET (0.75 1. 0.6)) 'BLAN' ; 
  $  * rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ; 
  $  * SI ITRAC1 ; 
- $  *   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT')) 'TITR' '[3D V] Maillage' ; 
+ $  *   TRAC o1 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT')) 'TITR' (CHAI str4 ' ' '[3D V] Maillage') ; 
  $  * FINSI ; 
  $  *   
  $  * ** Calcul 1 
@@ -267,8 +284,10 @@ Calcul MECANIQUE
  $  *   mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ; 
  $  *   ma2 = MATE mo2 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ; 
  $  * SINO ; 
- $  * * Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle... 
- $  *   QUIT BCALC; 
+ $  *   coel = MOTS 'YOUN' 'NU' 'RHO' 'ALPH' 'TALP' 'TREF' 'ACOM' 'BCOM' 'ATRA' 'BTRA' 'BETA' 'EPSD'; 
+ $  *   statev = MOTS 'DCOM' 'DTRA' 'ALFT' 'ALFC' 'D'; 
+ $  *   mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'NON_LINEAIRE' 'UTILISATEUR' 'LIB_LOI' 'libUmatBehaviour.so' 'FCT_LOI' 'umatmazars' 'C_MATERIAU' coel 'C_VARINTER' statev; 
+ $  *   ma2 = MATE mo2 'YOUN' you 'NU' nu 'RHO' xrho 'ALPH' xalph 'TALP' xtalp 'TREF' xtref 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'EPSD' epd0; 
  $  * FINSI ; 
  $  *   
  $  * ** Blocages 2 
@@ -465,6 +484,7 @@ Calcul MECANIQUE
 
  Numero du pas :18  Indice d evolution :19 -> temps : 1.80000E-01
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres RESO gain: 489348 actifs 533430 mots 18771 segments
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            0  8.75524E-17  1.87500E-06  3.37500E-05  8.75524E-17
@@ -473,7 +493,6 @@ Calcul MECANIQUE
 
 
  Numero du pas :19  Indice d evolution :20 -> temps : 1.90000E-01
- menage automatique 4 apres ADET gain: 484956 actifs 535728 mots 18776 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -872,6 +891,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  1.13929E-02  3.75000E-06  1.08750E-04  1.13929E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres BSIG gain: 1181880 actifs 1296720 mots 45311 segments
             2            8  4.46038E-04  3.75000E-06  1.08750E-04  4.46038E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            8  0.00000E+00  3.75000E-06  1.08750E-04  0.00000E+00
@@ -889,7 +909,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  4.76165E-04  3.75000E-06  1.10625E-04  4.76165E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres +    gain: 1176540 actifs 1299564 mots 45209 segments
             3            8  0.00000E+00  3.75000E-06  1.10625E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -1245,6 +1264,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
+ menage automatique 4 apres TABL gain: 1201500 actifs 1290564 mots 46153 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  1.59782E-02  3.75000E-06  1.55625E-04  1.59782E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -1265,7 +1285,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  6.89681E-04  3.75000E-06  1.57500E-04  6.89681E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres ET   gain: 1197600 actifs 1291350 mots 45950 segments
             3            8  0.00000E+00  3.75000E-06  1.57500E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -1611,6 +1630,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  8.77114E-04  3.75000E-06  2.13750E-04  8.77114E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres ABS  gain: 1194864 actifs 1272810 mots 45793 segments
             3            8  0.00000E+00  3.75000E-06  2.13750E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -1644,7 +1664,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
             3            8  0.00000E+00  3.75000E-06  2.21250E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
- menage automatique 4 apres REAC gain: 1194456 actifs 1288776 mots 46007 segments
 
 
  Numero du pas :110  Indice d evolution :111 -> temps : 6.20000E-01
@@ -1987,6 +2006,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  7.24117E-04  3.75000E-06  3.07500E-04  7.24117E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres RESO gain: 1181022 actifs 1267470 mots 46027 segments
             3            8  0.00000E+00  3.75000E-06  3.07500E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -2028,7 +2048,6 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres RESO gain: 1176006 actifs 1278612 mots 46155 segments
             1            8  1.15062E-02  3.75000E-06  3.18750E-04  1.15062E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  6.82609E-04  3.75000E-06  3.18750E-04  6.82609E-04
@@ -2361,6 +2380,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  6.11531E-03  3.75000E-06  4.01250E-04  6.11531E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres BSIG gain: 1164618 actifs 1250364 mots 45949 segments
             2            8  3.26283E-04  3.75000E-06  4.01250E-04  3.26283E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            8  0.00000E+00  3.75000E-06  4.01250E-04  0.00000E+00
@@ -2406,7 +2426,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  5.48613E-03  3.75000E-06  4.12500E-04  5.48613E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres -    gain: 1162320 actifs 1253364 mots 45796 segments
             2            8  2.83674E-04  3.75000E-06  4.12500E-04  2.83674E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            8  0.00000E+00  3.75000E-06  4.12500E-04  0.00000E+00
@@ -2744,6 +2763,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres EPSI gain: 1166526 actifs 1257594 mots 46085 segments
             1            8  2.48026E-03  3.75000E-06  4.98750E-04  2.48026E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            8  8.09281E-05  3.75000E-06  4.98750E-04  8.09281E-05
@@ -2804,7 +2824,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :188  Indice d evolution :189 -> temps : 7.76000E-01
- menage automatique 4 apres ADET gain: 1162866 actifs 1270956 mots 46238 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -3170,6 +3189,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
  Numero du pas :216  Indice d evolution :217 -> temps : 8.32000E-01
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres RESO gain: 1171668 actifs 1279230 mots 45922 segments
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
@@ -3241,7 +3261,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  1.27987E-03  3.75000E-06  6.41250E-04  1.27987E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres RESO gain: 1165866 actifs 1276032 mots 45482 segments
             2            8  1.19061E-05  3.75000E-06  6.41250E-04  1.19061E-05
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
@@ -3599,6 +3618,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :249  Indice d evolution :250 -> temps : 8.98000E-01
+ menage automatique 4 apres =    gain: 1170006 actifs 1276434 mots 45861 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -3680,7 +3700,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
- menage automatique 4 apres +    gain: 1166700 actifs 1287930 mots 45887 segments
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  1.02679E-03  3.75000E-06  7.68750E-04  1.02679E-03
@@ -4023,6 +4042,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  9.13137E-04  3.75000E-06  8.66250E-04  9.13137E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres COMP gain: 1168746 actifs 1267416 mots 45462 segments
             2            8  3.76615E-06  3.75000E-06  8.66250E-04  3.76615E-06
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
@@ -4114,7 +4134,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            8  8.87400E-04  3.75000E-06  8.92500E-04  8.87400E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres -    gain: 1164924 actifs 1274922 mots 45552 segments
             2            8  3.52327E-06  3.75000E-06  8.92500E-04  3.52327E-06
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
@@ -4285,7 +4304,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  * *           angles des directions principales vs temps 
  $  *   tt = t2 . 'TEMPS' ; 
  $  *   tu = t2 . 'DEPLACEMENTS' ; 
- $  * *nh145313 
  $  * *  def0 = DEFO mail (tu . 0) 0. ; 
  $  *   def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ; 
  $  * * evolutions temporelles a tous les points de Gauss de l'endommagement, des contraintes et des deformations 
@@ -4301,7 +4319,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tleg . 8 = MOT 'MARQ TRIR NOLI' ; 
  $  *   tleg . 'TITRE' = TABL ; 
  $  *   REPE b ng ; 
- $  *     tleg . 'TITRE' . &b = CHAI 'Cal_mat' str3 '_Pt_Gauss' ' ' &b ; 
+ $  *     tleg . 'TITRE' . &b = CHAI 'Cal_mat_' str3 '_Pt_Gauss' ' ' &b ; 
  $  *   FIN b ; 
  $  * * endommagement 
  $  *   evd = VIDE 'EVOLUTIO' ; 
@@ -4309,7 +4327,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evd = evd ET (EVOL 'VIOL' 'TEMP' t2 'VARIABLES_INTERNES' 'D' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evd 'LEGE' 'NO' tleg 'TITR' '[3D V] D vs Temps' ; 
+ $  *     DESS evd 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[3D V] Endommagement vs Temps') ; 
  $  *   FINSI ; 
  $  * * contraintes 
  $  *   evsmxx = VIDE 'EVOLUTIO' ; 
@@ -4317,21 +4335,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t2 'CONTRAINTES' 'SMXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxx 'LEGE' 'NE' tleg 'TITR' '[3D V] SMXX vs Temps' ; 
+ $  *     DESS evsmxx 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[3D V] SMXX vs Temps') ; 
  $  *   FINSI ; 
  $  *   evsmyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmyy = evsmyy ET (EVOL 'VERT' 'TEMP' t2 'CONTRAINTES' 'SMYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmyy 'LEGE' 'NE' tleg 'TITR' '[3D V] SMYY vs Temps' ; 
+ $  *     DESS evsmyy 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[3D V] SMYY vs Temps') ; 
  $  *   FINSI ; 
  $  *   evsmxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmxy = evsmxy ET (EVOL 'ROUG' 'TEMP' t2 'CONTRAINTES' 'SMXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxy 'LEGE' 'NE' tleg 'TITR' '[3D V] SMXY vs Temps' ; 
+ $  *     DESS evsmxy 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[3D V] SMXY vs Temps') ; 
  $  *   FINSI ; 
  $  * * deformations 
  $  *   evepxx = VIDE 'EVOLUTIO' ; 
@@ -4339,21 +4357,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evepxx = evepxx ET (EVOL 'BLEU' 'TEMP' t2 'DEFORMATIONS' 'EPXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[3D V] EPXX vs Temps' ; 
+ $  *     DESS evepxx 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[3D V] EPXX vs Temps') ; 
  $  *   FINSI ; 
  $  *   evepyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepyy = evepyy ET (EVOL 'VERT' 'TEMP' t2 'DEFORMATIONS' 'EPYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepyy 'LEGE' 'NO' tleg 'TITR' '[3D V] EPYY vs Temps' ; 
+ $  *     DESS evepyy 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[3D V] EPYY vs Temps') ; 
  $  *   FINSI ; 
  $  *   evepxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepxy = evepxy ET (EVOL 'ROUG' 'TEMP' t2 'DEFORMATIONS' 'GAXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxy 'LEGE' 'NO' tleg 'TITR' '[3D V] GAXY vs Temps' ; 
+ $  *     DESS evepxy 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[3D V] GAXY vs Temps') ; 
  $  *   FINSI ; 
  $  * * contraintes principales 
  $  *   tprin = TABL 'PASAPAS' ; 
@@ -4369,7 +4387,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   FIN b ; 
  $  *   evang11 = ACOS evcos11 ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evang11 'LEGE' 'NO' tleg 'TITR' '[3D V] Angle X ^ SI11 vs Temps' ; 
+ $  *     DESS evang11 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[3D V] Angle X ^ SI11 vs Temps') ; 
  $  *   FINSI ; 
  $  *   
  $  * * courbe Contraintes vs Deformation EPXX 
@@ -4378,9 +4396,9 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   evxy = EVOL 'ROUG' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxy 'ORDO') ; 
  $  *   tleg = TABL ; 
  $  *   tleg . 'TITRE' = TABL ; 
- $  *   tleg . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_SMXX' ; 
- $  *   tleg . 'TITRE' . 2 = CHAI 'Cal_mat' str3 '_SMYY' ; 
- $  *   tleg . 'TITRE' . 3 = CHAI 'Cal_mat' str3 '_SMXY' ; 
+ $  *   tleg . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_SMXX' ; 
+ $  *   tleg . 'TITRE' . 2 = CHAI 'Cal_mat_' str3 '_SMYY' ; 
+ $  *   tleg . 'TITRE' . 3 = CHAI 'Cal_mat_' str3 '_SMXY' ; 
  $  * * resultats de reference [2] Ghavamian (2003) LGCNSNiso 
  $  *   evref = VIDE 'EVOLUTIO' ; 
  $  *   tref = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ; 
@@ -4390,33 +4408,33 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tref = LIRE 'CSV' FIC3 'DEBU' 2 'SEPA' ',' ; 
  $  *   evref = evref ET (EVOL 'ROUG' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ; 
  $  *   tleg . 4   = MOT 'TIRR' ; 
- $  *   tleg . 'TITRE' . 4  = 'Ref_SMXX' ; 
+ $  *   tleg . 'TITRE' . 4  = MOT 'Ref_SMXX' ; 
  $  *   tleg . 5   = MOT 'TIRR' ; 
- $  *   tleg . 'TITRE' . 5  = 'Ref_SMYY' ; 
+ $  *   tleg . 'TITRE' . 5  = MOT 'Ref_SMYY' ; 
  $  *   tleg . 6   = MOT 'TIRR' ; 
- $  *   tleg . 'TITRE' . 6  = 'Ref_SMXY' ; 
+ $  *   tleg . 'TITRE' . 6  = MOT 'Ref_SMXY' ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' 'NE' tleg 'TITR' '[3D V] Contraintes vs Deformation' ; 
+ $  *     DESS (evxx et evyy et evxy et evref) 'YBOR' 0. 3.E6 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[3D V] Contraintes vs Deformation') ; 
  $  *   FINSI ; 
  $  *   
  $  * ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv 
  $  *   SI ISAUV ; 
- $  *     str2 = '3D_V' ; 
+ $  *     str2 = '3D_V_' ; 
  $  *     fic4 = CHAI str1 str2 str3 '.csv' ; 
  $  *     OPTI SORT fic4 ; 
- $  *     SORT 'EXCE' (evxx ET evyy ET evxy) ; 
+ $  *     SORT 'EXCE' (evxx ET evyy ET evxy) 'DIGI' 16 ; 
  $  *   FINSI ; 
  $  *   
  $  * * comparaison calcul / reference sur l'aire sous la courbe Contraintes vs Deformation EPXX 
  $  *   tsig = TABL ; 
  $  *   tbid = TABL ; 
  $  *   tbid . 'TITRE' = TABL ; 
- $  *   tbid . 1 = 'MARQ PLUS' ; 
- $  *   tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ; 
- $  *   tbid . 2 = 'MARQ ETOI' ; 
- $  *   tbid . 'TITRE' . 2 = ' Ref.' ; 
- $  *   tbid . 3 = 'MARQ CROI' ; 
- $  *   tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ; 
+ $  *   tbid . 1 = MOT 'MARQ PLUS' ; 
+ $  *   tbid . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_init.' ; 
+ $  *   tbid . 2 = MOT 'MARQ ETOI' ; 
+ $  *   tbid . 'TITRE' . 2 = MOT 'Ref.' ; 
+ $  *   tbid . 3 = MOT 'MARQ CROI' ; 
+ $  *   tbid . 'TITRE' . 3 = CHAI 'Cal_mat_' str3 '_ipol.' ; 
  $  *   OPTI ECHO 0 ; 
 
 
@@ -4437,31 +4455,31 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   REPE b1 (DIME tt) ; 
  $  *     tps1 = tt . (&b1 - 1) ; 
  $  * *   trace de la deformee (pour controle visuel) 
- $  * *nh145313 
  $  * *    def1 = DEFO mail (tu . (&b1 - 1)) 1000. 'ROUG' ; 
  $  *     def1 = DEFO mail (tu . (&b1 - 1)) 500. 'ROUG' ; 
- $  *     tit1 = CHAI '[3D V] Deformee au temps' ' ' tps1 ; 
+ $  *     tit1 = CHAI str4 ' ' '[3D V] Deformee au temps' ' ' tps1 ; 
  $  *     SI ITRAC1 ; 
- $  * *      TRAC (def0 ET def1) 'TITR' tit1 ; 
+ $  * *      TRAC o1 (def0 ET def1) 'TITR' tit1 ; 
  $  *     FINSI ; 
  $  *   FIN b1 ; 
  $  *   SI ITRAC1 ; 
- $  *     TRAC (def0 ET def1) 'TITR' tit1 ; 
+ $  *     TRAC o1 (def0 ET def1) 'TITR' tit1 ; 
  $  *   FINSI ; 
  $  *   REPE b1 (DIME tt) ; 
  $  *     tps1 = tt . (&b1 - 1) ; 
  $  * *   trace des vecteurs contraintes principales 
  $  *     vecs = VECT (tprin . 'CONTRAINTES' . (&b1 - 1)) mo2 1.E-7 ; 
- $  *     tit1 = CHAI '[3D V] Directions principales au temps' ' ' tps1 ; 
+ $  *     tit1 = CHAI str4 ' ' '[3D V] Directions principales au temps' ' ' tps1 ; 
  $  *     SI ITRAC1 ; 
- $  * *      TRAC vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ; 
+ $  * *      TRAC o1 vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ; 
  $  *       SI (tps1 EGA 5.52E-1) ; 
- $  *         TRAC vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ; 
+ $  *         TRAC o1 vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ; 
  $  *       FINSI ; 
  $  *     FINSI ; 
  $  *   FIN b1 ; 
+ menage automatique 4 apres VECT gain: 1360992 actifs 1150902 mots 42014 segments
  $  *   SI ITRAC1 ; 
- $  * *    TRAC vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ; 
+ $  * *    TRAC o1 vecs (cadr1 ET rep1 ET mail) 'TITR' tit1 ; 
  $  *   FINSI ; 
  $  * FINSI ; 
  $  *   
@@ -4481,11 +4499,10 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   sgauche = DROI 1 p1 p2 ; 
  $  *   mail    = sgauche TRAN 1 (long 0.) ; 
  $  *   p3      = mail POIN 'PROC' (long long) ; 
- $  * *nh145313 
  $  * cadr1 = COUL ((0. 1.05) ET (0.75 1.05)) 'BLAN' ; 
  $  * rep1 = @REPERE (-0.2 -0.2) (PROG 0.5 0.5) 'TURQ' ; 
  $  * SI ITRAC1 ; 
- $  *   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT')) 'TITR' '[2D Plan cont.] Maillage' ; 
+ $  *   TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT')) 'TITR' (CHAI str4 ' ' '[2D Plan cont.] Maillage') ; 
  $  * FINSI ; 
  $  *   
  $  * ** Calcul 1 
@@ -4574,8 +4591,10 @@ Calcul MECANIQUE
  $  *   mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ; 
  $  *   ma2 = MATE mo2 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ; 
  $  * SINO ; 
- $  * * Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle... 
- $  *   QUIT BCALC; 
+ $  *   coel = MOTS 'YOUN' 'NU' 'RHO' 'ALPH' 'DIM3' 'TALP' 'TREF' 'ACOM' 'BCOM' 'ATRA' 'BTRA' 'BETA' 'EPSD'; 
+ $  *   statev = MOTS 'DCOM' 'DTRA' 'ALFT' 'ALFC' 'D' 'ETOZ'; 
+ $  *   mo2 = MODE mail 'MECANIQUE' 'ELASTIQUE' 'NON_LINEAIRE' 'UTILISATEUR' 'LIB_LOI' 'libUmatBehaviour.so' 'FCT_LOI' 'umatmazars' 'C_MATERIAU' coel 'C_VARINTER' statev; 
+ $  *   ma2 = MATE mo2 'YOUN' you 'NU' nu 'RHO' xrho 'ALPH' xalph 'DIM3' epai 'TALP' xtalp 'TREF' xtref 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'EPSD' epd0; 
  $  * FINSI ; 
  $  *   
  $  * ** Blocages 2 
@@ -4636,7 +4655,6 @@ Calcul MECANIQUE
 
 
  Numero du pas :3  Indice d evolution :4 -> temps : 3.00000E-02
- menage automatique 4 apres ADET gain: 1349178 actifs 1308552 mots 49013 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -4991,6 +5009,7 @@ Calcul MECANIQUE
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres ADET gain: 1080294 actifs 1303998 mots 52337 segments
             1            0  1.25232E-16  1.87500E-06  7.87500E-05  1.25232E-16
  ****** CONVERGENCE A L ITERATION 1  SOUS-PAS 0
  
@@ -5106,7 +5125,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  6.29889E-04  3.75000E-06  9.93750E-05  6.29889E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres *    gain: 1042590 actifs 1152786 mots 45179 segments
             3            4  0.00000E+00  3.75000E-06  9.93750E-05  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -5404,6 +5422,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  2.06365E-02  3.75000E-06  1.36875E-04  2.06365E-02
+ menage automatique 4 apres -    gain: 1031730 actifs 1104402 mots 45829 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  5.61908E-04  3.75000E-06  1.36875E-04  5.61908E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -5518,7 +5537,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :81  Indice d evolution :82 -> temps : 5.62000E-01
- menage automatique 4 apres *    gain: 1054242 actifs 1137876 mots 46202 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -5809,6 +5827,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres EXCO gain: 1020738 actifs 1098492 mots 46050 segments
             1            4  2.21107E-02  3.75000E-06  1.87500E-04  2.21107E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  1.19474E-03  3.75000E-06  1.87500E-04  1.19474E-03
@@ -5931,7 +5950,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  2.15961E-02  3.75000E-06  2.17500E-04  2.15961E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres -    gain: 1025160 actifs 1100322 mots 45802 segments
             2            4  1.22536E-03  3.75000E-06  2.17500E-04  1.22536E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             3            4  0.00000E+00  3.75000E-06  2.17500E-04  0.00000E+00
@@ -6215,6 +6233,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres +    gain: 1006170 actifs 1083150 mots 46015 segments
             1            4  1.84104E-02  3.75000E-06  2.88750E-04  1.84104E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  1.09723E-03  3.75000E-06  2.88750E-04  1.09723E-03
@@ -6349,7 +6368,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
- menage automatique 4 apres TABL gain: 1050996 actifs 1135524 mots 46172 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             1            4  1.57778E-02  3.75000E-06  3.22500E-04  1.57778E-02
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
@@ -6621,6 +6639,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres BSIG gain: 1014486 actifs 1083228 mots 46025 segments
             1            4  9.53472E-03  3.75000E-06  3.90000E-04  9.53472E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  5.23285E-04  3.75000E-06  3.90000E-04  5.23285E-04
@@ -6760,7 +6779,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  3.44517E-04  3.75000E-06  4.23750E-04  3.44517E-04
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres ADET gain: 1015098 actifs 1091256 mots 45852 segments
             3            4  0.00000E+00  3.75000E-06  4.23750E-04  0.00000E+00
  ****** CONVERGENCE A L ITERATION 3  SOUS-PAS 0
  
@@ -7027,6 +7045,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres +    gain: 1012542 actifs 1081464 mots 46011 segments
             1            4  3.69713E-03  3.75000E-06  4.91250E-04  3.69713E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  1.27790E-04  3.75000E-06  4.91250E-04  1.27790E-04
@@ -7188,7 +7207,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :193  Indice d evolution :194 -> temps : 7.86000E-01
- menage automatique 4 apres =    gain: 1003578 actifs 1101096 mots 46230 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -7480,6 +7498,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres COMP gain: 1004022 actifs 1094964 mots 45932 segments
             1            4  1.90415E-03  3.75000E-06  6.18750E-04  1.90415E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  2.12273E-05  3.75000E-06  6.18750E-04  2.12273E-05
@@ -7662,7 +7681,6 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
- menage automatique 4 apres COMP gain: 999102 actifs 1099872 mots 45617 segments
             1            4  1.67957E-03  3.75000E-06  6.71250E-04  1.67957E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  1.27509E-05  3.75000E-06  6.71250E-04  1.27509E-05
@@ -7944,6 +7962,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
 
 
  Numero du pas :251  Indice d evolution :252 -> temps : 9.02000E-01
+ menage automatique 4 apres ADET gain: 1010796 actifs 1100232 mots 46067 segments
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
 Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
@@ -8136,7 +8155,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
             2            4  6.29268E-06  3.75000E-06  8.06250E-04  6.29268E-06
  ****** CONVERGENCE A L ITERATION 2  SOUS-PAS 0
  
- menage automatique 4 apres =    gain: 1032168 actifs 1133004 mots 46057 segments
 
 
  Numero du pas :266  Indice d evolution :267 -> temps : 9.32000E-01
@@ -8405,6 +8423,7 @@ Pas d increment de charge, initialisation calculee avec le temps
 Initialisation a partir de la solution precedente Coeff 1.00000E+00
          Iter        Nplas      Critere     Deps.max      Eps.max    Crit.flex
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
+ menage automatique 4 apres ET   gain: 1009656 actifs 1090224 mots 45600 segments
             1            4  1.25127E-03  3.75000E-06  8.85000E-04  1.25127E-03
  Attention, la matrice est vide apres elimination des conditions de Dirichlet
             2            4  5.02305E-06  3.75000E-06  8.85000E-04  5.02305E-06
@@ -8603,7 +8622,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  * *           angles des directions principales vs temps 
  $  *   tt = t2 . 'TEMPS' ; 
  $  *   tu = t2 . 'DEPLACEMENTS' ; 
- $  * *nh145313 
  $  * *  def0 = DEFO mail (tu . 0) 0. ; 
  $  *   def0 = DEFO (cadr1 ET rep1 ET mail) (tu . 0) 0. ; 
  $  * * evolutions temporelles a tous les points de Gauss de l'endommagement, des contraintes et des deformations 
@@ -8615,7 +8633,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tleg . 4 = MOT 'MARQ ETOI NOLI' ; 
  $  *   tleg . 'TITRE' = TABL ; 
  $  *   REPE b ng ; 
- $  *     tleg . 'TITRE' . &b = CHAI 'Cal_mat' str3 '_Pt_Gauss' ' ' &b ; 
+ $  *     tleg . 'TITRE' . &b = CHAI 'Cal_mat_' str3 '_Pt_Gauss' ' ' &b ; 
  $  *   FIN b ; 
  $  * * endommagement 
  $  *   evd = VIDE 'EVOLUTIO' ; 
@@ -8623,7 +8641,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evd = evd ET (EVOL 'VIOL' 'TEMP' t2 'VARIABLES_INTERNES' 'D' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evd 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] D vs Temps' ; 
+ $  *     DESS evd 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] Endommagement vs Temps') ; 
  $  *   FINSI ; 
  $  * * contraintes 
  $  *   evsmxx = VIDE 'EVOLUTIO' ; 
@@ -8631,21 +8649,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evsmxx = evsmxx ET (EVOL 'BLEU' 'TEMP' t2 'CONTRAINTES' 'SMXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxx 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMXX vs Temps' ; 
+ $  *     DESS evsmxx 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] SMXX vs Temps') ; 
  $  *   FINSI ; 
  $  *   evsmyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmyy = evsmyy ET (EVOL 'VERT' 'TEMP' t2 'CONTRAINTES' 'SMYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmyy 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMYY vs Temps' ; 
+ $  *     DESS evsmyy 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] SMYY vs Temps') ; 
  $  *   FINSI ; 
  $  *   evsmxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evsmxy = evsmxy ET (EVOL 'ROUG' 'TEMP' t2 'CONTRAINTES' 'SMXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evsmxy 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] SMXY vs Temps' ; 
+ $  *     DESS evsmxy 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] SMXY vs Temps') ; 
  $  *   FINSI ; 
  $  * * deformations 
  $  *   evepxx = VIDE 'EVOLUTIO' ; 
@@ -8653,21 +8671,21 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     evepxx = evepxx ET (EVOL 'BLEU' 'TEMP' t2 'DEFORMATIONS' 'EPXX' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxx 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] EPXX vs Temps' ; 
+ $  *     DESS evepxx 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] EPXX vs Temps') ; 
  $  *   FINSI ; 
  $  *   evepyy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepyy = evepyy ET (EVOL 'VERT' 'TEMP' t2 'DEFORMATIONS' 'EPYY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepyy 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] EPYY vs Temps' ; 
+ $  *     DESS evepyy 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] EPYY vs Temps') ; 
  $  *   FINSI ; 
  $  *   evepxy = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
  $  *     evepxy = evepxy ET (EVOL 'ROUG' 'TEMP' t2 'DEFORMATIONS' 'GAXY' 1 1 &b) ; 
  $  *   FIN b ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evepxy 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] GAXY vs Temps' ; 
+ $  *     DESS evepxy 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] GAXY vs Temps') ; 
  $  *   FINSI ; 
  $  * * contraintes principales 
  $  *   tprin = TABL 'PASAPAS' ; 
@@ -8676,7 +8694,6 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   REPE b1 (DIME tt) ; 
  $  *     tprin . 'CONTRAINTES' . (&b1 - 1) = PRIN mo2 (t2 . 'CONTRAINTES' . (&b1 - 1)) ; 
  $  *   FIN b1 ; 
- menage automatique 4 apres PRIN gain: 1115694 actifs 1258164 mots 50602 segments
  $  * * angle direction principale 1 
  $  *   evcos11 = VIDE 'EVOLUTIO' ; 
  $  *   REPE b ng ; 
@@ -8684,7 +8701,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   FIN b ; 
  $  *   evang11 = ACOS evcos11 ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS evang11 'LEGE' 'NO' tleg 'TITR' '[2D Plan cont.] Angle X ^ SI11 vs Temps' ; 
+ $  *     DESS evang11 'LEGE' 'NO' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] Angle X ^ SI11 vs Temps') ; 
  $  *   FINSI ; 
  $  *   
  $  * * courbe Contraintes vs Deformation EPXX 
@@ -8693,9 +8710,9 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   evxy = EVOL 'ROUG' 'MANU' 'EPXX' (EXTR evepxx 'ORDO') 'CONTRAINTE' (EXTR evsmxy 'ORDO') ; 
  $  *   tleg = TABL ; 
  $  *   tleg . 'TITRE' = TABL ; 
- $  *   tleg . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_SMXX' ; 
- $  *   tleg . 'TITRE' . 2 = CHAI 'Cal_mat' str3 '_SMYY' ; 
- $  *   tleg . 'TITRE' . 3 = CHAI 'Cal_mat' str3 '_SMXY' ; 
+ $  *   tleg . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_SMXX' ; 
+ $  *   tleg . 'TITRE' . 2 = CHAI 'Cal_mat_' str3 '_SMYY' ; 
+ $  *   tleg . 'TITRE' . 3 = CHAI 'Cal_mat_' str3 '_SMXY' ; 
  $  * * resultats de reference [2] Ghavamian (2003) LGCNSNiso 
  $  *   evref = VIDE 'EVOLUTIO' ; 
  $  *   tref = LIRE 'CSV' FIC1 'DEBU' 2 'SEPA' ',' ; 
@@ -8705,33 +8722,33 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   tref = LIRE 'CSV' FIC3 'DEBU' 2 'SEPA' ',' ; 
  $  *   evref = evref ET (EVOL 'ROUG' 'MANU' 'EPXX' (tref . 1) 'CONTRAINTE' (tref . 2)) ; 
  $  *   tleg . 4   = MOT 'TIRR' ; 
- $  *   tleg . 'TITRE' . 4  = 'Ref_SMXX' ; 
+ $  *   tleg . 'TITRE' . 4  = MOT 'Ref_SMXX' ; 
  $  *   tleg . 5   = MOT 'TIRR' ; 
- $  *   tleg . 'TITRE' . 5  = 'Ref_SMYY' ; 
+ $  *   tleg . 'TITRE' . 5  = MOT 'Ref_SMYY' ; 
  $  *   tleg . 6   = MOT 'TIRR' ; 
- $  *   tleg . 'TITRE' . 6  = 'Ref_SMXY' ; 
+ $  *   tleg . 'TITRE' . 6  = MOT 'Ref_SMXY' ; 
  $  *   SI ITRAC1 ; 
- $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' 'NE' tleg 'TITR' '[2D Plan cont.] Contraintes vs Deformation' ; 
+ $  *     DESS (evxx et evyy et evxy et evref) 'LEGE' 'NE' tleg 'TITR' (CHAI str4 ' ' '[2D Plan cont.] Contraintes vs Deformation') ; 
  $  *   FINSI ; 
  $  *   
  $  * ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv 
  $  *   SI ISAUV ; 
- $  *     str2 = '2D_CP' ; 
+ $  *     str2 = '2D_CP_' ; 
  $  *     fic4 = CHAI str1 str2 str3 '.csv' ; 
  $  *     OPTI SORT fic4 ; 
- $  *     SORT 'EXCE' (evxx ET evyy ET evxy) ; 
+ $  *     SORT 'EXCE' (evxx ET evyy ET evxy) 'DIGI' 16 ; 
  $  *   FINSI ; 
  $  *   
  $  * * comparaison calcul / reference sur l'aire sous la courbe Contraintes vs Deformation EPXX 
  $  *   tsig = TABL ; 
  $  *   tbid = TABL ; 
  $  *   tbid . 'TITRE' = TABL ; 
- $  *   tbid . 1 = 'MARQ PLUS' ; 
- $  *   tbid . 'TITRE' . 1 = CHAI 'Cal_mat' str3 '_init.' ; 
- $  *   tbid . 2 = 'MARQ ETOI' ; 
- $  *   tbid . 'TITRE' . 2 = ' Ref.' ; 
- $  *   tbid . 3 = 'MARQ CROI' ; 
- $  *   tbid . 'TITRE' . 3 =  CHAI 'Cal_mat' str3 '_ipol.' ; 
+ $  *   tbid . 1 = MOT 'MARQ PLUS' ; 
+ $  *   tbid . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_init.' ; 
+ $  *   tbid . 2 = MOT 'MARQ ETOI' ; 
+ $  *   tbid . 'TITRE' . 2 = MOT 'Ref.' ; 
+ $  *   tbid . 3 = MOT 'MARQ CROI' ; 
+ $  *   tbid . 'TITRE' . 3 = CHAI 'Cal_mat_' str3 '_ipol.' ; 
  $  *   OPTI ECHO 0 ; 
 
 
@@ -8752,10 +8769,9 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *   REPE b1 (DIME tt) ; 
  $  *     tps1 = tt . (&b1 - 1) ; 
  $  * *   trace de la deformee (pour controle visuel) 
- $  * *nh145313 
  $  * *    def1 = DEFO mail (tu . (&b1 - 1)) 1000. 'ROUG' ; 
  $  *     def1 = DEFO mail (tu . (&b1 - 1)) 500. 'ROUG' ; 
- $  *     tit1 = CHAI '[2D Plan cont.] Deformee au temps' ' ' tps1 ; 
+ $  *     tit1 = CHAI str4 ' ' '[2D Plan cont.] Deformee au temps' ' ' tps1 ; 
  $  *     SI ITRAC1 ; 
  $  * *      TRAC (def0 ET def1) 'TITR' tit1 ; 
  $  *     FINSI ; 
@@ -8767,7 +8783,7 @@ Initialisation a partir de la solution precedente Coeff 1.00000E+00
  $  *     tps1 = tt . (&b1 - 1) ; 
  $  * *   trace des vecteurs contraintes principales 
  $  *     vecs = VECT (tprin . 'CONTRAINTES' . (&b1 - 1)) mo2 1.E-7 ; 
- $  *     tit1 = CHAI '[2D Plan cont.] Directions principales au temps' ' ' tps1 ; 
+ $  *     tit1 = CHAI str4 ' ' '[2D Plan cont.] Directions principales au temps' ' ' tps1 ; 
  $  *     SI ITRAC1 ; 
  $  * *      TRAC vecs (rep1 ET mail) 'TITR' tit1 ; 
  $  *       SI (tps1 EGA 5.52E-1) ; 

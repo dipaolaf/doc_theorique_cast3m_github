@@ -38,9 +38,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction.dgibi
       :language: gibiane
-      :lines: 338-349
+      :lines: 380-390
       :linenos:
-      :lineno-start: 338
+      :lineno-start: 380
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -83,9 +83,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression.dgibi
       :language: gibiane
-      :lines: 354-365
+      :lines: 397-407
       :linenos:
-      :lineno-start: 354
+      :lineno-start: 397
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -127,9 +127,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 383-395
+      :lines: 425-436
       :linenos:
-      :lineno-start: 383
+      :lineno-start: 425
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -171,9 +171,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 400-412
+      :lines: 440-451
       :linenos:
-      :lineno-start: 400
+      :lineno-start: 440
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -215,9 +215,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 517-529
+      :lines: 561-572
       :linenos:
-      :lineno-start: 517
+      :lineno-start: 561
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -259,9 +259,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 698-710
+      :lines: 742-753
       :linenos:
-      :lineno-start: 698
+      :lineno-start: 742
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
@@ -303,13 +303,13 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_cisaillement.dgibi
       :language: gibiane
-      :lines: 314-326
+      :lines: 337-349
       :linenos:
-      :lineno-start: 314
+      :lineno-start: 337
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
-.. figure:: figures/mazars_cisaillement_film_defo_HPP_3D_PaF_5.gif
+.. figure:: figures/mazars_cisaillement_Beta_1.06_film_defo_3D_PaF_5.gif
    :width: 15cm
    :align: center
 
@@ -366,17 +366,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction.dgibi
       :language: gibiane
-      :lines: 120-129
+      :lines: 166-175
       :linenos:
-      :lineno-start: 120
+      :lineno-start: 166
 
 .. admonition:: Traction monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction.dgibi
       :language: gibiane
-      :lines: 752-760
+      :lines: 790-798
       :linenos:
-      :lineno-start: 752
+      :lineno-start: 790
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -454,17 +454,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression.dgibi
       :language: gibiane
-      :lines: 120-129
+      :lines: 166-175
       :linenos:
-      :lineno-start: 120
+      :lineno-start: 166
 
 .. admonition:: Compression monotone : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_compression.dgibi
       :language: gibiane
-      :lines: 792-800
+      :lines: 833-841
       :linenos:
-      :lineno-start: 792
+      :lineno-start: 833
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -541,17 +541,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 120-130
+      :lines: 166-176
       :linenos:
-      :lineno-start: 120
+      :lineno-start: 166
 
 .. admonition:: Traction cyclique : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction_cyclique.dgibi
       :language: gibiane
-      :lines: 888-897
+      :lines: 926-935
       :linenos:
-      :lineno-start: 888
+      :lineno-start: 926
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -628,17 +628,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 120-130
+      :lines: 166-176
       :linenos:
-      :lineno-start: 120
+      :lineno-start: 166
 
 .. admonition:: Compression cyclique : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_compression_cyclique.dgibi
       :language: gibiane
-      :lines: 914-923
+      :lines: 949-958
       :linenos:
-      :lineno-start: 914
+      :lineno-start: 949
 
 Les blocages et le chargement sont représentés sur la figure suivante.
    
@@ -715,17 +715,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 124-134
+      :lines: 172-182
       :linenos:
-      :lineno-start: 124
+      :lineno-start: 172
 
 .. admonition:: Traction compression : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction_compression.dgibi
       :language: gibiane
-      :lines: 1280-1289
+      :lines: 1320-1329
       :linenos:
-      :lineno-start: 1289
+      :lineno-start: 1320
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -802,17 +802,17 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 131-141
+      :lines: 179-189
       :linenos:
-      :lineno-start: 131
+      :lineno-start: 179
 
 .. admonition:: Traction compression traction : blocages et chargement pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_traction_compression_traction.dgibi
       :language: gibiane
-      :lines: 1816-1825
+      :lines: 1855-1864
       :linenos:
-      :lineno-start: 1816
+      :lineno-start: 1855
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -884,9 +884,9 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_cisaillement.dgibi
       :language: gibiane
-      :lines: 136-149
+      :lines: 163-176
       :linenos:
-      :lineno-start: 136
+      :lineno-start: 163
 
 Les blocages et le chargement sont représentés sur la figure suivante.
 
@@ -909,9 +909,9 @@ Les blocages et le chargement sont représentés sur la figure suivante.
 
 La déformée au cours du chargement est représentée sur la figure suivante.
 
-.. image:: figures/mazars_cisaillement_film_defo_HPP_3D_V_5.gif
+.. image:: figures/mazars_cisaillement_Beta_1.06_film_defo_3D_V_5.gif
    :width: 49%
-.. image:: figures/mazars_cisaillement_film_defo_HPP_2D_CP_5.gif
+.. image:: figures/mazars_cisaillement_Beta_1.06_film_defo_2D_CP_5.gif
    :width: 50%
 
 .. figure:: figures/mazars_cisa_mono_beta1.06_char_2dplan.png
@@ -980,37 +980,37 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 186
+      :lines: 238
       :linenos:
       :lineno-start: 186
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 191-193
+      :lines: 243-245
       :linenos:
-      :lineno-start: 191
+      :lineno-start: 243
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 199-204
+      :lines: 250-255
       :linenos:
-      :lineno-start: 199
+      :lineno-start: 250
 
 .. admonition:: Biaxial : blocages pour le cas 3D
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 182-183
+      :lines: 234-235
       :linenos:
-      :lineno-start: 182
+      :lineno-start: 234
 
 .. admonition:: Biaxial : blocages pour le cas 2D plan
 
    .. literalinclude:: dgibi/mazars_biaxial.dgibi
       :language: gibiane
-      :lines: 526-527
+      :lines: 578-579
       :linenos:
-      :lineno-start: 526
+      :lineno-start: 578
 
 Les blocages et le chargement dans la situation de biaxialité :math:`\theta=120°` (:math:`\sigma_{xx}` : traction ; :math:`\sigma_{yy}` : compression) sont représentés sur la figure suivante.
 
@@ -1088,85 +1088,85 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 65-67
+      :lines: 68-70
       :linenos:
-      :lineno-start: 65
+      :lineno-start: 68
 
 .. admonition:: Triaxial : blocages et chargements pour le cas 3D
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 131-137
+      :lines: 189-195
       :linenos:
-      :lineno-start: 131
+      :lineno-start: 189
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 142-145
+      :lines: 200-203
       :linenos:
-      :lineno-start: 142
+      :lineno-start: 200
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 148-152
+      :lines: 205-209
       :linenos:
-      :lineno-start: 148
+      :lineno-start: 205
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 153
+      :lines: 210
       :linenos:
-      :lineno-start: 153
+      :lineno-start: 210
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 157-158
+      :lines: 214-215
       :linenos:
-      :lineno-start: 157
+      :lineno-start: 214
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 164-168
+      :lines: 221-225
       :linenos:
-      :lineno-start: 164
+      :lineno-start: 221
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 183-184
+      :lines: 239-240
       :linenos:
-      :lineno-start: 183
+      :lineno-start: 239
 
 .. admonition:: Triaxial : blocages et chargements pour le cas 2D axisymétrique
 
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 366-372
+      :lines: 424-430
       :linenos:
-      :lineno-start: 366
+      :lineno-start: 424
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 377-380
+      :lines: 435-438
       :linenos:
-      :lineno-start: 377
+      :lineno-start: 435
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 383-386
+      :lines: 440-443
       :linenos:
-      :lineno-start: 383
+      :lineno-start: 440
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 387
+      :lines: 444
       :linenos:
-      :lineno-start: 387
+      :lineno-start: 444
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 391-392
+      :lines: 448-449
       :linenos:
-      :lineno-start: 391
+      :lineno-start: 448
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 398-402
+      :lines: 455-459
       :linenos:
-      :lineno-start: 398
+      :lineno-start: 455
    .. literalinclude:: dgibi/mazars_triaxial.dgibi
       :language: gibiane
-      :lines: 417-418
+      :lines: 473-474
       :linenos:
-      :lineno-start: 417
+      :lineno-start: 473
 
 Les blocages et les chargements, pour la pression hydrostatique nulle (0 MPa) et maximale (9 MPa), sont représentés sur les figures suivantes.
 
@@ -1214,7 +1214,7 @@ La déformée au cours du chargement, pour la pression hydrostatique nulle (0 MP
 .. figure:: figures/mazars_triax_9MPa_char_2daxi.png
    :width: 0%
 
-   Triaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique nulle (0 MPa).
+   Triaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D axi - Pression hydrostatique nulle (0 MPa).
 
 .. image:: figures/mazars_triaxial_9MPa_film_defo_3D_V_5.gif
    :width: 50%
@@ -1224,7 +1224,7 @@ La déformée au cours du chargement, pour la pression hydrostatique nulle (0 MP
 .. figure:: figures/mazars_triax_9MPa_char_2daxi.png
    :width: 0%
 
-   Triaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D plan - Pression hydrostatique maximale (9 MPa).
+   Triaxial - Maillage initial et déformé (x10) des modèles volumiques 3D et 2D axi - Pression hydrostatique maximale (9 MPa).
 
 Liste des exemples dgibi
 """"""""""""""""""""""""
@@ -1268,9 +1268,9 @@ Enfin, le paramètre **BTRA** du modèle de Mazars est issu d'une communication 
 .. admonition:: Test de Willam : Paramètres géométrique, matériau (dont Mazars) et chargement
 
    .. literalinclude:: dgibi/mazars_willam.ecr
-      :lines: 119-140
+      :lines: 122-146
       :linenos:
-      :lineno-start: 119
+      :lineno-start: 122
 
 Blocages et chargement
 """"""""""""""""""""""
@@ -1288,15 +1288,15 @@ Les instructions Gibiane correspondantes sont :
 
    .. literalinclude:: dgibi/mazars_willam.dgibi
       :language: gibiane
-      :lines: 147-193
+      :lines: 170-216
       :linenos:
-      :lineno-start: 147
+      :lineno-start: 170
 
    .. literalinclude:: dgibi/mazars_willam.dgibi
       :language: gibiane
-      :lines: 195-228
+      :lines: 218-253
       :linenos:
-      :lineno-start: 195
+      :lineno-start: 218
 
 La représentation des blocages et des chargements n'étant pas suffisament explicite, on représente sur la figure suivante l'évolution de la déformée qui en résulte au cours du chargement. 
 

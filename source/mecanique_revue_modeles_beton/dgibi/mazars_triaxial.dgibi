@@ -16,7 +16,7 @@
 * Selon deux modes d'integration du comportement                       *
 * realises successivement dans la boucle BCALC :                       *
 *   passage 1 : Cast3M                                                 *
-*   passage 2 : MFront                                                 *
+*   passage 2 : MFront (pas actif a date)                              *
 *                                                                      *
 * ITRAC1 : VRAI => affichage resultats                                 *
 * IPSC1  : VRAI => affichage resultats dans un PostScript Couleur      *
@@ -43,7 +43,6 @@ FINSI ;
 
 ** Liste des modes de calcul a traiter
 lcas = LECT 1 2 ;
-*nh145313
 *lcas = LECT 1 ; COMM '3D volumique' ;
 *lcas = LECT 2 ; COMM '2D axisymetrique' ;
 
@@ -61,36 +60,88 @@ ac    = 1.1 ;
 bt    = 10000. ;
 bc    = 1200. ;
 beta  = 1. ;
+xrho  = 0. ;
+xalph = 0. ;
+xtalp = 0. ;
+xtref = 0. ;	   
 
 ** Parametres chargement
 lpres = PROG 0. 1.5E6 4.5E6 9.E6 ;
 umax  = 0.015 * haut ;
 
+OPTI ECHO 0 ;
+SAUT 1 lign ;
+mess 'Parametres' ;
+mess '==========';
+SAUT 1 lign ;
+mess 'Parametre de taille de l element' ;
+mess '- long = côté de la section : long (m)' ' ' long ;
+mess '- rayo = rayon de la section : rayo (m)' ' ' rayo ;
+mess '- haut = hauteur de l element : haut (m)' ' ' haut ;
+SAUT 1 lign ;
+mess 'Coef. elastiques' ;
+mess '- Module d Young         : you (Pa)' you ;
+mess '- Coefficient de Poisson : nu' ' ' ' ' ' ' ' ' ' ' ' ' nu ;
+SAUT 1 lign ;
+mess 'Coef. Mazars' ;
+mess '- KTR0 : epd0' ' ' epd0 ;
+mess '- ATRA : at' ' ' ' ' ' ' at ;
+mess '- BTRA : bt' ' ' ' ' ' ' bt ;
+mess '- ACOM : ac' ' ' ' ' ' ' ac ;
+mess '- BCOM : bc' ' ' ' ' ' ' bc ;
+mess '- BETA : beta' ' ' beta ;
+SAUT 1 lign ;
+mess 'Chargement' ;
+mess '- Pression hydrostatique (confinement)';
+REPE phydr (DIME lpres) ;
+mess '  -' ' ' &phydr ' : P (Pa)' (EXTR &phydr lpres) ;
+FIN phydr ;
+mess '- Depl.imp.max : -1*umax (m)' ' ' (-1.*umax) ;
+SAUT 1 lign ;
+OPTI ECHO 1 ;
+*opti donn 5;
+
 ** Legende courbes
 tpre = TABL ;
-tpre . 1 = '0MPa' ;
-tpre . 2 = '1.5MPa' ;
-tpre . 3 = '4.5MPa' ;
-tpre . 4 = '9MPa' ;
+tpre . 1 = MOT '0MPa' ;
+tpre . 2 = MOT '1.5MPa' ;
+tpre . 3 = MOT '4.5MPa' ;
+tpre . 4 = MOT '9MPa' ;
 tleg = TABL ;
 tleg.'TITRE' = TABL ;
 
 *nh145313 .csv recuperes => resext = vrai
 resexp = vrai ;
 
+** Oeil en 3D_V (trace a conserver pour conserver l'oeil)
+  OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+  rep1 = @REPERE (-0.55 -0.55 0.) 'TURQ' ;
+  TRAC rep1 'TITR' 'Repere 3D';
+  o1 = VALE OEIL ;
+  xo1 yo1 zo1 = COOR o1 ;
+
 
 REPE BCALC 2 ;
-*======= A ENLEVER lorsque l'implémentation MFront sera faite =======
+*============= A ENLEVER pour realiser le calcul MFront =============
 SI (NEG &BCALC 1) ;
   QUIT BCALC;
 FINSI ;
 *========================== fin A ENLEVER ===========================
-** Distinction des résultats de calcul Cast3M et/ou MFront
+** Distinction des résultats de calcul Cast3M ou MFront (PostScript, sauvegarde)
 SI (EGA &BCALC 1) ;
   str3 = 'Cast3M' ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' ===================  Comportement materiau : Cast3M  ====================';
+  SAUT 1 LIGN ;
 SINO ;
   str3 = 'MFront' ;
+  OPTI ECHO 0 ;
+  SAUT 1 LIGN ;
+  MESS ' ===================  Comportement materiau : MFront  ====================';
+  SAUT 1 LIGN ;
 FINSI ;
+OPTI ECHO 1 ;
 str4 = CHAI str3 ' :' ;
 
 
@@ -99,6 +150,7 @@ SI (EXIS lcas 1) ;
 
 ** Options generales
   OPTI 'DIME' 3 'MODE' 'TRID' 'ELEM' 'CUB8' ;
+  o1 = xo1 yo1 zo1 ;
 
 ** Maillage
   p1      = 0. 0. 0. ;
@@ -114,14 +166,13 @@ SI (EXIS lcas 1) ;
   sderrie = env1 ELEM 3 ;
   p3      = mail POIN 'PROC' (0. 0. haut) ;
   mes1    = MESU mail ;
-*nh145313
 cadr1 = COUL ((0. (long + 5.E-3) (haut + 5.E-3)) ET (long (long + 5.E-3) (haut + 5.E-3))) 'BLAN' ;
 rep1 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) 'TURQ' ;
 SI ITRAC1 ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sgauche, sdroite') ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sbas, shaut') ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sdevant, sderrie') ;
-  TRAC 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage') ;
+  TRAC o1 'QUAL' (cadr1 ET rep1 ET mail ET (sgauche COUL 'VERT') ET (sdroite COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sgauche, sdroite') ;
+  TRAC o1 'QUAL' (cadr1 ET rep1 ET mail ET (sbas COUL 'VERT') ET (shaut COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sbas, shaut') ;
+  TRAC o1 'QUAL' (cadr1 ET rep1 ET mail ET (sdevant COUL 'VERT') ET (sderrie COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage - sdevant, sderrie') ;
+  TRAC o1 'QUAL' (cadr1 ET rep1 ET mail ET ((sgauche ET sbas ET sdevant) COUL 'VERT') ET ((sdroite ET shaut ET sderrie) COUL 'ROUG')) 'TITR' (CHAI str4 ' '  '[3D V] Maillage') ;
 FINSI ;
 
 ** Modele et caracteristiques materiau (&BCALC : 1->Cast3M, 2->MFront)
@@ -129,8 +180,10 @@ SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
 SINO ;
-* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
-  QUIT BCALC;
+  coel = MOTS 'YOUN' 'NU' 'RHO' 'ALPH' 'TALP' 'TREF' 'ACOM' 'BCOM' 'ATRA' 'BTRA' 'BETA' 'EPSD';
+  statev = MOTS 'DCOM' 'DTRA' 'ALFT' 'ALFC' 'D';
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'NON_LINEAIRE' 'UTILISATEUR' 'LIB_LOI' 'libUmatBehaviour.so' 'FCT_LOI' 'umatmazars' 'C_MATERIAU' coel 'C_VARINTER' statev;
+  ma = MATE mo 'YOUN' you 'NU' nu 'RHO' xrho 'ALPH' xalph 'TALP' xtalp 'TREF' xtref 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'EPSD' epd0;
 FINSI ;
 
 ** Blocages
@@ -148,7 +201,6 @@ FINSI ;
   REPE b0 npres ;
 * On fait un premier calcul avec seulement la pression imposee
     pre1 = EXTR lpres &b0 ;
-*nh145313
 *    fpr  = PRES 'MASS' mo (sdroite ET sderrie ET shaut) pre1 ;
     fprx = PRES 'MASS' mo sdroite pre1 ;
     fpry = PRES 'MASS' mo sderrie pre1 ;
@@ -171,7 +223,6 @@ FINSI ;
     uz0    = ABS (EXTR (t . 'DEPLACEMENTS' . 5) 'UZ' p3) ;
     evc2   = EVOL 'MANU' (PROG 0.5 1.) (PROG uz0 (umax - uz0)) ;
     chadi  = CHAR 'DIMP' dihaut evc2 ;
-*nh145313
 ** Trace des blocages et du chargement
     re0 = @REPERE (-0.16 -0.16 0.) (PROG 0.3 0.3 0.3) ;
     mor = MODE re0 'MECANIQUE' 'BARR' ;
@@ -183,7 +234,7 @@ FINSI ;
     vdiz = VECT dihaut ' ' ' ' 'FLX' 'ROUG' 3.E-2 ;
     tit0 = CHAI str4 ' '  '[3D V] Blocages et chargements Uimp et P=' tpre . &b0 ;
     SI ITRAC1 ;
-      TRAC ((RIGI mo ma) ET bl ET rir) (vprx ET vpry ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
+      TRAC o1 ((RIGI mo ma) ET bl ET rir) (vprx ET vpry ET vprz ET vdiz) 'NOLE' 'TITR' tit0 ;
     FINSI ;
     t . 'BLOCAGES_MECANIQUES'       = bl ;
     t . 'CHARGEMENT'                = chap ET chadi ;
@@ -196,7 +247,7 @@ FINSI ;
 *      DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
 *    FINSI ;
 
-** Post traitement :
+** Post traitement
 * courbes : endommagement moyen vs temps
 *           contrainte moyenne vs deformation moyenne
 *           force de reaction vs deplacement impose
@@ -283,22 +334,21 @@ fins;
 
 ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
   SI ISAUV ;
-    str2 = '3D_V' ;
+    str2 = '3D_V_' ;
     fic5 = CHAI str1 str2 str3 '.csv' ;
     OPTI SORT fic5 ;
-    SORT 'EXCE' evtot1 ;
+    SORT 'EXCE' evtot1 'DIGI' 16 ;
   FINSI ;
   
-*nh145313
 ** Comparaison Calcul / Reference sur l'aire sous la courbe Valeur absolue de l'Ecart relatif en Contrainte vs Deformation
 si (resexp);
   tbid = TABL ;
   tbid . 'TITRE' = TABL ;
-  tbid . 1 = 'MARQ PLUS' ;
+  tbid . 1 = MOT 'MARQ PLUS' ;
   tbid . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_init.' ;
-  tbid . 2 = 'MARQ ETOI' ;
-  tbid . 'TITRE' . 2 = 'Ref.exp.' ;
-  tbid . 3 = 'MARQ CROI' ;
+  tbid . 2 = MOT 'MARQ ETOI' ;
+  tbid . 'TITRE' . 2 = MOT 'Ref.exp.' ;
+  tbid . 3 = MOT 'MARQ CROI' ;
   tbid . 'TITRE' . 3 =  CHAI 'Cal_mat_' str3 '_ipol.' ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
@@ -320,14 +370,14 @@ si (resexp);
     eer1 = EVOL 'ORAN' 'MANU' (CHAI '|EPZZ|_' tpre . &b2) (ABS xexp) (CHAI '|Er|SMZZ_' tpre . &b2) ler1 ;
     deps = ABS ((EXTR xexp (DIME xexp)) - (EXTR xexp 1)) ;
     mer1 = (INTG eer1) / deps ;
-    tit1 = CHAI str4 ' '  '[3D V]' ' P=' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs |Defo.|, moy.int.|Ecart|' ' ' mer1 ;
+    tit1 = CHAI str4 ' '  '[3D V]' ' P=' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref|, Moy.int.|Ecart|' ' ' mer1 ;
     SI ITRAC1 ;
       DESS eer1 'TITR' tit1 ;
     FINSI ;
     SI ITRAC1 ;
       DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' 'NO' tbid ;
     FINSI ;
-    MESS ' Pres.hydrostat.: P=' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
+    MESS ' Pres.hydrostat.: P=' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
     SAUT 1 LIGN ;
   FIN b2 ;
   OPTI ECHO 1 ;
@@ -338,7 +388,7 @@ FINSI ;
 
 
 
-**************** C A S  #2  :  2 D   A X I S Y M E T R I Q U E ****************
+************ C A S  #2  :  2 D   A X I S Y M E T R I Q U E *************
 SI (EXIS lcas 2) ;
 ** Options generales
   OPTI 'DIME' 2 'MODE' 'AXIS' 'ELEM' 'QUA4' ;
@@ -351,7 +401,6 @@ SI (EXIS lcas 2) ;
   shaut   = mail COTE 3 ;
   p3      = shaut POIN 'PROC' (0. haut) ;
   sdroite = mail COTE 2 ;
-*nh145313
 cadr1 = COUL ((0. (haut + 5.E-3)) ET (long (haut + 5.E-3))) 'BLAN' ;
 rep1 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) 'TURQ' ;
 SI ITRAC1 ;
@@ -363,8 +412,10 @@ SI (EGA &BCALC 1) ;
   mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'ENDOMMAGEMENT' 'MAZARS' ;
   ma = MATE mo 'YOUN' you 'NU' nu 'KTR0' epd0 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta ;
 SINO ;
-* Elian@ed282932 : Implémentation MFront A FAIRE. En attendant on quitte la boucle...
-  QUIT BCALC;
+  coel = MOTS 'YOUN' 'NU' 'RHO' 'ALPH' 'TALP' 'TREF' 'ACOM' 'BCOM' 'ATRA' 'BTRA' 'BETA' 'EPSD';
+  statev = MOTS 'DCOM' 'DTRA' 'ALFT' 'ALFC' 'D';
+  mo = MODE mail 'MECANIQUE' 'ELASTIQUE' 'NON_LINEAIRE' 'UTILISATEUR' 'LIB_LOI' 'libUmatBehaviour.so' 'FCT_LOI' 'umatmazars' 'C_MATERIAU' coel 'C_VARINTER' statev;
+  ma = MATE mo 'YOUN' you 'NU' nu 'RHO' xrho 'ALPH' xalph 'TALP' xtalp 'TREF' xtref 'ACOM' ac 'BCOM' bc 'ATRA' at 'BTRA' bt 'BETA' beta 'EPSD' epd0;
 FINSI ;
   zer = ZERO mo 'NOEUD' ;
   un  = zer + 1. ;
@@ -385,7 +436,6 @@ FINSI ;
   REPE b0 npres ;
 * On fait un premier calcul avec seulement la pression imposee
     pre1 = EXTR lpres &b0 ;
-*nh145313
 *    fpr  = PRES 'MASS' mo (sdroite ET shaut) pre1 ;
     fprr = PRES 'MASS' mo sdroite pre1 ;
     fprz = PRES 'MASS' mo shaut pre1 ;
@@ -407,7 +457,6 @@ FINSI ;
     uz0    = ABS (EXTR (t . 'DEPLACEMENTS' . 5) 'UZ' p3) ;
     evc2   = EVOL 'MANU' (PROG 0.5 1.) (PROG uz0 (umax - uz0)) ;
     chadi  = CHAR 'DIMP' dihaut evc2 ;
-*nh145313
 ** Trace des blocages et du chargement
     re0 = @REPERE (-0.1 -0.06) (PROG 0.15 0.15) ;
 
@@ -432,7 +481,7 @@ FINSI ;
 *      DESS (EVOL 'TEMP' t 'CONTRAINTES' 'SMZZ' 1 1 1) 'TITR' tit1 ;
 *    FINSI ;
 
-** Post traitement :
+** Post traitement
 * courbes : endommagement moyen vs temps
 *           contrainte moyenne vs deformation moyenne
 *           force de reaction vs deplacement impose
@@ -519,26 +568,25 @@ fins;
 
 ** Sauvegarde des resultats de calcul Cast3M (reference pour MFront) au format .csv
   SI ISAUV ;
-    str2 = '2D_axi' ;
+    str2 = '2D_axi_' ;
     fic5 = CHAI str1 str2 str3 '.csv' ;
     OPTI SORT fic5 ;
-    SORT 'EXCE' evtot1 ;
+    SORT 'EXCE' evtot1 'DIGI' 16 ;
   FINSI ;
   
-*nh145313
 ** Comparaison Calcul / Reference sur l'aire sous la courbe Valeur absolue de l'Ecart relatif en Contrainte vs Deformation
 si (resexp);
   tbid = TABL ;
   tbid . 'TITRE' = TABL ;
-  tbid . 1 = 'MARQ PLUS' ;
+  tbid . 1 = MOT 'MARQ PLUS' ;
   tbid . 'TITRE' . 1 = CHAI 'Cal_mat_' str3 '_init.' ;
-  tbid . 2 = 'MARQ ETOI' ;
-  tbid . 'TITRE' . 2 = 'Ref.exp.' ;
-  tbid . 3 = 'MARQ CROI' ;
+  tbid . 2 = MOT 'MARQ ETOI' ;
+  tbid . 'TITRE' . 2 = MOT 'Ref.exp.' ;
+  tbid . 3 = MOT 'MARQ CROI' ;
   tbid . 'TITRE' . 3 =  CHAI 'Cal_mat_' str3 '_ipol.' ;
   OPTI ECHO 0 ;
   SAUT 1 LIGN ;
-  MESS ' **************** C A S  #2  :  2 D   A X I S Y M E T R I Q U E ****************';
+  MESS ' ************ C A S  #2  :  2 D   A X I S Y M E T R I Q U E *************';
   SAUT 1 LIGN ;
   REPE b2 (DIME evxp0) ;
     evexp = EXTR evxp0  'COUR' &b2 ;
@@ -556,14 +604,14 @@ si (resexp);
     eer1 = EVOL 'ORAN' 'MANU' (CHAI '|EPZZ|_' tpre . &b2) (ABS xexp) (CHAI '|Er|SMZZ_' tpre . &b2) ler1 ;
     deps = ABS ((EXTR xexp (DIME xexp)) - (EXTR xexp 1)) ;
     mer1 = (INTG eer1) / deps ;
-    tit1 = CHAI str4 ' '  '[2D Axi.]' ' P=' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref| Contr. vs |Defo.|, moy.int.|Ecart|' ' ' mer1 ;
+    tit1 = CHAI str4 ' '  '[2D Axi.]' ' P=' (tpre . &b2) ' Val.abs.Ec.rel.|(Calc-Ref)/Ref|, Moy.int.|Ecart|' ' ' mer1 ;
     SI ITRAC1 ;
       DESS eer1 'TITR' tit1 ;
     FINSI ;
     SI ITRAC1 ;
       DESS (evcal et evexp et evcal2) 'TITR' tit1 'LEGE' 'NO' tbid ;
     FINSI ;
-    MESS ' Pres.hydrostat.: P=' ' ' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
+    MESS ' Pres.hydrostat.: P=' (tpre . &b2) ', Moy.int. Val.abs. Ecart relatif entre Calcul et Reference' ' ' mer1 ;
     SAUT 1 LIGN ;
   FIN b2 ;
   OPTI ECHO 1 ;
